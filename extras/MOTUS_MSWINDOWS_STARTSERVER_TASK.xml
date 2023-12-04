@@ -3,7 +3,7 @@
   <RegistrationInfo>
     <Date>2022-11-12T15:09:06.8909151</Date>
     <Author>AHNC_MOTUS1\Admin</Author>
-    <Description>Task to run the Motus Kiosk Shiny WebApp using R when the computer boots. This is done via the MOTUS_MSWINDOWS_SATRTSERVER.bat file from Users/MOTUS_KIOSK/Projects/AHNC_MOTUS_KIOSK.   There is a Log file kept in the Logs directory fof that project.</Description>
+    <Description>Task to run the Motus Kiosk Shiny WebApp using R when the computer boots. This is done via the MOTUS_MSWINDOWS_STARTSERVER.bat file from Users/MOTUS_USER/Projects/MOTUS_KIOSK.   There is a Log file kept in the Logs directory of that project.</Description>
     <URI>\MOTUS_MSWINDOWS_STARTSERVER_TASK</URI>
   </RegistrationInfo>
   <Triggers>
@@ -39,8 +39,8 @@
   </Settings>
   <Actions Context="Author">
     <Exec>
-      <Command>C:\Users\MOTUS_KIOSK\Projects\AHNC_MOTUS_KIOSK\MOTUS_MSWINDOWS_STARTSERVER.bat</Command>
-      <WorkingDirectory>C:\Users\MOTUS_KIOSK\Projects\AHNC_MOTUS_KIOSK\</WorkingDirectory>
+      <Command>C:\Users\MOTUS_USER\Projects\MOTUS_KIOSK\MOTUS_MSWINDOWS_STARTSERVER.bat</Command>
+      <WorkingDirectory>C:\Users\MOTUS_USER\Projects\MOTUS_KIOSK\</WorkingDirectory>
     </Exec>
   </Actions>
 </Task>
