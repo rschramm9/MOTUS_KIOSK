@@ -1,0 +1,39 @@
+ui|es
+ui_nav_page_main|Casa
+ui_nav_page_help|Help / Feedback
+
+ui_mainpage_lang|Select UI language
+ui_mainpage_available_receivers|Receptores Disponibles
+ui_mainpage_loading|Loading...
+
+ui_MotusNews_title|Noticias Motus!
+ui_motusnews_loading|Noticias cargando
+
+ui_AboutMotus_title|Más información sobre Motus
+ui_about_motus_loading|Acerca de la carga de Motus
+
+ui_RCVR_title|Detecciones del receptor
+
+ui_RCVR_detections_details_tab_label|Detalles
+ui_RCVR_detections_details_tab_helptext|La información de despliegue del ave etiquetada seleccionada.
+
+ui_RCVR_detections_flightpath_tab_label|Historial de vuelos
+ui_RCVR_detections_flightpath_tab_helptext|Los detalles del historial de vuelo del ave seleccionada
+
+ui_RCVR_detections_leaflet_tab_label|Mapa de vuelo
+ui_RCVR_detections_leaflet_tab_helptext|Use los botones a continuación para simular la ruta aproximada que voló el ave. Tenga en cuenta que los datos pueden contener detecciones falsas de "punto salvaje" que no intentamos filtrar.
+
+ui_RCVR_detections_species_tab_label|Especies
+ui_RCVR_detections_species_tab_helptext|Información sobre la especie del ave seleccionada.
+
+ui_RCVR_labelinfo|Ingrese la información de la etiqueta aquí. Las etiquetas que faltan se ignoran
+
+ui_RCVR_input_requery_label_help_text|Vuelva a consultar el servidor MOTUS
+ui_RCVR_input_requery_button_caption|Consulta Motus
+
+ui_RCVR_fly_button_caption|Volar
+ui_RCVR_stop_button_caption|Deténgase
+ui_RCVR_pause_button_caption|Pausa
+ui_RCVR_resume_button_caption|Reanudar
+
+species_ui_loading|Espanole Species page loading
