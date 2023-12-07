@@ -40,7 +40,7 @@ We are setting  OpenKiosk to start at every login of user MOTUS_USER to connect 
 
 
 
-##### Complete all steps of BUILDING_THE_APP_README.md
+##### Complete all steps of START_HERE.md
 
 It is assumed here that you are now able to run the MOTUS_KIOSK project in R-Studio running on your target machine and the project has been downloaded from github resides in the above directory belonging to the MOTUS_USER user (or whichever username you want to run the kiosk as).
 
@@ -105,73 +105,98 @@ Verifiy Settings are:
 
 #### 2.0 - Set the shiny kiosk application local web server to run at at boot
 
-Shiny kiosk  is a background server application needed by the kiosk web pages. We want it to start at boot so it’s running and ready whenever the kiosk gui is displayed by OpenKiosk (eg.when ever the MOTUS_USER user logs in)
-
-There are two files in the project directory.
-
-File 1 - MOTUS_MSWINDOWS_STARTSERVER.bat is the command file that starts the kiosk server
-
-File 2 - MOTUS_MSWINDOWS_STARTSERVER_TASK.xml is used to create the task scheduler job that runs the above .bat file at system boot
+Shiny kiosk App.R is the background server application needed by the kiosk web pages. So we want it to start at boot so it’s running and ready whenever the kiosk gui is displayed by OpenKiosk (eg.when ever the MOTUS_USER user logs in). This is accomplished by setting a job that starts in the background on boot using the Windows Task Manager. 
 
 **2.1** - Login as administrator Admin
 
-**2.2** - Check the path to the installed version of R.
- 2.2.1 -  Using the File Explorer, navigate to  C:\Program Files\R and make a note of the path where R is installed (eg. R-4.2.2)
+**2.2** - Check the path to the installed version of R. 2.2.1
+
+ 	2.2.1 Using the File Explorer, navigate to folder C:\Program Files\R
+
+​	2.2.2 Make a note of the path where R is installed (eg. R-4.3.2)
 
 **2.3** - Edit the startup command .bat file to set the path to the installed version of R
 
- 2.3.1 - Using the File Explorer, find the file: MOTUS_MSWINDOWS_STARTSERVER.bat in the main project folder.
+​	2.3.1 Using the File Explorer navigate to the file: MOTUS_MSWINDOWS_STARTSERVER.bat 
 
- 2.3.2 - right-click to edit (in notepad) , set the path in the cmd shown to the version discovered above and "Save" it.
+​	2.3.2  Right-click to edit (in notepad) 
 
-**2.4** - Create the task scheduler run-at-boot job.
+​	2.3.3  Set the path in the cmd shown to the version discovered above and "Save" it.
 
- 2.4.1 - Right-click the TaskScheduler icon and choose "Run as administrator"
+**2.4**   Use the SearchBox or right-click the TaskScheduler icon on your taskbar and choose "Run as administrator"
 
- 2.4.2 - In TaskScheduler window - Click to highlight "Task Scheduler Library" on the right side panel
+**2.5 - In TaskScheduler - Highlight "Task Scheduler Library" on the right side panel
 
- 2.4.3 - In TaskScheduler Main Menubar:  Action > Import Task
+**2.6** - In TaskScheduler Main Menubar:  Action > Create Task 
 
- 2.4.4 - in the "open file" pop-up, navigate to the file  MOTUS_MSWINDOWS_STARTSERVER_TASK.xml in the project folder and "Open" it.
+**2.7** - On the "General" tab
 
-  **Note** Windows may ask you for the Admin account password, before it will create the task.) 
+- The task will be named MOTUS_MSWINDOWS_STARTSERVER_TASK
+- Location field is just a default backslash character
 
-**2.5**  - Test that the job starts manually
+   - Type a short Description. e.g. 
+   -  Check run under the Admin account. (ComputerName\Admin)·   
 
- 2.5.1 - From within the taskManager , highlight the MOTUS_MSWINDOWS_STARTSERVER_TASK task you just created, right-click on it and select 'Run'.
+- Check the option  ‘Run whether user is logged on or not”
 
- 2.5.2 - Open Chrome or Firefox and browse to:  http:://localhost:8081 - the kiosk app should be displayed in the browser.
+**2.8** - On the "Triggers" tab
 
-**2.6** - Test that the job starts on boot
+- Click "New" button and in the pop-up, set "Begin the task" to run at “At Startup”
+- Make sure the checkbox near the bottom of the panel here is “Enabled” (checked)
+- Press "OK" button for the trigger.
 
- 2.6.1 - shutdown and reboot the PC.
- 2.6.2 - retest by pointing your web browser again to localhost:8081
+**2.9** - On the "Actions" tab
 
-**Warning** On a slow PC, sometimes it takes a few momentd for the server to fully start.  Your browser may say it failed to connect, wait perhaps 5-10 seconds and retry.)
+- Click "New" button ; in the pop-up,  set  it’s 'Begin the task' dropdown to be “Start a  Program”
+- In the "Program/script" section, use the browse button and navigate to the main projects    		      Motus_Kiosk/extras/ MOTUS_MSWINDOWS_STARTSERVER.bat and select it
+- Set the "Start In:" field to C:\MOTUS_USER\Projects\MOTUS_KIOSK\code
+- Press "OK"  for the action button.
 
-**2.7** - At this point you should have a kiosk server )that auto-starts whenever the PC is booted (but not the dashboard window yet...that comes next)wmic
+**2.10** - On the "Conditions" tab
 
-**TROUBLE SHOOTING:** If the browser doesnt display the dashboard.
+- Uncheck the box "Start only if computer is on AC power"
+- Press "OK"  for the action button.
 
-First look in the main project's Logs directory for any messages in the most recent log.
+**2.11** - On the "Settings" tab
+
+- Only the following two boxes should be checked:
+  - "Allow task to be run on demand"
+  - "If task does not end when requested, force it to stop."
+- Press "OK"  for the action button.
+
+**2.12** - Click the final "OK" -  Windows will ask you for the Admin account password, then create the task. 
+
+**2.13** - From within the TaskScheduler
+
+- Highlight the MOTUS_MSWINDOWS_STARTSERVER_TASK task
+-  Right-click and select "Run" from the dropdown.
+- Open a browser and go to URL:  http:://localhost:8081 - the kiosk app should be displayed in the browser.
+
+**2.14** - If you are able to get the Kiosk dashboard to display in a Web browser,  shutdown and reboot the PC. Then retest by again  pointing your web browser again to localhost:8081
+
+Note that on a slow PC, sometimes it takes a few moment for the server to fully start.  Your browser may say it failed to connect, wait perhaps 5-10 seconds and retry.)
+
+**2.15** - At this point you hopefully have a kiosk server that auto-starts whenever the PC is booted. 
+
+If not... **TROUBLE SHOOTING: ** If the browser doesnt display the dashboard correctly.
+
+First look in the main project's Logs directory for any messages in the most recent log. If the program was able to get far enough to start logging and crashed, then there should be a timestamped log file in the C:\MOTUS_USER\Projects\MOTUS_KIOSK\logs directory
 
 Else try opening a Cmd.exe window and R-Studio side-by-side. In the command window type the full command below all as a single line:
 
-**WARNING**: sometimes a cut&paste from below will replace the single quotes that wrap the directory path  with a reversed quote (’). Its really hard to spot so make sure after the paste they both are true single quotes!  Same for the double-quotes.
+**WARNING**: sometimes a cut&paste from below will replace the single quotes that wrap the directory path  with a reversed quote (’). Its really hard to spot so make sure after the paste they both are true single quotes!  Same for the double-quotes. It should all be a single line in the cmd window.
+
+**Substitute your installed version of R in the cmd below*
 
 ```
-“C:\Program Files\R\R-4.2.2\bin\R.exe” -e “shiny::runApp('C:/Users/MOTUS_USER/Projects/MOTUS_KIOSK',port=8081)"
+“C:\Program Files\R\R-4.3.2\bin\R.exe” -e “shiny::runApp('C:/Users/MOTUS_USER/Projects/MOTUS_KIOSK',port=8081)"
 ```
 
-View the command output for hints to the error - sometimes it has been a failed package load and there will be a message like "No package xxxx not found".  This can usually be cleared by typing install.package("xxxx") in the RStudio console.  (See also the BUILDING_THE_APP_README.md Section 3.0)
+View the command output for hints to the error - sometimes it has been a failed package load and there will be a message like "No package xxxx not found" or needs to be updated. This can usually be cleared by typing install.package("xxxx") in the RStudio console.  (See also the START_HERE.md Section 3.0)
 
 Once you are able to get the Kiosk dashboard to display in a Web browser,  shutdown and reboot the PC. Then point your web browser again to localhost:8081
 
-(Note that on a slow PC, sometimes it takes a few moment for the server to fully start.  Your browser may say it failed to connect, wait perhaps 5-10 seconds and retry.)
-
-At this point you hopefully have a kiosk server that auto-starts whenever the PC is booted.
-
- 
+(Note that on a slow PC, sometimes it takes a few moment for the server to fully start.  Your browser may say it failed to connect, wait perhaps 5-10 seconds and retry.) 
 
 ### 3.0 - Make user MOTUS_USER auto start kiosk gui on login
 
@@ -225,70 +250,3 @@ Go to Section 2 try to troubleshoot the auto-start at boot of the shiny server.
 
 
 
-#### Appendix 2 - OBSOLETE App.R Start on Boot Directions OBSOLETE
-
- 15-Nov-22 I changed the windows task startup proceedure (Section 2 above) to make it easier to debug startup issues. Below is the old proceedure which would still work but is less friendly and harder to troubleshoot. 
-
-#### A-2.0 - Set the shiny App.R local web server to run at at boot
-
-Shiny kiosk App.R is the background server application needed by the kiosk web pages. So we want it to start at boot so it’s running and ready whenever the kiosk gui is displayed by OpenKiosk (eg.when ever the MOTUS_USER user logs in)
-
-**A-2.1** - Login as administrator Admin
-
-**A-2.2** - Right-click the TaskScheduler icon and choose "Run as administrator"
-
-**A-2.3** - In TaskScheduler - Highlight "Task Scheduler Library" on the right side panel
-
-**A-2.4** - In TaskScheduler Main Menubar:  Action > Create Task 
-
-**A_2.5** - On the "General" tab
-
-.			-  The task will be named MOTUS_KIOSK_SERVER
-
-.			-  Location field is just a default backslash character
-
-·   		-	Check the option  ‘Run whether user is logged on or not”
-
-·   		-	Check that it is set to run under the Admin account.
-
-**A-2.6** - On the "Triggers" tab
-
-·   		- Click "New" button and then set "Begin the task" to run at “Startup”
-
-·   		- Make sure the checkbox near the bottom of the panel here is “Enabled” (checked)
-
-·   		- Press "OK" button for the trigger.
-
-**A-2.7** - On the "Actions" tab
-
-·   		- Click "New" button and then set  it’s Action to be “Start a  Program”
-
-·  		 - In the "Program/script" use the browse button and navigate to:
-
-​			 “C:\Program Files\R\R-4.2.1\bin\R.exe”    (or which ever installed  version of R is) and select it
-
-.			- Verify that the 'Browse' function filled in the Program/script field with the surrounding double-quotes as shown *above*
-
-.			- Now fill the the Action "Add arguments" field as written below (with quotes as shown):  Note the port number selected must match the OpenKiosk default homepage set in previous section.
-
-WARNING: sometimes a cut&paste from below will replace the single quotes that wrap the directory path  with a reversed quote (’). Its really hard to spot so make sure after the paste they both are true single quotes!
-
-```code
--e “shiny::runApp('C:/Users/MOTUS_USER/Projects/MOTUS_KIOSK',)
-```
-
-.			- Press "OK"  for the action button.
-
-**A-2.8** - On the "Settings" tab
-
-·   		- Uncheck the box "Stop the task if it runs longer than x days"
-
-**A-2.9** - Click the final "OK" and Windows will ask you for the Admin account password, then create the task. 
-
-**A-2.10** - From within the taskManager , highlight the MOTUS_KIOSK_SERVER task, right-click and select run. Then open Crome or Firefox and browse to:  http:://localhost:8081 - the kiosk app should be displayed in the browser.
-
-**A-2.11** - If you are able to get the Kiosk dashboard to display in a Web browser,  shutdown and reboot the PC. Then retest by pointing your web browser again to localhost:8081
-
-Note that on a slow PC, sometimes it takes a few moment for the server to fully start.  Your browser may say it failed to connect, wait perhaps 5-10 seconds and retry.)
-
-**A-2.12** - At this point you hopefully have a kiosk server that auto-starts whenever the PC is booted. 
