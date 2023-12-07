@@ -1,9 +1,17 @@
-# AHNC_MOTUS_KIOSK
-## Ankeny Hill Nature Center MOTUS Kiosk System
+# MOTUS_KIOSK
+## Nature Center MOTUS Kiosk System
 
-This project creates a public display or "kiosk"" for a Motus receiver station for the US Fish and Wildlife Service (USFWS) Ankeny Hill Nature Center.  The goal is to engage public visitors to the site with a simple near-realtime display of migratory bird tag detection events. It presents a very simple limited number of screens that are easy to navigate via a touchscreen display.
+This project began as public display or "kiosk"" for a Motus receiver station for the US Fish and Wildlife Service (USFWS) Ankeny Hill Nature Center. The goal is to engage public visitors to the site with a simple near-realtime display of current migratory bird tag detection events at the selected receiver. It presents a very simple limited number of screens that are easy to navigate. 
+
+The project has evolved to become useful beyond that original site and has been now been deployed at other organizations as both a public 'on site' kiosk and as a public accessible www website.  The 'look' of the application (logos, colors, text content) is easily customizable.  
+
+When deployed as a kiosk, the user interacts with the application via a touchscreen display.
+
+When deployed as a web site, the touchscreen interface is replaced by the users web browser so it fully accessible via the World Wide Web.
 
 The Motus Wildlife Tracking System (Motus) is an international collaborative research network that uses coordinated automated radio telemetry to facilitate research and education on the ecology and conservation of migratory animals. Motus is a program of Birds Canada in partnership with collaborating researchers and organizations. Learn more at https://motus.org
+
+Below are some example screen captures.
 
 ![Figure1](./documentation/md_images/RM_KioskHomepage.png)
 
@@ -40,7 +48,7 @@ or find it at https://motus.org/policy/
 
 ### Copyright and License
 
-Copyright 2022 Richard Schramm - Corvallis, Oregon USA
+Copyright 2022-2024 Richard Schramm - Corvallis, Oregon USA
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -60,7 +68,9 @@ Please read BOTH the included LICENSE file and LICENSE_ADDITIONAL_PERMISSIONS.  
 
 ### Hardware & Software Requirements
 
-I have quite successfully built and run the application in full kiosk mode on low-end  Intel NUC PC computers with Window 10 Pro pre-installed. These are easily purchased used on eBay for as little as $100.   I have also built and run the application on Apple Mac OSX (but not as a locked down kiosk).
+I have quite successfully built and run the application in full kiosk mode on low-end  Intel NUC PC computers with Window 10 Pro pre-installed. These are easily purchased used on eBay for as little as $100.   
+
+I have also built and run the application on Apple Mac OSX (but not as a locked down kiosk).
 
 These are the machines I have used:
 
@@ -80,9 +90,7 @@ I *strongly* recommend Windows-10 PRO edition.  Home Edition works too but with 
 
 ### Where to Start?
 
-Easily 70% of the kiosk installation is getting Windows configured to work smoothly in kiosk mode. The 30% effort (or less) is getting the app built.  If you want to skip all of the Windows and kiosk-specific setup and just go explore the app in R and RStudio, see BUILDING_THE_APP_README.md
-
-For the full kiosk behavior we need, start at **WINDOWS_FIRSTRUN_README.md** in the project's top level directory. 
+ See **1_START_HERE.md** in the project's top level documentation folder. 
 
 
 
