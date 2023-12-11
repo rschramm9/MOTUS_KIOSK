@@ -374,8 +374,8 @@ SERVER_ReceiverDetections <- function(id, i18n_r, lang, rcvr) {
         
         DebugPrint("input$mytable_rows_selected observeEvent()")
         
-        message("---------- x=input$lang_pick")
-        print(paste0(" at 372 lang() is:",lang()))
+        #message("---------- x=input$lang_pick")
+  
         
         #DebugPrint("calling updateSpeciesInfo")
         updateSpeciesInfo()
