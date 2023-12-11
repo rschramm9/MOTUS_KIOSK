@@ -3,9 +3,9 @@
 ################################################################################
 CloneKiosk <- function(from, to)
 { 
-  kiosks='./kiosks/'
-  fromkiosk<-paste0(kiosks,from)
-  tokiosk<-paste0(kiosks,to)
+  #kiosks='./kiosks/'
+  fromkiosk<-paste0(from)
+  tokiosk<-paste0(to)
   if (!file.exists(fromkiosk)) {
     message(paste0("ERROR: kiosk", fromkiosk," not found."))
   } else {
