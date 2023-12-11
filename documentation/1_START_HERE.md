@@ -2,6 +2,13 @@
 
 ### Build the Motus Kiosk web app
 
+### Who do I talk to?
+
+-   Owner/Originator: Richard Schramm - [schramm.r@gmail.com](mailto:schramm.r@gmail.com){.email}
+
+- Please let me know if you experience problems or have questions. I am happy to try and help.
+- *Also please let me know if you use the system!*  I would love to compile a list of locations where the app has been deployed!
+
 **This** document is a guide on how to , the kiosk app out of source control (git), and how to do the first build.
 
 In this document will guide you along the following path:
@@ -15,19 +22,17 @@ In this document will guide you along the following path:
 
 At the end of these steps you should have your own copy of the shiny web app up-and-running using R-Studio on your local computer and ready to begin customizing it.
 
-If you intend to deploy as a kiosk you will want to also complete steps in the document WINDOWS_FIRSTRUN_README.md in the project's top level directory.  Unfortunately there are quite a number of steps and tweaks to Windows 10 and the user accounts settings required to get the full, securely locked-down kiosk behavior we ultimately require. The provided document describes these settings and tweaks in full and painful detail.
+If you intend to deploy as a kiosk you will want to also complete steps in the document SETUP_FOR_WINDOWS.md in the project's top level directory.  Unfortunately there are quite a number of steps and tweaks to Windows 10 and the user accounts settings required to get the full, securely locked-down kiosk behavior we ultimately require. The provided document describes these settings and tweaks in full and painful detail.
 
-The final deployment and configuration of the app to a kiosk-like display using OpenKiosk is described in the third companion document FINAL_DEPLOYMENT_WINDOWS_README.md in the project's top level directory.
+The final deployment and configuration of the app to a kiosk-like display using OpenKiosk is described in the third companion document FINAL_DEPLOYMENT.md in the project's top level directory.
 
-There is a fourth document that describes  the available configuration parameters and performance 'tweeks' - CONFIGURATION_GUIDE_README.md
+There is a document that describes  the available configuration parameters and performance 'tweeks' - CONFIGURATION_GUIDE_README.md
+
+There is a useful document describing TIPS_TRICKS_AND_MAINTENANCE.md
 
 If you are wanting to modify or further develop the application there is a fifth document named DEVELOPERS_README.md that may be helpful.
 
-### Who do I talk to?
-
--   Owner/Originator: Richard Schramm - [schramm.r@gmail.com](mailto:schramm.r@gmail.com){.email}
-
-#### 1.0 - Preliminaries
+#### 1.0 - A Brief Description of "The System"
 
 The 'kiosk system' can be viewed as built on these .
 
@@ -43,7 +48,9 @@ The 'kiosk system' can be viewed as built on these .
 
 Windows 10 Pro OS was specified a requirement for the Ankeny Hill Nature Center.
 
-Nothing precludes you from choosing a different operation system. I have developed and run everything quite well at home under Mac OSX (v12.6) and deployed to Windows 10 target. It should also be able to be run on small generic linux machines although I have not attempted to verify.
+Nothing precludes you from choosing a different operation system. I have developed and run everything quite well at home under Mac OSX (v12.6) and then deployed to Windows 10 target. It should also be able to be run on small generic linux machines although I have not attempted to verify.
+
+The kiosk mode of deployment is documented for Windows.  Deployment details for kiosk deployment to other platforms (OSX, linux) is a future (if ever) topic.
 
 ##### The programming/language environment
 
@@ -69,19 +76,39 @@ All of the desired tagged bird detection information is available via simple htt
 
 The application is built in R-Studio using the R package "Shiny" (see: <https://shiny.rstudio.com/>) Shiny is an R package that makes it easy to build interactive web apps straight from R. You can host standalone apps on a webpage or build dashboards. When run on the local machine from a cmd line it will start a 'shiny server' on a local machine URL that you can point your browser to.
 
-#### 2.0 - Install R for your platform 
+
+
+### 2.0 - Create two user accounts
+
+Typically for a kiosk we would want to utilize two users accounts - one with administrator privileges and one non-administrator account.  
+
+***While you may use any account name to get the project up-and-running - this and all other accompanying documentation assumes particular user accounts: "Admin" and "MOTUS_USER"***
+
+If you initially want to just see if you can get something running quickly you certainly can just install and run everything on your local account (if you have admin permissons).  However to deploy either as a public kiosk or to a web server to you will certainly want to revisit these pages and 'harden' the system to be stable and secure.
+
+( If you need help creating user accounts and setting permissions on Windows platforms please see: SETUP_FOR_WINDOWS.md
+
+**2.1** - Create the Admin user account
+
+**2.2** - Create the MOTUS_USER user account
+
+
+
+### 3.0 - Installing R for your platform 
+
+***In this documentation the administrator account is assumed to be "Admin"*** 
 
 ##### Windows:
 
-Log in as administrator
+Log in as administrator.   
 
-If not already installed (see: <https://www.r-project.org/>) - Download the installer to your downloads folder
+If R is not already installed (see: <https://www.r-project.org/>) - Download the installer for your platform to your downloads folder
 
 Double-click the installer.
 
-Make sure it says to install into "C:\Program Files\R\R-4.4.2" (or whatever your downloaded version is)
+Make sure it says to install into "C:\Program Files\R\R-4.4.2" (or whatever your current downloaded version is)
 
-You also may need to install Rtools  to be able to rebuild/install R packages . See: https://cran.r-project.org/bin/windows/Rtools/
+You also may need to install Rtools to be able to rebuild/install R packages . See: https://cran.r-project.org/bin/windows/Rtools/
 
 **Other Operating systems:**
 
@@ -91,37 +118,41 @@ For Apple OSX current version is  4.3.1 (2023-06-16)
 
 
 
-#### 3.0 - Install R-studio IDE Free Edition for your platform
+### 4.0 - Install RStudio IDE Free Edition for your platform
 
-##### 3.1 - Install Required R Packages
+RStudio is the development environment (IDE) that is used to create and test programs in R. 
+
+##### 4.1 - Install RStudio 
 
 Log in as administrator
 
-If not already installed. (see:<https://www.rstudio.com/products/rstudio/download/>)
+Download RStudio for your platform from <https://www.rstudio.com/products/rstudio/download/>
 
-##### 3.2 - Install Required R Packages
+Typically the installer will be in your "Downloads" folder.  Double-click it and follow the instruction, acccepting allof  the defaults.
 
-You will need quite a few additional packages installed.  This can be a somewhat frustrating part depending on which revision levels  of R and the various packages are currently considered 'current'.
+##### 4.2 - Install Required R Packages
 
-Some will cleanly install straight from binary distributions, others may need to recompile using Rtools. 
+We use quite a few additional packages (software libraries) installed for R.  This can be a somewhat frustrating part depending on which revision levels of R and the various packages are currently considered 'current'. 
 
-Run R console.
+An annoying feature is that R by default installs packages in the current users local directories.  It seems desirable to install packages globally once for all users to avoid package version issues and confussion. However the instructions to do this  vary immensely depending on which operating system, which version, version, user permissions etc.
 
-Enter the following cmds into the R Console just to make sure all are installed for the Admin user. I suggest doing them one at a time.  R may cleanly install or may report something like "The binary package is available but source versions are later".  
+**So therefore I recommend installing packages twice! ** - once for user=Admin and then for user=MOTUS_USER.  Packages evolve very slowly rarely need updating until the version of R itself needs updating.  We can also use the RStudio IDE "Packages" management tab to track versions and keep each user updated when needed.
 
-You can try installing with **install.packages("*thepkgname*", type="source")** to cause recompile with rTools or   **install.packages("*thepkgname*", type="binary")**  Compiling from source would probably be best to get the latest fixes etc.
+Advanced system users or administrators that may want to explore more global package installations and configuration. These links may help. 
 
-Occasionally a package install may also hang with "package xxxx not found" displayed in the Console. So far that has been cleared by typing directly in the R-Studio Console like:
+https://cran.r-project.org/doc/manuals/R-admin.html#Managing-libraries
 
-``` r
-install.packages('xxxx', dependencies = TRUE)
-or
-install.packages('xxxx', dependencies = TRUE, repos='http://cran.rstudio.com/')
-```
+And: https://stackoverflow.com/questions/24387660/how-to-change-libpaths-permanently-in-r
 
 
 
-Note R may ask you to select a mirror site - Use one physically close to you. I used OSU's mirror
+**4.2.1** Run R console (as user = Admin).  (You can also enter these as commands in RStudio)  
+
+**4.2.2** Now Log in user=MOTUS_USER, Run R console, and repeat the package installs.
+
+**Note:** R may ask you to select a mirror site - Use one physically close to you. I used the mirror at OSU in Oregon)
+
+Enter the following install.packages cmds into the R Console just to make sure all are installed for the both the Admin user and MOTUS_USER. I suggest doing them one linr at a time. 
 
     install.packages("shiny")
     install.packages("shinymeta")
@@ -146,31 +177,52 @@ Note R may ask you to select a mirror site - Use one physically close to you. I 
     install.packages("rjson")
     install.packages("fs")
 
-#### 4.0 - Create the MOTUS_USER user account
+**TROUBLESHOOTING Failed Package installs.**
 
-This and all other accompanying documentation assumes a particular Windows10 user account (username=MOTUS_USER)
+**Note:** R may cleanly install or may report something like "The binary package is available but source versions are later".  
 
-*While you may use any account to get the web app dashboard up-and-running - you will save yourself needing to repeat some of this work if you do it within the username and home directory on the local machine that you intend to deploy on.*
+You can try installing with **install.packages("*thepkgname*", type="source")** to cause a recompile with rTools or  **install.packages("*thepkgname*", type="binary")**  Compiling from source would probably be best to get the latest fixes etc.
 
-Whichever username you want the code to live under, navigate to that user's home directory and create a new folder to hold your project.  *I will use a folder named "Projects"  for the throughout this documentation.*
+**Note:** Occasionally a package install may also hang with "package xxxx not found" displayed in the Console. So far that has been cleared by typing directly in the R-Studio Console like:
 
-#### 5.0 - Installing  git
+``` r
+install.packages('xxxx', dependencies = TRUE)
+or
+install.packages('xxxx', dependencies = TRUE, repos='http://cran.rstudio.com/')
+```
 
-git is the cloud repository that contains the code and documentation. Presumably if you are viewing this file you have at least visited the repository. 
 
-You will first (as administrator) need to install the program 'git' on the machine you wish to download the project to. (See: <https://git-scm.com/book/en/v2/Getting-Started-Installing-Git>)
+
+### 5.0 - Install  git
+
+**git** is the repository checkout program that you will use to access the project on **github**. (github is the cloud repository that contains the code and documentation). Presumably if you are viewing this file you have at least visited the cloud repository. 
+
+You will first (**as user=Admin**) need to install the program 'git' on the machine you wish to download the project to. (See: <https://git-scm.com/book/en/v2/Getting-Started-Installing-Git>)
 
 NOTE: This install on windows machines can be a bit frustrating due to the variations of Windows 10 installations. WIndows 10 Pro was pretty straight forward. With Windows 10 Home Edition it is challenging to get git.exe recognized on the path. Persistence is key.. the git.exe install should be to C:\Program Files. You may need to 'cd' there in the cmd.exe window to run git...
 
-#### 6.0 - Getting the code project
+### 6.0 - Create the user's "Projects" folder
 
-Log in as user = MOTUS_USER (or your intended username from step 4.0)
+.  *I will use a folder named "Projects"  for the throughout this documentation.*
+
+**6.1** Whichever username you want the code to live under (eg. MOTUS_USER), navigate to that user's home directory and create a new folder to hold the project.  (Eventually the Projects folder may contain different versions of your kiosk project as your site evolves)
+
+Log in as user = MOTUS_USER (or your intended username from above)
+
+``` code
+cd  C:\Users\MOTUS_USER
+mkdir Projects
+```
+
+### 7.0 - Getting the code project from Github
+
+Log in as user = MOTUS_USER (or your intended username from above)
 
 This and all other accompanying documentation assumes a particular Windows10 user account (username=MOTUS_USER) and project directory structure: C:\Users\MOTUS_USER\_KIOSK\Projects
 
-Create a directory for the project - for example on Windows I use **C:\Users\MOTUS_USER\Projects** as my top-level directory. If you dont already have the above Projects folder - create it now as User=MOTUS_USER
+In your Projects folder..  (e.g.  **C:\Users\MOTUS_USER\Projects**)
 
-You shouldnt need to create a github account to clone a repository but it can be helpful to do so if you want to submit bug reports etc.
+*You dont need to register for a github account to clone a repository but it can be extremely helpful to do so if you want to check for updates,  submit bug reports, add your custom html pages into GitHub  etc. (see https://github.com/)*
 
 Open a command window such as Cmd.exe (windows)  or iTerm (macs) and type:
 
@@ -179,9 +231,7 @@ cd  C:\Users\MOTUS_USER\Projects
 git clone https://github.com/rschramm9/MOTUS_KIOSK.git
 ```
 
-You shouldnt need to create a github account to clone a repository but it can be helpful to do so if you want to submit bug reports etc.  Git may pop-up an authentication options window in which case you will need to register.
-
-Git may pop-up an authentication options window -- provide your git credentials via a web browser if asked. Once authenticated, the download should proceed along the lines of:
+Git may pop-up an authentication options window in which case you will need to register. -- provide your git credentials via a web browser if asked. Once authenticated, the download should proceed along the lines of:
 
 ``` code
 Cloning into 'MOTUS_KIOSK'...
@@ -195,43 +245,63 @@ Resolving deltas: 100% (4/4), done.
 
 A complete copy of the repository should now be in subdirectory at: C:\Users\MOTUS\_USER\Projects\MOTUS_KIOSK
 
-#### 7.0 - Your first test build
+### 8.0 - Your first test build
 
-Run the R-Studio IDE. Once open, Click File \> New Project
+**8.1** Load project into RStudio.
 
-From the shown "New Project Wizard" select "Existing Directory"
+- Run the RStudio IDE. Once open, Click File \> New Project
+- From the "New Project" popup, select "Existing Directory"
 
-"Browse" **INTO** the folder: C:\Users\MOTUS\_USER\Projects\MOTUS_KIOSK and click "Open"
+- "Browse" **INTO** the folder: C:\Users\MOTUS\_USER\Projects\MOTUS_KIOSK and click "Open"
 
-Once back in the wizard, Click "Create Project" button
+- After the  'FileOpen' dialog returns you to the wizard, Click "Create Project" button.
 
-From the IDE Right-side "Files" Panel/Tab, Click to open the file ***global.R***
+##### 8.2 Check the initial startup.cfg
 
-Check at the top of the main source code window for a warning regarding several packages that may need still need to be installed... Go ahead and click the "Install" and Wait while it installs numerous package dependencies. This can take around 4 to 5 minutes....
+Notice the row of tabs on the IDE right-side panel approximately mid page.  Select the 'Files' tab and navigate to the top-level project folder (MOTUS_KIOSK),  find startup.cfg and open it. It should look like below.
 
-Note: see hints back in section 3.1 regarding getting packages to install.
+```
+KiosksPath="~/Projects/MOTUS_KIOSK/kiosks"
+StartKiosk="DEFAULT"
+KioskCfgFile="kiosk.cfg"
+```
 
-Repeat checking for other packages still needing to be installed (if any) for these source code files:
+The '~' instructs R to open the kiosk *relative* to the logged in users home directory.
 
-1.  ui.R
+##### 8.3 Check for packages 
 
-2.  server.R
+- Notice the row of tabs on the IDE right-side panel approximately mid page.  Select the 'Files' tab and navigate and open the file  ***code/global.R***  ( "code" is a subdirectory of MOTUS_KIOSK top-level folder).
 
-    (And in the modules sub-folder....)
+- Check at the top of the main source code window for a warning regarding several packages that may need still need to be installed... Go ahead and click the "Install" and Wait while it installs numerous package dependencies. This can take around 4 to 5 minutes....
 
-3.  modules/receiverDeploymentDetections.R
 
-4.  modules/ReceiverDetections.R
+​	Note: see hints back in section 4 regarding getting packages to install.
 
-5.  modules/tagDeploymentDetails.R
+​	Repeat checking for other packages still needing to be installed (if any) for these source code files:
 
-6.  modules/tagDeploymentDetections.R
+- open and check file: code/ui.R
+
+- open and check file: server.R
+
+  (And in the modules sub-folder....)
+
+- open and check file: modules/receiverDeploymentDetections.R
+
+- open and check file: modules/ReceiverDetections.R
+
+- open and check file: modules/tagDeploymentDetails.R
+
+- open and check file: modules/tagDeploymentDetections.R
+
+##### 8.4 Ready to run.
 
 Now close the tabs for all source code files **EXCEPT** global.R, ui.R and server.R
 
-With one of those three files selected for view in the code window, notice a green arrow labeled "Run App" should be visible -click that.
+With one of those three files selected for view in the code window ( upper left quadrant), notice a green arrow labeled "Run App" should be visible in the upper quadrant 'file window' -click that.
 
 After RStudio builds the app it should pop-up the app in its own browser window.
+
+Watch for warnings or error in the console panel ( lower left quadrant) below the file window. 
 
 Two other things to observe...
 
@@ -241,64 +311,79 @@ Two other things to observe...
 
 "Listening on [http://127.0.0.1:####](http://127.0.0.1:####){.uri}". This is the temporary URL server and port that Shiny assigns. You may be curious to try cutting that URL to your clipboard and pasting it into any browser on any machine on your local network. It should work!
 
-#### 8.0 - Make your own kiosk to customize
+### 9.0 - Make your own kiosk to customize
 
-Next we will create a clone of the DEFAULT kiosk and give it your own name.  This will become the kiosk you modify and run, customized with your own content and receivers etc.
+Next we will create a clone of the DEFAULT kiosk and give it your own name in your own folder.  This will become the kiosk you modify and run, customized with your own content and receivers etc.
 
-Open the RStudio project.  ( at: MOTUS\_USER\Projects\MOTUS_KIOSK\MotusKiosk.Rproj)
+Do you have a name in mind?  Whatever you like (*no spaces or special characters except underscore should be OK*).  I will use "mycustomkiosk"
 
-Click on the IDE top menubar:  File > NewFile> R Script   This will pop a new untitled  blank window on the IDE.
 
-Cut and paste these two lines into the window,  modifying 'yourkioskname' of course (and keeping the single quotes)
+
+**9.1** Decide where to keep your content. It can be anywhere however there are a couple obvious choices. The goal is to separate your customized site-dependent code from the repository code.
+
+- Best practice is someplace outside of the repository project such as the user's "Documents" folder. eg  C:/Users/MOTUS_USER/Documents (or perhaps Projects). This keeps good separation and protection of your customized content from the files that came from the repository.
+
+- In the MOTUS_KIOSK/kiosks folder (same as where DEFAULT lives) This is convient as you develop quickly using the IDE - however its messy to maintain once you 'go live' or need to update versions or bug fixesfrom the repository etc. 
+
+  
+
+**9.2** Open WindowsExplorer (or OSX Finder) and do a copy...
+
+- Navigate to:  C:\Users\MOTUS\_USER\Projects\MOTUS_KIOSK
+
+- "Copy" (right-click) the entire folder kiosks/DEFAULT 
+
+- Navigate to your MOTUS_USER\Documents folder
+
+- "Paste" the copy
+
+- Navigate to that new kiosks folder (C:\Users\MOTUS_USER\Documents\kiosks)
+
+- Right-click the "DEFAULT" folder and rename it "mycustomkiosk"
+
+  If you have been following along with my conventions for names you should, you should now have a folder:  C:\Users\MOTUS_USER\Documents\kiosks\mycustomkiosk
+
+### 10.0 - Configuration
+
+##### 10.1 - Re-Point the starup.cfg to run your new kiosk.
+
+Now back in the RStudio IDE -  select the 'Files' tab again and navigate to the top-level project folder and find startup.cfg.  Open it.
+
+Change the StartKiosk value from DEFAULT to whatever path and name you used above. Again we can use relative paths here since we are working as a local user in the IDE.
 
 ```
-source("code/modules/utility_functions.R")
-CloneKiosk("DEFAULT", "yourkioskname")
-```
-
-Then in that untitled panel, in the upper right corner find and click on the 'source' button. This will execute the script.  If all goes well, you should see a message in the lower console window saying "creating kiosk"
-
-Close that untitled1 panel by clicking on the x next to 'untitled1' and without saving - we wont need it again.
-
-
-
-#### 9.0 - Configuration
-
-##### 9.1 - Point the starup.cfg to run your kiosk.
-
-Now notice the row of tabs on the IDE right-side panel approximately mid page.  Select the 'Files' tab and navigate to the top-level project folder and find startup.cfg and open it. It should look like below.
-
-```
-KiosksPath="kiosks"
-StartKiosk="DEFAULT"
-```
-
-Change the StartKiosk from DEFAULT to whatever yourkioskname you used above.
-
-```
-KiosksPath="kiosks"
-StartKiosk="yourkioskname" 
+KiosksPath="~/Documents/kiosks"
+StartKiosk="mycustomkiosk"
+KioskCfgFile="kiosk.cfg"
 ```
 
 Save it and close the Startup.cfg file ( dont forget the 'Save' !)
 
-Check your work: Select the global.R file again and click 'Run app' button.  The app should run properly and if you scroll back in the console window and you should see a line like  "global KioskName:yourkioskname" 
+Select the global.R file again and click 'Run app' button.  The app should run properly and if you scroll back in the console window and you should see a line like  "global KioskName:mycustomkiosk" 
 
 From now on, you will be running and working to customize your own copy of the kiosk.
 
-##### 9.2 - Edit your kiosk.cfg file.
+##### 10.2 - Edit your kiosk.cfg file.
 
-In your own kiosk directory (e.g. *top-level-project-dir/kiosks/yourkioskname*)  is a file called kiosk.cfg.  It contains the default set of key value pairs that do things like set the target motus receiver deployment(s), your icons , banner logos, main title etc.
+In your own kiosk directory (mycustomkiosk)  is a file called kiosk.cfg.  It contains the default set of key/value pairs that do things like set the target motus receiver deployment(s), your icons , banner logos, main title etc.
 
-Jump over to the document **2_CONFIGURATION_GUIDE_README.md** and set the parameters in your kiosk.cfg as described there. (Initially you may only need to change the top few items)
+Jump over to the document **2_CONFIGURATION_GUIDE_README.md** and set the parameters in your kiosk.cfg as described there. 
+
+I suggest you initially change the top three items to see some immeadiate results... perhaps just the logo and the receivers?  (If your reciever hasnt had any detections you might want to stick to the defaults for awhile)  (Copy your organizations logo to the www/images/logos folder)
 
 Then restart the web application in Studio to verify the results.
 
-##### 9.3 - Configure your own "Home" tab content
+##### Good break point - You can easily delay the next two steps and jump to configuring windows to autostart and run the application as a locked-down kiosk (FINAL_DEPLOYMENT_FOR_WINDOWS guide).  Well done!
 
-The descriptive content that appears in the in the main page body when ever the "Home" tab is open comes from a language dependent .html file in the project sub-directory www/homepages
 
-There should be one file for each language that the application supports - currently: English, Spanish and French.  Feel free to copy and edit the default pages provided.  And make sure to set the correct filenames in your configuration file
+
+### 11.0 - Configure your own "Home" tab content
+
+The descriptive content that appears in the in the main page body when ever the "Home" tab is open comes from a language dependent .html file found in the project sub-directory at **www/homepages**
+
+I suggest you at minimum modify the page title from "Default Homepage for a Generic Motus Data Kiosk" to something more relevant to you so you have a good visual cue your looking at the correct homepage.
+
+There should be one file for each language that the application supports - currently: English, Spanish and French.  Feel free to copy and edit the default pages provided.  And make sure to set the correct filenames in your kiosk.cfg configuration file
 
 -   default_homepage_en.html for English
 
@@ -312,7 +397,7 @@ Edit these files carefully with an html editor or a text editor of your choice.
 
 **WARNING:** Teaching html document structure is beyond the scope of this documentation. Be careful to maintain correct opening and closing html tags and verify that your changes render correctly in an html browser such as firefox or chrome before replacing the existing files.
 
-##### 9.4 - Configure your own "Species" tab content
+### 12.0 - Configure your own "Species" tab content
 
 *It is up to you if you want to work on creating your own species page content at this point. You can easily delay this task and jump to configuring windows to autostart and run the application as a locked-down kiosk.*
 
@@ -320,7 +405,7 @@ The descriptive content that appears in the in the in the "Species" tab when eve
 
 There should be a files for each species you want to describe, one in each language you wish to support.
 
-***File name choice is critical.*** The software builds a compacted lowercase 'key' using the motus species name field and tries to match that to a file in the speciespages directory.
+***File name choice here is critical.*** The software builds a compacted lowercase 'key' using the motus species name field and tries to match that to a file in the speciespages directory.
 
 To add your own species files, copy any group files (one for each language) to use as templates and edit them carefully with an html editor or a text editor for the species of your choice. Save them using the filename pattern described above.
 

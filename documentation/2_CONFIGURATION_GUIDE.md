@@ -1,6 +1,6 @@
 # Configuration Guide
 
-### For the Ankeny Hill Nature Center Kiosk App v5.0.0
+### For the MOTUS Nature Center Kiosk App v5.0.0
 
 **This** document is a guide on how to configure get the 'Motus Kiosk' Shiny web app. for Version 5.x
 
@@ -15,24 +15,30 @@
 In the project's top-level directory is a file called startup.cfg It contains the path and name of the kiosk you want to start. For the DEFAULT kiosk the startup.cfg file is:
 
 ```
-KiosksPath="kiosks"
+KiosksPath="~/Projects/MOTUS_KIOSK/kiosks"
 StartKiosk="DEFAULT"
+KioskCfgFile="kiosk.cfg"
 ```
 
-The above points the startup to:   *top-level-project-dir*/kiosks/DEFAULT
+The '~' in KiosksPath instructs R to open the kiosk *relative* to the logged in users home directory.
 
-In the this example, the DEFAULT directory contains all of the site-specific files that make up the content of the DEFAULT kiosk.  
+In the the above example, the DEFAULT directory in the kiosks folder contains all of the site-specific files that make up the content of the DEFAULT kiosk.  
 
 If you followed all the steps in the **1_START_HERE** document you will have already cloned the default kiosk and given the clone your own kiosk name.  If not, I suggest you either go back to complete those steps, or if you already know what your doing then go ahead and edit the Startup.cfg file now and set the correct kiosk name you want to work on.
+
+Below reflects that the kiosk folder was copied to the users Documents folder - (see instructions in  StartHere.md Sections 9.0)
 
 Startup.cfg becomes:
 
 ```
-KiosksPath="kiosks"
-StartKiosk="yourkioskname" 
+KiosksPath="~/Documents/kiosks"
+StartKiosk="mycustomkiosk"
+KioskCfgFile="kiosk.cfg"
 ```
 
 *Note: these values are case sensitive and must match exactly the project directory structure containing your kiosk.*
+
+**TIP:** relative (~) paths are convenient when developing your site using the RStudio IDE.  However when your kiosk 'goes-live' it will likely be run in the background by another account such as Admin.  At some point you will want to modify the startup.cfg to use the full absolute paths (eg.  C:/Users/MOTUS_USER/Documents/kiosks)  (See the FINAL_DEPLOYMENT document Section 2.0)
 
 ##### 1.2 - Locate your site's motus receiver deployment ID.
 
@@ -40,7 +46,7 @@ To locate all of your desired receiver's deployment IDs: Go to motus.org Then : 
 
 Find your ProjectID, then click on the link that takes you to your project's description. Look for the item named "Receivers" and click the link next to it saying ""(Table)". Locate the ID# for your active receiver deployment. ( *NOTE: a Receiver may have multiple Deployments - we are looking for the currently active **deploymentID, (not the receiverID**) )* 
 
-Note: If you want your kiosk to display detections from multiple receivers, simply make a list of the all of the active ReceiverDeploymentIDs  and names to use in the next step.
+**TIP:** If you want your kiosk to display detections from multiple receivers, simply make a list of the all of the active ReceiverDeploymentIDs and names to use in the next step.
 
 ##### 1.3 Find a suitable logo for your main page.
 
@@ -244,7 +250,7 @@ There should be one file for each language that the application supports - curre
 
 ##### 2.11 - "MotusNews" tab content
 
-Short special interest stories you write about any motus activity at your site can appear in the main page body when ever the "MotusNews!" tab is open. It comes from a language dependent html file you create in the project sub-directory www/aboutmotuspages.
+Optional short special interest stories you write about any motus activity at your site can appear in the main page body when ever the "MotusNews!" tab is open. It comes from a language dependent html file you create in the project sub-directory www/aboutmotuspages.
 
 ```
 EnableMotusNewsTab=1
@@ -264,4 +270,4 @@ SpeciesPageEnglish="speciespages/species_unknown_en.html"
 
 There should be one file for each language that the application supports - currently: English, Spanish and French.  Only the english language page is entered in the kiosk.cfg file. 
 
-***WARNING:  when creating species content, it is your responsibility to be sure you have legal permission to use all images, maps and text you incorporate. Be sure to give proper credit for anything you use. Most content taken from the web is protected by copyright or other terms of use. If you cant find and document a clear statement that you have the permission to use - don't use it.***  
+***WARNING:  when creating species page content, it is your responsibility to be sure you have legal permission to use all images, maps and text you incorporate. Be sure to give proper credit for anything you use. Most content taken from the web is protected by copyright or other terms of use. If you cant find and document a clear statement that you have the permission to use - don't use it.***  

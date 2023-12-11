@@ -148,6 +148,22 @@ local database or CSV file to query based on the common 'species name' to someth
 
 ### R Package Install issues
 
+
+
+https://cran.r-project.org/doc/manuals/R-admin.html#Managing-libraries
+
+and https://stackoverflow.com/questions/10818903/r-install-package-globally
+
+And: https://stackoverflow.com/questions/24387660/how-to-change-libpaths-permanently-in-r
+
+
+
+
+
+
+
+
+
 Sometimes package xxxx installs hang with message such as:
 
 > ```
