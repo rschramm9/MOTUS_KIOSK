@@ -1,7 +1,7 @@
 
 ######## I put github release version and other data here ############
 ######## so it can be displayed on the footer of the kiosk window ####
-gblFooterText <- "MOTUS_KIOSK  vsn 5.0.0  30-Nov-2023"
+gblFooterText <- "MOTUS_KIOSK  vsn 5.0.0  12-Dec-2023"
 
 ###############################################################################
 # Copyright 2022-2023 Richard Schramm
@@ -170,7 +170,7 @@ source(paste0(codedir,"/modules/MotusNews.R"))
      # eg for a 'test tag' used a site where we dont want to show the public user
      # our test data
      thefile<-paste0(config.SiteSpecificContent,"/data/ignoredetections/ignore_tags.csv") 
-     #message(paste0("attempting to load file:",thefile))
+     message(paste0("attempting to load ignore file:",thefile))
      gblIgnoreTag_df <<- ReadCsvToDataframe(thefile)
      if( is.null(gblIgnoreTag_df) ) {
        message("the FIRST csv file returned NULL")
@@ -193,9 +193,9 @@ source(paste0(codedir,"/modules/MotusNews.R"))
      #message(paste0("attempting to load file:",thefile))
      gblIgnoreTagDeployment_df <<- ReadCsvToDataframe(thefile)
      if( is.null(gblIgnoreTag_df) ) {
-       #message("SECOND csv file returned NULL")
+       message("SECOND csv file returned NULL")
      } else {
-       #message("loaded SECOND csv file")
+      # message("loaded SECOND csv file")
      }
      #print(gblIgnoreTagDeployment_df) 
      
@@ -205,12 +205,14 @@ source(paste0(codedir,"/modules/MotusNews.R"))
      # flies across the continent in a day = a false detections that motus hasnt filtered
      # this hack isnt scalable but for now....
 
+     ##thefile<-paste0(config.SiteSpecificContent,"data/ignoredetections/ignore_date_tag_receiver_detections.csv") 
+     
      thefile<-paste0(config.SiteSpecificContent,"/data/ignoredetections/ignore_date_tag_receiver_detections.csv") 
      
     # message(paste0("attempting to load file:",thefile))
      gblIgnoreDateTagReceiverDetections_df <<- ReadCsvToDataframe(thefile)
      if( is.null(gblIgnoreTag_df) ) {
-       #message("THIRD csv file returned NULL")
+       message("THIRD csv file returned NULL")
      } else {
        #message("loaded THIRD csv file")
      }
