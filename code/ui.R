@@ -1,5 +1,5 @@
 
-#############deployApp()##################################################################
+###############################################################################
 # Copyright 2022-2023 Richard Schramm
 # 
 # This program is free software: you can redistribute it and/or modify
@@ -69,20 +69,18 @@ df <- data.frame(
   #val=setNames(active_ui_lang,active_ui_lang)
 )
 
-
 ## and the country flags - careful to match the order in df above
 ## - and note the css class is jhr
-####en=paste0(  "<img src='", config.SiteSpecificContentWWW, "/images/flags/ENUS.png' width=30px height=20px><div class='jhr'>English</div></img>")
-####es=paste0(  "<img src='", config.SiteSpecificContentWWW, "/images/flags/ES.png' width=30px height=20px><div class='jhr'>Español</div></img>")
-####fr=paste0(  "<img src='", config.SiteSpecificContentWWW, "/images/flags/FR.png' width=30px height=20px><div class='jhr'>Français</div></img>")
 
+##### this works when run in local but not on shinyapps.io web - 12Dec23
+#en=paste0(  "<img src='", "/images/flags/ENUS.png' width=30px height=20px><div class='jhr'>English</div></img>")
+#es=paste0(  "<img src='", "/images/flags/ES.png' width=30px height=20px><div class='jhr'>Español</div></img>")
+#fr=paste0(  "<img src='",  "/images/flags/FR.png' width=30px height=20px><div class='jhr'>Français</div></img>")
 
-##### this works
-## and the country flags - careful to match the order in df above
-## - and note the css class is jhr
-en=paste0(  "<img src='", "/images/flags/ENUS.png' width=30px height=20px><div class='jhr'>English</div></img>")
-es=paste0(  "<img src='", "/images/flags/ES.png' width=30px height=20px><div class='jhr'>Español</div></img>")
-fr=paste0(  "<img src='",  "/images/flags/FR.png' width=30px height=20px><div class='jhr'>Français</div></img>")
+en=paste0(  "<img src='",  "images/flags/ENUS.png' width=30px height=20px><div class='jhr'>English</div></img>")
+es=paste0(  "<img src='",  "images/flags/ES.png' width=30px height=20px><div class='jhr'>Español</div></img>")
+fr=paste0(  "<img src='",  "images/flags/FR.png' width=30px height=20px><div class='jhr'>Français</div></img>")
+
 df$img = c(
   en, es, fr
 ) 
