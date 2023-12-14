@@ -75,7 +75,7 @@ While on the admin page:
 
 Select "Home" selector on the sidebar panel.
 
-* Set "Homepage and new windows" to "localhost:8081" 
+* Set "Homepage and new windows" to "localhost:8081" << this port must agree with the shiny app startup task we will create in next section!
 
 Select "OpenKiosk" selector on the sidebar panel.
 
@@ -85,7 +85,6 @@ Verifiy Settings are:
 - "Enable Full Screen" True (checked box) http://
 - "Enable Redirect Screen" True (checked box)
 - "Enable URL Filters" False (unchecked box)
-- Set homepage to : localhost:8081  << this port must agree with the shiny app startup task we will create in next section!
 - "Enable Javascript" True (checked box)
 - "Enable Network Protocol Filters". Both blob and data should be checked
 - Section "Reset Session" check the box for "Set Inactive terminal" and reset after 5 minutes
