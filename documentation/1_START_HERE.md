@@ -90,7 +90,7 @@ If you initially want to just see if you can get something running quickly you c
 
 **2.1** - Create the Admin user account
 
-**2.2** - Create the MOTUS_USER user account
+**2.2** - Create the MOTUS_USER user account ** with no password** (see SETUP_FOR_WINDOWS.md section 14.0 - "Add MOTUS_USER user account with Auto-login")
 
 
 
