@@ -14,7 +14,7 @@ It is intended to coach a user inexperienced in computer admin through the arduo
 
 If you are a novice, hopefully it will (hopefully) be detailed enough to get you through and on to the fun parts. It may seem daunting but if you proceed steadily and carefully (and *ask for help* if something doesnt go right). You will get there.
 
-Also - if you are jumping in from a computer that has already been 'spun up' or if you like to skip ahead but be advised, you may get away with skipping some steps but you will likely need to come back here to get everything set just as it should be.
+Also - if you are jumping in from a computer that has already been 'spun up' or if you like to skip ahead but be advised, you may get away with skipping some steps but you will likely need to come back here to get everything set just as it should be. **Particularly important is to get the MOTUS_USER account set to auto login, (see Section 14 of this document)
 
 
 ### Who do I talk to? ###
