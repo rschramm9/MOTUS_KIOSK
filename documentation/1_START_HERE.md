@@ -106,7 +106,7 @@ If R is not already installed (see: <https://www.r-project.org/>) - Download the
 
 Double-click the installer.
 
-Make sure it says to install into "C:\Program Files\R\R-4.4.2" (or whatever your current downloaded version is)
+ Make sure it says to install into "C:\Program Files\R\R-4.4.2" (or whatever your current downloaded version is)
 
 You also may need to install Rtools to be able to rebuild/install R packages . See: https://cran.r-project.org/bin/windows/Rtools/
 
@@ -159,6 +159,7 @@ Enter the following install.packages cmds into the R Console just to make sure a
     install.packages("shinyjs")
     install.packages("shiny.i18n")
     install.packages("shinyWidgets")
+    install.packages("shinybusy")
     install.packages("rvest")
     install.packages("tidyr")
     install.packages("lubridate")
@@ -176,6 +177,7 @@ Enter the following install.packages cmds into the R Console just to make sure a
     install.packages("sf")
     install.packages("rjson")
     install.packages("fs")
+    install.packages("units")
 
 **TROUBLESHOOTING Failed Package installs.**
 
