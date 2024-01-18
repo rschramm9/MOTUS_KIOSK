@@ -143,7 +143,7 @@ SERVER_ReceiverDetections <- function(id, i18n_r, lang, rcvr) {
     
     # !!! session$ns is needed to properly address reactive UI elements from the Server function
     ns <- session$ns
-    
+  
     #show or hide the enablefilter checkbox on the UI
     if(config.EnableSuspectDetectionFilter==0){
       shinyjs::hide("enablefilter")
@@ -339,17 +339,25 @@ SERVER_ReceiverDetections <- function(id, i18n_r, lang, rcvr) {
       #print(lang())
       #message("----------")
       
+      
+      
+      
+      
+      
       # this is a hack, we want the spinner in tagDeploymnmentDetections.R to be mulitlingual
       # but the translator item is not passed in to that function...so we pass in this text
       x=lang()
       if(x=='en'){
         usespinnertext<<-"Requesting data."
+        motusofflinetext<<-"No records to display - Motus.org possibly offline."
       } else if (x=='es'){ 
         usespinnertext<<-"Solicitando datos."
+        motusofflinetext<<-"No hay registros para mostrar: Motus.org posiblemente esté fuera de línea."
       } else if (x=='fr'){ 
         usespinnertext<<-"Demander des données."
+        motusofflinetext<<-"Aucun enregistrement à afficher - Motus.org éventuellement hors ligne."
       } 
-      
+
       updateSpeciesInfo()
     }) #end observeEvent(lang()
     
@@ -433,7 +441,7 @@ SERVER_ReceiverDetections <- function(id, i18n_r, lang, rcvr) {
                                               selection = "single", 
                                               options=list(dom = 'Bfrtip',
                                                            searching = F,
-                                                           language = list(zeroRecords = "No records to display - Motus.org possibly offline.")
+                                                           language = list(zeroRecords = "")
                                               ) #end options
       ) #end renderDataTable()
       
@@ -445,7 +453,7 @@ SERVER_ReceiverDetections <- function(id, i18n_r, lang, rcvr) {
                                                  options=list(dom = 'Bfrtip',
                                                               searching = F,
                                                               "pageLength" = 18,
-                                                              language = list(zeroRecords = "No records to display - Motus.org possibly offline.")
+                                                              language = list(zeroRecords = motusofflinetext)
                                                  ) #end options
         ) #end renderDataTable()
         
@@ -619,7 +627,7 @@ SERVER_ReceiverDetections <- function(id, i18n_r, lang, rcvr) {
                       options=list(dom = 'Bfrtip',
                                    searching = F,
                                    "pageLength" = 18,
-                                   language = list(zeroRecords = "No records to display - Motus.org possibly offline.")
+                                   language = list(zeroRecords = motusofflinetext)
                       ) )  %>%  formatRound(columns=c("lat","lon"),digits=4)  %>%  formatRound(columns=c("distance","duration","velocity"),digits=1)  
            
          } ) #end renderDataTable
@@ -634,7 +642,7 @@ SERVER_ReceiverDetections <- function(id, i18n_r, lang, rcvr) {
                       options=list(dom = 'Bfrtip',
                                    searching = F,
                                    "pageLength" = 18,
-                                   language = list(zeroRecords = "No records to display - Motus.org possibly offline.")
+                                   language = list(zeroRecords = motusofflinetext)
                       ) )  %>%  formatRound(columns=c("lat","lon"),digits=4) 
            
          } ) #end renderDataTable
