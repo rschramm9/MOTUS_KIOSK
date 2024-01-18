@@ -23,6 +23,8 @@ ui_RCVR_detections_flightpath_tab_helptext|Los detalles del historial de vuelo d
 ui_RCVR_detections_leaflet_tab_label|Mapa de vuelo
 ui_RCVR_detections_leaflet_tab_helptext|Use los botones a continuación para simular la ruta aproximada que voló el ave. Tenga en cuenta que los datos pueden contener detecciones falsas de "punto salvaje" que no intentamos filtrar.
 
+ui_filter_velocity_checkbox_label|Eliminar sospechas de detecciones falsas
+
 ui_RCVR_detections_species_tab_label|Especies
 ui_RCVR_detections_species_tab_helptext|Información sobre la especie del ave seleccionada.
 
