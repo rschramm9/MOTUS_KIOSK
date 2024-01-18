@@ -83,7 +83,8 @@ empty_receiverDeploymentDetection_df <- function()
 # empty_receiverdetection_df()
 #
 ################################################################################
-receiverDeploymentDetections <- function(receiverDeploymentID, useReadCache=1, cacheAgeLimitMinutes=60) 
+## display modal busy spinner if we go query motus ( ie no cached data)
+receiverDeploymentDetections <- function(receiverDeploymentID, useReadCache=1, cacheAgeLimitMinutes=60, withSpinner=FALSE, spinnerText="Requesting data.") 
 {
   
   #url <- paste( c('https://motus.org/data/receiverDeploymentDetections?id=7948') ,collapse="")
@@ -108,6 +109,16 @@ receiverDeploymentDetections <- function(receiverDeploymentID, useReadCache=1, c
   # so need to call the URL 
   
   InfoPrint(paste0("make call to motus.org using URL:",url))
+  
+  if(withSpinner){
+     Sys.sleep(1.5) #to avoid flashing effect
+     show_modal_spinner(
+     spin="fading-circle",
+     color = "#2f77eb",
+     text = spinnerText
+     )
+  }
+  
   
   result <- lapply(url, readUrlWithTimeout)   #see utility_functions.R
   

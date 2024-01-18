@@ -71,7 +71,7 @@ library(leaflet.extras2) #for movingmarker
 #using the coordinate reference system with columns: time,geometry
 
 library(sf) #for making flightpath for movingmarker
-####library(geosphere)
+
 ### glue for building leaflet labels
 library(glue)
 library(lubridate) # for working with dates
@@ -79,7 +79,6 @@ library(tidyverse)
 library(fs) #for path_home()
 
 library(shinybusy) #for modal spinner displayed when busy
-
 
 options(stringsAsFactors = FALSE)
 
@@ -112,7 +111,6 @@ if( grepl('/code$', wd)){
   wd<-getwd()
 }
 
-
 projectdir <<- wd
 codedir <<- paste0( projectdir,"/code")
 
@@ -140,9 +138,7 @@ source(paste0(codedir,"/modules/MotusNews.R"))
        FatalPrint("There is a fatal error in your startup.cfg file")
        stop("Stopping because there is a serious error in your cfg file")
      }
-     
-     
-    
+
      #message(paste0("Starting Kiosk named:", config.StartKiosk))
      InfoPrint(paste0("[global.R] Starting Kiosk named:", config.StartKiosk))
      badCfg<-getKioskConfig()

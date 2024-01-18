@@ -11,9 +11,9 @@ library("rjson")
 
 empty_tagTrack_df <- function()
 {
-  df <- data.frame( matrix( ncol = 8, nrow = 1) )
+  df <- data.frame( matrix( ncol = 9, nrow = 1) )
   df <- df %>% drop_na()
-  colnames(df) <- c('usecs', 'date', 'site', 'lat', 'lon', 'receiverDeploymentID','seq', 'use')
+  colnames(df) <- c('date', 'site', 'lat', 'lon', 'receiverDeploymentID','seq', 'use','usecs','doy')
   return (df)
 }
 
@@ -70,7 +70,7 @@ tagTrack <- function(tagDeploymentID, useReadCache=0, cacheAgeLimitMinutes=60)
     return(onError_df)           
   }
 
-  # create five empty 'vectors'
+  # create empty 'vectors'
   usecs<-c()
   date<-c()
   site<-c()
@@ -79,6 +79,7 @@ tagTrack <- function(tagDeploymentID, useReadCache=0, cacheAgeLimitMinutes=60)
   receiverDeploymentID<-c()
   seq<-c()
   use<-c()
+  doy<-c()
   n<-0
 
   for (i in seq( 1, length(json), 4) ) {
@@ -88,8 +89,13 @@ tagTrack <- function(tagDeploymentID, useReadCache=0, cacheAgeLimitMinutes=60)
       the_lon<-json[[i+1]]
       the_site <- json[[i+2]]
       the_usecs <- json[[i+3]][[j]]
-      the_date <- as.POSIXct(as.numeric(the_usecs), origin = '1970-01-01', tz = 'GMT')
-
+      the_date <- as.POSIXct(as.numeric(the_usecs), origin = '1970-01-01', tz = 'UTC')
+      
+      yr <- as.numeric(strftime(the_date, format = "%Y", tz = "UTC"))
+      jday <- as.numeric(strftime(the_date, format = "%j", tz = "UTC"))
+      x <- (yr*1000)+jday
+      doy <- c(doy, x)
+      
       usecs <- c( usecs, the_usecs )
       date <- c( date, as.character(the_date ))
       site <- c( site, the_site )
@@ -103,11 +109,77 @@ tagTrack <- function(tagDeploymentID, useReadCache=0, cacheAgeLimitMinutes=60)
   
   } #end for i
   
-    df <-data.frame(usecs,date,site,lat,lon, receiverDeploymentID,seq,use)
+  # and combine arrays into a dataframe
+  df <-data.frame(date,site,lat,lon, receiverDeploymentID,seq,use,usecs,doy)
+    
+  # and sort flight detection so most recent appears at bottom of the list
+  df <- df[ order(df$usecs, decreasing = FALSE), ]
+    
+  #delete any rows with nulls
+  df <- df %>% drop_na()
+    
+  #add three columns to help with statistics
+  df$runstart <- 0
+  df$runend <- 0
+  df$runcount <- 0
+    
+  #options(max.print=1000000)
+  #print("---------------------tagTrack.R df  at line 114 ----------------")
+  #print(df)
+     
+  if( nrow(df) >= 1 ){
   
-    #finally, delete any rows with nulls
-    df <- df %>% drop_na()
+      #first go thru df backwards to get the last detection timestamp for any date/site
+      idxstrt<-nrow(df)
+      idxend<-1
+      current_site <- "dontcare"  #df[idxstrt, "site"]
+      current_doy <- 0 #dont care
+      n <- 0
+      
+      for (i in idxstrt:idxend){
+        usecs <- df[i,"usecs"]
+        if(  (df[i, "site"] == current_site)  & ( df[i,"doy"] == current_doy) ) {
+          n <- n+1
+        } else {
+           departed <- usecs
+           n <- 1
+           current_site <- df[i, "site"]
+           current_doy <- df[i,"doy"]
+        }
+        df[i,"runend"] <- departed
+        df[i,"runcount"] <- n
+      } # end for
 
+      #then go thru forward to get the first (earliest) detection timestamp for any date/site
+      #and the largest runcount for each date/site run
+      idxstrt <- 1
+      idxend <- nrow(df)
+      current_site <- "dontcare"  #df[idxstrt, "site"]
+      current_doy <- 0 #dont care
+      
+      for (i in idxstrt:idxend){
+        usecs <- df[i,"usecs"]
+        
+        if(  (df[i, "site"] != current_site)  | ( df[i,"doy"] != current_doy) ) {
+          #this is the first record of a new site/doy run
+          arrived <- usecs
+          runcount <- df[i,"runcount"]
+          current_site <- df[i, "site"]
+          current_doy <- df[i,"doy"]
+        }
+        
+        df[i,"runstart"] <- arrived
+        df[i,"runcount"] <- runcount
+      } # end for
+      
+
+#      options(max.print=1000000)
+#      print("---------------------tagTrack.R df  at line 176 ----------------")
+#      print(df)
+ 
+    }   #end if
+
+    # save to cache
     if(config.EnableWriteCache == 1){
       DebugPrint("writing new cache file.")
       saveRDS(df,file=cacheFilename)

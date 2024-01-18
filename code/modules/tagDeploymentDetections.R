@@ -75,9 +75,11 @@ rows = function(x) lapply(seq_len(nrow(x)), function(i) lapply(x,"[",i))
 
 empty_tagDeploymentDetection_df <- function()
 {
-  df <- data.frame( matrix( ncol = 7, nrow = 1) )
+  df <- data.frame( matrix( ncol = 12, nrow = 1) )
   df <- df %>% drop_na()
-  colnames(df) <- c('date', 'site', 'lat', 'lon', 'receiverDeploymentID', 'seq', 'use')
+  #colnames(df) <- c('date', 'site', 'lat', 'lon', 'receiverDeploymentID', 'seq', 'use', 'usecs')
+  
+  colnames(df) <- c('date', 'site', 'lat', 'lon', 'receiverDeploymentID', 'seq', 'use', 'usecs','doy','runstart', 'runend', 'runcount')
   return (df)
 }
 
@@ -85,7 +87,7 @@ empty_tagDeploymentDetection_df <- function()
 ################################################################################
 #
 ################################################################################
-tagDeploymentDetections <- function(tagDeploymentID, useReadCache=1, cacheAgeLimitMinutes=60) 
+tagDeploymentDetections <- function(tagDeploymentID, useReadCache=1, cacheAgeLimitMinutes=60, withSpinner=FALSE, spinnerText="Requesting data.") 
 {
 
   #possible detections returns are limited to 100 by default
@@ -97,13 +99,22 @@ url <- paste( c('https://motus.org/data/tagDeploymentDetections?id=',tagDeployme
 
 cacheFilename = paste0(config.CachePath,"/tagDeploymentDetections_",tagDeploymentID,".Rda")
 
-
 summaryFlight_df <-readCache(cacheFilename, useReadCache, cacheAgeLimitMinutes)   #see utility_functions.R
-
+# returnd NA if no cache
 if( is.data.frame(summaryFlight_df)){
   DebugPrint("tagDeploymentDetections returning cached file")
   return(summaryFlight_df)
 } #else was NA
+
+if(withSpinner){
+ Sys.sleep(1.5) #to avoid flashing effect
+ show_modal_spinner(
+ spin="fading-circle",
+  color = "#2f77eb",
+ text = spinnerText
+)
+}
+
 
 #prepare an empty dataframe we can return if we encounter errors parsing query results
 onError_df <- empty_tagDeploymentDetection_df()
@@ -171,13 +182,14 @@ tbls <- page %>% html_nodes("table")
 #[1] 1
 
 tbl1 <- html_table(tbls[[1]],fill=TRUE)
-##print(tbl1)
+#print("^^^^^^^^^^^^^^^^^^^ tbl1 ^^^^^^^^^^^^^^^")
+#print(tbl1)
 
 num.cols<-dim(tbl1)[2]
 num.rows<-dim(tbl1)[1]
 #print(dim(tbl1))
 
-# create five empty 'vectors'
+# create empty 'vectors'
 date<-c()
 site<-c()
 lat<-c()
@@ -185,6 +197,13 @@ lon<-c()
 receiverDeploymentID<-c()
 seq<-c()
 use<-c()
+usecs<-c()
+doy<-c()
+runstart<-c()
+runend<-c()
+runcount<-c()
+
+
 
 #> print(class(tbl1[[1]][i]))  
 #[1] "character"
@@ -216,6 +235,12 @@ for(i in 1:nrecords){
   lon <-  c( lon,  tbl1[[4]][i] )
   seq <- c(seq,n)
   use <- c(use,TRUE)
+  #placehoders
+  usecs <-c(usecs, 0)
+  doy<-c(doy, 0)
+  runstart<-c(runstart, 0)
+  runend<-c(runend, 0)
+  runcount<-c(runcount, 0)
 }
 
 #convert strings to correct type
@@ -253,28 +278,42 @@ for (node in a_nodes) {
   }
 }
 
-summaryFlight_df <-data.frame(date,site,lat,lon,receiverDeploymentID,seq,use)
+# this is summary level data
+# date                     site   lat     lon receiverDeploymentID seq  use usecs
+# 2022-08-21                    FDSHQ 27.62  -82.71                 5938   1 TRUE     0
+
+summaryFlight_df <-data.frame(date,site,lat,lon,receiverDeploymentID,seq,use,usecs,doy,runstart,runend,runcount)
+
+#print("---------------------tagDeploymentDetections summaryFlight_df line 262 ----------------")
+#print(summaryFlight_df)
 
 # obtain the track data with so we can correctly order the daily summary data
 # tagTrack_df <- tagTrack(tagDeploymentID, config.EnableReadCache, config.ActiveCacheAgeLimitMinutes)
 
-#dont read or write cache this df is a by product used to create
+#dont read or write cache.  this df is a by product used to create
 #the summary flight df so if that cached product would be the same age
 #if we wrote this to cache... ie its redundant to cache this
-tagTrack_df <- tagTrack(tagDeploymentID, 0, 0) 
+tagTrack_df <- tagTrack(tagDeploymentID, 0, 0)
 
-# we need the correct receiverDeploymentID to support the ability to filter out
-# specific wild points detections in later steps.
-# Make a compact df of all unique sites from the tagTrack_df
-# for each distinct site, use the summaryFlight_df to lookup the receiverDeploymentID
-# using the site name and replace the dummy default receiver on the tagTrack_df 
+### NOTE: it appears that motus will only report if at least two detections per day...
 
+
+# we need to add the correct receiverDeploymentID to tagTrack_df to support the
+# ability to filter out specific wild point detections in later steps.
+
+# First make a compact df of all unique sites from the tagTrack_df,
+# Then for each distinct site, use the summaryFlight_df to lookup
+# the receiverDeploymentID using the site name and replace the dummy default
+# receiver ID on the tagTrack_df with the correct ID from the lookup.
+
+#collapse duplicates
 distinctSites_df<-tagTrack_df[!duplicated(tagTrack_df[ , c("site") ]),]
+# for each distinct....
 if( length(distinctSites_df > 0 )){
   for(i in 1:nrow(distinctSites_df)) {
     row <- distinctSites_df[i,]
-    theDate=row[["date"]]
-    theID=row[["receiverDeploymentID"]]
+    ##. not used  theDate=row[["date"]]
+    ## theID=row[["receiverDeploymentID"]]
     theSite=row[["site"]]
     
     #search for a row in summary containing the target site name 
@@ -288,55 +327,89 @@ if( length(distinctSites_df > 0 )){
     } #else site was not found on summaryFlight_df - ignore
   } # end for each row
 } #endif length distinct sites
+# we now have corrected receiverDeploymentID in tagTrack_df
+
 
 #sort flight detection so most recent appears at bottom of the list
-tagTrack_df <- tagTrack_df[ order(tagTrack_df$usecs, decreasing = FALSE), ]
+## do in tagTrack.R.  tagTrack_df <- tagTrack_df[ order(tagTrack_df$usecs, decreasing = FALSE), ]
 
 #options(max.print=1000000)
+#print("---------------------tagDeploymentDetections tagTrack_df  line 328 ----------------")
 #print(tagTrack_df)
+
+## full res record from json like:
+#date                         site     lat       lon receiverDeploymentID seq  use      usecs     doy   runstart     runend runcount
+#   2023-07-29 18:43:00                 tagging site 48.0634 -108.8518                    0   1 TRUE 1690656180 2023210 1690656180 1690656480        2
+#   2023-07-29 18:48:00                 tagging site 48.0634 -108.8518                    0   2 TRUE 1690656480 2023210 1690656180 1690656480        2
+#   2023-07-29 22:35:58               Lake Seventeen 48.0891 -108.8834                 8878  15 TRUE 1690670158 2023210 1690670158 1690671222        4
+# NOTE: with all records set TRUE (havent detected value yet)
+# NOTE: in datetime order but sequence number is random
+# NOTE: havent determined receiverDeploymentID yet
 
 
 # we are done with the original summary df
 # we build a new summaryFlight_df from time ordered df sequence number
-n<-0
+# from tagFlight_df
+
+n<-0  #a counter for record sequence numbe
 prior_doy<-0
 prior_rcvr<-9999
 
+DebugPrint("Begin creating summaryFlight using tagFlight")
 if( nrow(tagTrack_df) >= 1 ){
-  summaryFlight_df<-empty_tagDeploymentDetection_df() #zero it our so we can rebuild it
   
-  for (row in 1:nrow(tagTrack_df)) {
-  seq <- n #overwrites seq from raw dataframe
-  theUsecs <- tagTrack_df[row, "usecs"]
-  date <- tagTrack_df[row, "date"]
-  site <- tagTrack_df[row, "site"]
-  lat <- tagTrack_df[row, "lat"]
-  lon <- tagTrack_df[row, "lon"]
-  receiverDeploymentID <- tagTrack_df[row, "receiverDeploymentID"]
-  use <- tagTrack_df[row, "use"]
-  yr <- as.numeric(strftime(date, format = "%Y"))
-  doy <- as.numeric(strftime(date, format = "%j"))
-  #now ready truncate the datetime to date part only
-  s<-strftime(date, format = "%Y-%m-%d")
-  date<-s
+  summaryFlight_df<-empty_tagDeploymentDetection_df() #zero it out so we can rebuild it
 
-  # we want to build a new data frame only using only the first detection of
-  # tag + day + station (with new sequence number)
-  if( (doy == prior_doy) &  (receiverDeploymentID == prior_rcvr ) ){
-    use<-FALSE
-  } else { 
-    use<-TRUE
-    # create new frame and append 
-    n<-n+1
-    seq<-n
-    a_df<-data.frame(date, site, lat, lon, receiverDeploymentID,seq,use)
-    summaryFlight_df[nrow(summaryFlight_df) + 1,] <- a_df
-    prior_doy = doy
-    prior_rcvr = receiverDeploymentID
-  }
-}  #end for each row
+  for (row in 1:nrow(tagTrack_df)) {
+     doy <- tagTrack_df[row, "doy"]
+     receiverDeploymentID <- tagTrack_df[row, "receiverDeploymentID"]
+
+     # we want to build a new data frame only using only the first detection of
+     # tag + day + station (with new sequence number)
+     if( (doy == prior_doy) & (receiverDeploymentID == prior_rcvr ) ){
+         use<-FALSE
+     } else {  # its a new day or new receiver
+        usecs <- tagTrack_df[row, "usecs"]
+        date <- tagTrack_df[row, "date"]
+        #truncate the datetime to date part only
+        date <- strftime(date, format = "%Y-%m-%d ", tz = "UTC") 
+        
+        site <- tagTrack_df[row, "site"]
+        lat <- tagTrack_df[row, "lat"]
+        lon <- tagTrack_df[row, "lon"]
+        use <- tagTrack_df[row, "use"]
+        runstart <- tagTrack_df[row, "runstart"]
+        runend <- tagTrack_df[row, "runend"]
+        runcount <- tagTrack_df[row, "runcount"]
+        use <- TRUE  # this will always be true.. its used later by the caller 
+        
+        n <- n+1
+        seq <- n # from our counter
+        
+        # append row to dataframe
+        a_df <- data.frame(date, site, lat, lon, receiverDeploymentID,seq,use,usecs,doy,runstart,runend,runcount)
+        summaryFlight_df[nrow(summaryFlight_df) + 1,] <- a_df
+        
+        prior_doy = doy
+        prior_rcvr = receiverDeploymentID
+
+     }
+  }  #end for each row
+  
 
 } #endif nrows(tagTrack_df)>0
+
+
+
+
+#options(max.print=1000000)
+#print("---------------------tagDeploymentDetections summaryFlight_df at lin 402 ----------------")
+#print(summaryFlight_df)
+
+#date                         site     lat       lon receiverDeploymentID seq  use      usecs     doy   runstart     runend runcount
+#2023-07-29                  tagging site 48.0634 -108.8518                    0   1 TRUE 1690656180 2023210 1690656180 1690656480        2
+#2023-07-29                  tagging site 48.0634 -108.8518                    0   2 TRUE 1690656180 2023210 1690656180 1690656480        2
+#2023-07-29                Lake Seventeen 48.0891 -108.8834                 8878   3 TRUE 1690670158 2023210 1690670158 1690671222        4
 
 #remove any other rows with 'use' field = FALSE
 summaryFlight_df <- summaryFlight_df[!(summaryFlight_df$use == FALSE),]

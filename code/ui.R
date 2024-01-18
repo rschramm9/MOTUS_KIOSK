@@ -103,8 +103,6 @@ ui_mainpage <- fluidPage(
            )
   )
 
-  
-
 )  # end of main page layout
 
 
@@ -154,31 +152,22 @@ ui_navbar <-  div( class="navbar1",  style="font-family: Verdana font-style: nor
 ## language selector.  It will appear on all pages.
 ###############################################################################
 
+#to recover vertical space..value determined by trial and error
+#now is a configuration setting in your config file 
+strLogoOffset=paste0("display: inline-block; margin-top:", as.character(config.MainLogoTopOffsetPixels), "px;" )
 
 ui_titlebar <- fluidRow(
 
+  
   titlePanel(   
     tagList(
-      # NOTE: Offseting logo -30PX to recover vertical space.. value determined by trial and error
-      #div(style="display: inline-block;margin-top:-30px;",img(src = config.MainLogoFile, height = config.MainLogoHeight)),
+           # in version 4.x was
+           # div(style="display: inline-block; margin-top:-30px;",
+           #     img(src = config.MainLogoFile, height = config.MainLogoHeight)),
       
-      
-      ## getting close:
-#works1     div(style="display: inline-block;margin-top:-30px;",
-#works1          img(src = "logos/ankenyhill_logo.png", height = config.MainLogoHeight)),
-
-      #this STILL NOT works ------   
-
-           div(style="display: inline-block;margin-top:-30px;",
-                img(src = config.MainLogoFile, height = config.MainLogoHeight)),
- 
-      
-      
-      
-      #div(style="display: inline-block;margin-top:-30px;",
-       #   img(src = config.MainLogoFile, height = config.MainLogoHeight)),
-      
-      
+           div(style=strLogoOffset,
+               img(src = config.MainLogoFile, height = config.MainLogoHeight)),
+   
       #span(style="color:#8FBC8F;font-style: italic;font-size: 25px;",
       span(style=paste0("color:",config.TitlebarColor,";font-style: italic;font-size: 25px;"), 
            
@@ -189,7 +178,7 @@ ui_titlebar <- fluidRow(
            # a utility action button on titlebar for debugging
            # if you enable, also enable the observer function in server.R
            #actionButton("btnCommand","Command"),
-           
+
            
            div(style="display: inline-block;vertical-align:top;width:120px", pickerInput(inputId = "receiver_pick",
                                    label = i18n$t("ui_mainpage_available_receivers"),

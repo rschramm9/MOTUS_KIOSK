@@ -160,21 +160,7 @@ server <- function(input, output, session) {
         thefile <- paste0("www/DEFAULT/homepages/default_homepage_fr.html")
       } 
     }
-    ###message(paste0("THEFILE:",thefile))
-    ###thepage <-includeHTML(as.character(thefile))
-    ###fixpath<-paste0("<img src=\"", "../", config.SiteSpecificContent, "/homepages/images/")
-    #### message(fixpath)
-    ###thepage<-str_replace(thepage,'<img src="images/', fixpath)
     
-    
-    #tx <-includeHTML(as.character(thefile))
-    #tx2  <- gsub(pattern = "src=\"images", replace = "src=\"../AHNC/homepages/images", x = tx)
-    
-    
-    
-    ###fixpath<-paste0("<img src=\"", "../", config.SiteSpecificContent, "/homepages/images/")
-    #### message(fixpath)
-    ###thepage<-str_replace(thepage,'<img src="images/', fixpath)
 
     DebugPrint(paste0("********* the HOMEPAGE:",thefile, "  ************"))
     # Refresh homepage file on the main home page tab of the navbar
