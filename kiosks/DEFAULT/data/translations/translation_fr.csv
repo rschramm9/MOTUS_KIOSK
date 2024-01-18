@@ -23,6 +23,8 @@ ui_RCVR_detections_flightpath_tab_helptext|Détails de l'historique de vol de l'
 ui_RCVR_detections_leaflet_tab_label|Carte de vol
 ui_RCVR_detections_leaflet_tab_helptext|Utilisez les boutons ci-dessous pour simuler la trajectoire approximative parcourue par l'oiseau. Notez que les données peuvent contenir de fausses détections de « point sauvage » que nous n'essayons pas de filtrer.
 
+ui_filter_velocity_checkbox_label|Supprimer les fausses détections suspectées
+
 ui_RCVR_detections_species_tab_label|Espèces
 ui_RCVR_detections_species_tab_helptext|Informations sur l'espèce de l'oiseau sélectionné.
 
