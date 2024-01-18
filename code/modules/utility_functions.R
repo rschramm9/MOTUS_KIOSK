@@ -1,4 +1,15 @@
 ################################################################################
+# insert row in dataframe
+# from https://stackoverflow.com/questions/11561856/add-new-row-to-dataframe-at-specific-row-index-not-appended
+################################################################################
+insertRow <- function(existingDF, newrow, r) {
+  existingDF[seq(r+1,nrow(existingDF)+1),] <- existingDF[seq(r,nrow(existingDF)),]
+  existingDF[r,] <- newrow
+  existingDF
+}
+
+
+################################################################################
 # 
 ################################################################################
 CloneKiosk <- function(from, to)
