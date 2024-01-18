@@ -214,6 +214,14 @@ getKioskConfig <- function() {
     config.MainLogoHeight <<- as.numeric(list1[1]) #assume length=1
   }
   
+  #print("------------ MainLogoTopOffsetPixels --------------")
+  list1 <- keyValueToList(configtbl,'MainLogoTopOffsetPixels')
+  if( is.null(list1) ){
+    config.MainLogoTopOffsetPixels <<- -30
+  } else {
+    config.MainLogoTopOffsetPixels <<- as.numeric(list1[1]) #assume length=1
+  }
+  
   
   #print("------------ Homepage----------------")
   #must be the _en.html page....
@@ -437,8 +445,31 @@ getKioskConfig <- function() {
   }
   
   
+  #print("------------ EnableSuspectDetectionFilter  --------------")
+  list1 <- keyValueToList(configtbl,'EnableSuspectDetectionFilter')
+  if( is.null(list1) ){
+    config.EnableSuspectDetectionFilter<<-0  # 0=FALSE or 1=TRUE
+  } else {
+    config.EnableSuspectDetectionFilter<<- as.numeric(list1[1]) #assume length=1
+  }
   
   
+  #print("------------ VelocitySuspectMetersPerSecond  --------------")
+  list1 <- keyValueToList(configtbl,'VelocitySuspectMetersPerSecond')
+  if( is.null(list1) ){
+    config.VelocitySuspectMetersPerSecond<<-20 
+  } else {
+    config.VelocitySuspectMetersPerSecond<<- as.numeric(list1[1]) #assume length=1
+  }
+  
+  #print("------------ MapIconFlightDurationSeconds  --------------")
+  list1 <- keyValueToList(configtbl,'MapIconFlightDurationSeconds')
+  if( is.null(list1) ){
+    config.MapIconFlightDurationSeconds<<-7 
+  } else {
+    config.MapIconFlightDurationSeconds<<- as.numeric(list1[1]) #assume length=1
+  }
+
   
   
   #print("------------ LogLevel ----------------")
@@ -494,6 +525,7 @@ printConfig <- function() {
   TSprint(paste0("MainTitleFrench:",config.MainTitleFrench))
   
   TSprint(paste0("MainLogoHeight:",config.MainLogoHeight))
+  TSprint(paste0("MainLogoTopOffsetPixels:",config.MainLogoTopOffsetPixels))
   
   TSprint(paste0("HomepageEnglish:",config.HomepageEnglish))
   TSprint(paste0("SpeciesPageEnglish:",config.SpeciesPageEnglish))
@@ -532,6 +564,7 @@ printConfig <- function() {
   TSprint(paste0("ActiveCacheAgeLimitMinutes:",config.ActiveCacheAgeLimitMinutes))
   
   TSprint(paste0("InactiveCacheAgeLimitMinutes:",config.InactiveCacheAgeLimitMinutes))
+
   
   TSprint(paste0("CachePath:", config.CachePath))
   
@@ -543,6 +576,12 @@ printConfig <- function() {
   
   TSprint(paste0("EnableMotusNewsTab:", config.EnableMotusNewsTab))
   TSprint(paste0("EnableLearnAboutMotusTab:", config.EnableLearnAboutMotusTab))
+  
+  TSprint(paste0("EnableSuspectDetectionFilter:",config.EnableSuspectDetectionFilter))
+  TSprint(paste0("VelocitySuspectMetersPerSecond:",config.VelocitySuspectMetersPerSecond))
+  
+  TSprint(paste0("MapIconFlightDurationSeconds:",config.MapBirdFlightDurationSeconds))
+
   return()
   
 } #end printConfig()
