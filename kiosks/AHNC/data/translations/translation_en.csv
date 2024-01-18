@@ -23,6 +23,8 @@ ui_RCVR_detections_flightpath_tab_helptext|The selected bird's flight history de
 ui_RCVR_detections_leaflet_tab_label|Flight Map
 ui_RCVR_detections_leaflet_tab_helptext|Use the buttons below to simulate the approximate path the bird flew. Note data may contain 'wild point' false detections that we do not attempt to filter out.
 
+ui_filter_velocity_checkbox_label|Remove suspected false detections
+
 ui_RCVR_detections_species_tab_label|Species
 ui_RCVR_detections_species_tab_helptext|Information about the species of the selected bird.
 
