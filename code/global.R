@@ -1,7 +1,7 @@
 
 ######## I put github release version and other data here ############
 ######## so it can be displayed on the footer of the kiosk window ####
-gblFooterText <- "MOTUS_KIOSK  vsn 5.0.0  12-Dec-2023"
+gblFooterText <- "MOTUS_KIOSK  vsn 5.1.0  17-Jan-2023"
 
 ###############################################################################
 # Copyright 2022-2023 Richard Schramm
@@ -62,19 +62,24 @@ library(tidyr) #for  web scraping
 ### read URLs with timeouts
 library(httr)
 
+library(units)
 
 #### for leaflet map
 library(leaflet)
 library(leaflet.extras2) #for movingmarker
 # movingmarkers needs flight_ df converted f to a 'simple features dataframe'
 #using the coordinate reference system with columns: time,geometry
-library(sf) #for making flightpath for movingmarker
 
+library(sf) #for making flightpath for movingmarker
+####library(geosphere)
 ### glue for building leaflet labels
 library(glue)
 library(lubridate) # for working with dates
 library(tidyverse)
 library(fs) #for path_home()
+
+library(shinybusy) #for modal spinner displayed when busy
+
 
 options(stringsAsFactors = FALSE)
 
@@ -137,7 +142,7 @@ source(paste0(codedir,"/modules/MotusNews.R"))
      }
      
      
-     
+    
      #message(paste0("Starting Kiosk named:", config.StartKiosk))
      InfoPrint(paste0("[global.R] Starting Kiosk named:", config.StartKiosk))
      badCfg<-getKioskConfig()
@@ -173,7 +178,7 @@ source(paste0(codedir,"/modules/MotusNews.R"))
      message(paste0("attempting to load ignore file:",thefile))
      gblIgnoreTag_df <<- ReadCsvToDataframe(thefile)
      if( is.null(gblIgnoreTag_df) ) {
-       message("the FIRST csv file returned NULL")
+       #message("the FIRST csv file returned NULL")
      } else {
        #message("loaded FIRST csv file")
      }
@@ -189,11 +194,10 @@ source(paste0(codedir,"/modules/MotusNews.R"))
      ####gblIgnoreTagDeployment_df <<- ReadCsvToDataframe(f)
      
      thefile<-paste0(config.SiteSpecificContent,"/data/ignoredetections/ignore_tag_deployments.csv") 
-
      #message(paste0("attempting to load file:",thefile))
      gblIgnoreTagDeployment_df <<- ReadCsvToDataframe(thefile)
      if( is.null(gblIgnoreTag_df) ) {
-       message("SECOND csv file returned NULL")
+      # message("SECOND csv file returned NULL")
      } else {
       # message("loaded SECOND csv file")
      }
@@ -204,19 +208,31 @@ source(paste0(codedir,"/modules/MotusNews.R"))
      # these are individual detections of a tag at some receiver - eg wild point where the animal 
      # flies across the continent in a day = a false detections that motus hasnt filtered
      # this hack isnt scalable but for now....
-
-     ##thefile<-paste0(config.SiteSpecificContent,"data/ignoredetections/ignore_date_tag_receiver_detections.csv") 
-     
      thefile<-paste0(config.SiteSpecificContent,"/data/ignoredetections/ignore_date_tag_receiver_detections.csv") 
      
-    # message(paste0("attempting to load file:",thefile))
+     # message(paste0("attempting to load file:",thefile))
      gblIgnoreDateTagReceiverDetections_df <<- ReadCsvToDataframe(thefile)
      if( is.null(gblIgnoreTag_df) ) {
-       message("THIRD csv file returned NULL")
+       #message("THIRD csv file returned NULL")
      } else {
        #message("loaded THIRD csv file")
      }
      #print(gblIgnoreDateTagReceiverDetections_df) 
+     
+     
+     # read a csv file for any known bad receiver that we want the gui to ignore
+     # these are all detections of a tag at receiver - eg a known very noisy receiver
+     # this hack isnt scalable but for now...
+     thefile<-paste0(config.SiteSpecificContent,"/data/ignoredetections/ignore_all_detections_at_receiver.csv") 
+     
+     # message(paste0("attempting to load file:",thefile))
+     gblIgnoreAllDetectionsAtReceiver_df <<- ReadCsvToDataframe(thefile)
+     if( is.null(gblIgnoreTag_df) ) {
+       #message("FOURTH csv file returned NULL")
+     } else {
+       #message("loaded Forth csv file")
+     }
+     #print(gblIgnoreAllDetectionsAtReceiver_df) 
 
 
 
@@ -286,9 +302,6 @@ source(paste0(codedir,"/modules/MotusNews.R"))
      s = paste0(config.SiteSpecificContentWWW,"/images/flags")
      addResourcePath("images/flags", s)
      
-     
-     
-     
      # construct data frame to support the available receivers picklist
      # the shortnames list contains the visible choices on the dropdown
      # here we make a dataframe from the shortnames and the deployment ids, later we
@@ -307,12 +320,14 @@ source(paste0(codedir,"/modules/MotusNews.R"))
      defaultReceiverID<<-receiverDeploymentID 
        
      # Initially populate the dataframes here
+     # dont allow a modal spinner as UI may not be 'up' yet
+     
      # we want these to be global variables... (note the <<- ) 
      InfoPrint(paste0("global.R Make initial call to motus for receiverDeploymentDetections of receiver:", receiverDeploymentID))
-     detections_df <<- receiverDeploymentDetections(receiverDeploymentID, config.EnableReadCache, config.ActiveCacheAgeLimitMinutes)
+     detections_df <<- receiverDeploymentDetections(receiverDeploymentID, config.EnableReadCache, config.ActiveCacheAgeLimitMinutes, withSpinner=FALSE)
      if(nrow(detections_df)<=0) {  # failed to get results... try the inactive cache
        InfoPrint("initial receiverDeploymentDetections request failed - try Inactive cache")
-       detections_df <<- receiverDeploymentDetections(receiverDeploymentID, config.EnableReadCache, config.InactiveCacheAgeLimitMinutes)
+       detections_df <<- receiverDeploymentDetections(receiverDeploymentID, config.EnableReadCache, config.InactiveCacheAgeLimitMinutes, withSpinner=FALSE)
      }
 
      detections_subset_df<<-detections_df[c("tagDetectionDate", "tagDeploymentID","species" )]
