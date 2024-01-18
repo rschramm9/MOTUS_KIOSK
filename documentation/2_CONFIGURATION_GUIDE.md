@@ -73,6 +73,7 @@ MainLogoFile="images/logos/ankenyhill_logo.png"
 NavbarColor="#8FBC8F"
 TitlebarColor="#8FBC8F"
 MainLogoHeight=120
+MainLogoTopOffsetPixels=0
 MainTitleEnglish="Motus Receiver at:"
 MainTitleSpanish="Receptor Motus en:"
 MainTitleFrench="Récepteur Motus à:"
@@ -80,6 +81,7 @@ HomepageEnglish="homepages/default_homepage_en.html"
 MovingMarkerIcon="images/icons/motus-bird.png"
 MovingMarkerIconWidth=22
 MovingMarkerIconHeight=22
+MapIconFlightDurationSeconds=3
 InactivityTimeoutSeconds=3600
 EnableReadCache=1
 EnableWriteCache=1
@@ -95,6 +97,8 @@ EnableMotusNewsTab=1
 NewsPageEnglish="newspages/current_news_en.html"
 EnableSpeciesInfoTab=1
 SpeciesPageEnglish="speciespages/species_unknown_en.html"
+EnableSuspectDetectionFilter=1
+VelocitySuspectMetersPerSecond=55
 
 ```
 
@@ -124,7 +128,7 @@ ReceiverShortName="Ankeny Hill OR", "Bullards Bridge OR", "Nisqually Delta WA", 
 
 ##### 2.2 - Titles and Navbar Settings
 
-These setting control the apperance of the title bar and navigation banner.
+These setting control the apperance of the title bar and navigation banner. LogoHeight and LogoTopOffset are to be determined by trial&error given the particular customized logo provided for the application. 
 
 *Note the the color is entered in 'hex format'*  The color shown is Ankeney Hill Nature Center's green.
 
@@ -135,6 +139,7 @@ MainLogoFile="images/logos/ankenyhill_logo.png"
 NavbarColor="#8FBC8F"
 TitlebarColor="#8FBC8F"
 MainLogoHeight=140
+MainLogoTopOffsetPixels=0
 MainTitleEnglish="Motus Receiver at:"
 MainTitleSpanish="Receptor Motus en:"
 MainTitleFrench="Récepteur Motus à:"
@@ -162,12 +167,15 @@ Edit these files carefully with an html editor or a text editor of your choice.
 
 These parameters set the icon and size of the marker the follows the flightpath of a bird on the leaflet map tab.
 
+The additional parameter "MapIconFlightDurationSecond" controls the time the MovingMarkerIcon takes to travel the tagged animals flightpath over the map. 
+
 The MovingMarkerIcon is relative to the "www" directory:  *top-level-project-dir/kiosks/yourkioskname/www*/
 
 ```
 MovingMarkerIcon="images/icons/motus-bird.png"
 MovingMarkerIconWidth=22
 MovingMarkerIconHeight=22
+MapIconFlightDurationSeconds=3
 ```
 
 ##### 2.5 - Inactivity Timeout
@@ -271,3 +279,17 @@ SpeciesPageEnglish="speciespages/species_unknown_en.html"
 There should be one file for each language that the application supports - currently: English, Spanish and French.  Only the english language page is entered in the kiosk.cfg file. 
 
 ***WARNING:  when creating species page content, it is your responsibility to be sure you have legal permission to use all images, maps and text you incorporate. Be sure to give proper credit for anything you use. Most content taken from the web is protected by copyright or other terms of use. If you cant find and document a clear statement that you have the permission to use - don't use it.***  
+
+##### 2.13 - Suspect Detections Filter
+
+Starting with MOTUS_KIOSK Version 5.1.0  I have introduced an experimental attempt at filtering wild point "suspect" detection data. This feature can be turned on by setting the kiosk.cfg parameter EnableSuspectDetectionFilter to 1.  Enabling this feature currently places a checkbox on the ReceiverDetections panel so the user can toggle it on and off to see the filter effect. Disabling this feature hides the checkbox and bypasses all filtering logic.  
+
+Another kiosk.cfg parameter "VelocitySuspectMetersPerSecond" parameter is currently used as the upper limit to bird's horizontal flight velocity.
+
+```
+EnableSuspectDetectionFilter=1
+VelocitySuspectMetersPerSecond=55
+```
+
+Currently the algorithm is very unsophisticated and will hopefully be subject to improvements in future releases.    
+
