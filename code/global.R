@@ -138,7 +138,9 @@ source(paste0(codedir,"/modules/MotusNews.R"))
        FatalPrint("There is a fatal error in your startup.cfg file")
        stop("Stopping because there is a serious error in your cfg file")
      }
-
+     
+     
+    
      #message(paste0("Starting Kiosk named:", config.StartKiosk))
      InfoPrint(paste0("[global.R] Starting Kiosk named:", config.StartKiosk))
      badCfg<-getKioskConfig()
@@ -320,12 +322,25 @@ source(paste0(codedir,"/modules/MotusNews.R"))
      
      # we want these to be global variables... (note the <<- ) 
      InfoPrint(paste0("global.R Make initial call to motus for receiverDeploymentDetections of receiver:", receiverDeploymentID))
-     detections_df <<- receiverDeploymentDetections(receiverDeploymentID, config.EnableReadCache, config.ActiveCacheAgeLimitMinutes, withSpinner=FALSE)
-     if(nrow(detections_df)<=0) {  # failed to get results... try the inactive cache
-       InfoPrint("initial receiverDeploymentDetections request failed - try Inactive cache")
-       detections_df <<- receiverDeploymentDetections(receiverDeploymentID, config.EnableReadCache, config.InactiveCacheAgeLimitMinutes, withSpinner=FALSE)
-     }
-
+     
+     # the shiny server and ui havent been initialized yet, and they need some initial
+     # set of receivers to start... so here I contact motus an create the initial dataframe of receivers
+     # if it cant connect at first it just endlessly keeps trying
+     DONE<-FALSE
+     while(!DONE){
+        #first connection attempt with motus.org
+        detections_df <<- receiverDeploymentDetections(receiverDeploymentID, config.EnableReadCache, config.ActiveCacheAgeLimitMinutes, withSpinner=FALSE)
+        if(nrow(detections_df)<=0) {  # failed to get results... try the inactive cache
+           InfoPrint("initial receiverDeploymentDetections request failed - try Inactive cache")
+           detections_df <<- receiverDeploymentDetections(receiverDeploymentID, config.EnableReadCache, config.InactiveCacheAgeLimitMinutes, withSpinner=FALSE)
+        } else {
+          DONE <-TRUE
+        }
+        if(nrow(detections_df)<=0) {
+          message("Unable to connect to Motus.org. Sleep 5 seconds and try again")
+          Sys.sleep(5)
+        }
+     } #end while
      detections_subset_df<<-detections_df[c("tagDetectionDate", "tagDeploymentID","species" )]
 
      ## javascript idleTimer to reset gui when its been inactive 
