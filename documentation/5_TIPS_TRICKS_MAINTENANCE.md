@@ -1,6 +1,6 @@
 # Tips, Tricks and Maintenance for Motus Kiosk
 
-### For the MOTUS Nature Center Kiosk App v5.0.0
+### For the MOTUS Nature Center Kiosk App v5.1.0
 
 ### Who do I talk to?
 
@@ -32,6 +32,8 @@ Then point the startup.cfg file to whichever one you want to run at any given ti
 
 ### 4.0 - Remove Wild points, false detections or "Test Tags"
 
+#### 4.1 The 'ignore files'
+
 Each kiosk instance has three files in the MOTUS_KIOSK/kiosks/*kioskname*/data/ignoredetections folder.
 
 For individual detections:  ignore_date_tag_receiver_detections.csv 
@@ -42,13 +44,28 @@ For a tag to ignore only for duration of one deployment (eg. if your tag was use
 
 See the DEFAULT kiosk for examples.
 
-### 4.0 - How to Cleanup Log Files
+### 5.0 - Suspect Detections Filter
+
+Starting with MOTUS_KIOSK Version 5.1.0  I have introduced an experimental attempt at filtering wild point "suspect" detection data. This feature can be turned on by setting the kiosk.cfg parameter EnableSuspectDetectionFilter to 1.  Enabling this feature currently places a checkbox on the ReceiverDetections panel so the user can toggle it on and off to see the filter effect. Disabling this feature hides the checkbox and bypasses all filtering logic.  
+
+Another kiosk.cfg parameter "VelocitySuspectMetersPerSecond" parameter is currently used as the upper limit to bird's horizontal flight velocity.
+
+```
+EnableSuspectDetectionFilter=1
+VelocitySuspectMetersPerSecond=55
+```
+
+Currently the algorithm is very unsophisticated and will hopefully be subject to improvements in future releases.    
+
+
+
+### 6.0 - How to Cleanup Log Files
 
 When running as a Windows locked down kiosk that is started at boot. - log messages get written to a file in the The app writes console messages to a log file in the MOTUS_KIOSK/kiosks/*kioskname*/logs folder.
 
 Useful for debugging but may need a yearly cleanup to recover space
 
-### 5.0 - How to Cleanup Data Cache
+### 7.0 - How to Cleanup Data Cache
 
 If a kiosk has its EnableWriteCache set to 1 (default) ,  recently retrieved detection data are stored in a local cache to reduce calls out to motus.org.  These can grow old and you may want to purge them after some period to recover space.   Each kiosk instance has its own data cache.  Cached files are in the MOTUS_KIOSK/kiosks/*kioskname*/data/cache folder. They all end in name .Rda  It is always completely safe to delete any or all of them.
 
