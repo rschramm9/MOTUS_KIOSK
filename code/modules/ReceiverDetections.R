@@ -225,9 +225,15 @@ SERVER_ReceiverDetections <- function(id, i18n_r, lang, rcvr) {
       # but we test for the existence of the actual file using 'project relative' path 
       testfile<<-paste0(config.SiteSpecificContentWWW,"/",thefile)
       if (!file.exists(testfile)) {
-        message("species page is missing, substitute a default unknown file")
-        thefile <- paste0("speciespages/species_unknown_en.html")
-      } 
+           message("species page is missing, substitute a default unknown file")
+           if(x=='en'){
+             thefile <- paste0("speciespages/species_unknown_en.html")
+           } else if (x=='es'){ 
+             thefile <- paste0("speciespages/species_unknown_es.html")
+           } else if (x=='fr'){ 
+             thefile <- paste0("speciespages/species_unknown_fr.html")
+           } 
+        } 
       
       DebugPrint(paste0("updatespecies render the file"))
       
