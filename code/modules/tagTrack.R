@@ -72,52 +72,38 @@ tagTrack <- function(tagDeploymentID, useReadCache=0, cacheAgeLimitMinutes=60)
 
   # create empty 'vectors'
   usecs<-c()
-  date<-c()
   site<-c()
   lat<-c()
   lon<-c() 
-  receiverDeploymentID<-c()
   seq<-c()
-  use<-c()
-  doy<-c()
   n<-0
-
+  #convert json to vectors for dataframe
   for (i in seq( 1, length(json), 4) ) {
-
     for(j in seq(1,length(json[[i+3]]),1 )){
-      the_lat<-json[[i]]
-      the_lon<-json[[i+1]]
-      the_site <- json[[i+2]]
-      the_usecs <- json[[i+3]][[j]]
-      the_date <- as.POSIXct(as.numeric(the_usecs), origin = '1970-01-01', tz = 'UTC')
       
-      yr <- as.numeric(strftime(the_date, format = "%Y", tz = "UTC"))
-      jday <- as.numeric(strftime(the_date, format = "%j", tz = "UTC"))
-      x <- (yr*1000)+jday
-      doy <- c(doy, x)
-      
-      usecs <- c( usecs, the_usecs )
-      date <- c( date, as.character(the_date ))
-      site <- c( site, the_site )
-      lat <-  c( lat, the_lat  )
-      lon <-  c( lon, the_lon )
-      receiverDeploymentID<-c(receiverDeploymentID,0) #0=default 
+      lat <-  c( lat, json[[i]]  )
+      lon <-  c( lon, json[[i+1]] )
+      site <- c( site, json[[i+2]] )
+      usecs <- c( usecs, json[[i+3]][[j]] )
+      #bump counter, append to seq array
       n<-n+1
       seq<-c(seq,n)
-      use<-c(use,TRUE)
     } #end for j
-  
   } #end for i
   
   # and combine arrays into a dataframe
-  df <-data.frame(date,site,lat,lon, receiverDeploymentID,seq,use,usecs,doy)
-    
+  df <-data.frame(site,lat,lon,seq,usecs)
+
   # and sort flight detection so most recent appears at bottom of the list
   df <- df[ order(df$usecs, decreasing = FALSE), ]
     
   #delete any rows with nulls
   df <- df %>% drop_na()
-    
+  
+  df$receiverDeploymentID<-0
+  df$date <- as.POSIXct(as.numeric(df$usecs), origin = '1970-01-01', tz = 'UTC')
+  df$doy <- (as.numeric(strftime(df$date, format = "%Y", tz = "UTC"))) *1000 + (as.numeric(strftime(df$date, format = "%j", tz = "UTC")))
+  df$use<-TRUE
   #add three columns to help with statistics
   df$runstart <- 0
   df$runend <- 0
@@ -172,7 +158,6 @@ tagTrack <- function(tagDeploymentID, useReadCache=0, cacheAgeLimitMinutes=60)
         df[i,"runcount"] <- runcount
       } # end for
       
-
 #      options(max.print=1000000)
 #      print("---------------------tagTrack.R df  at line 176 ----------------")
 #      print(df)
