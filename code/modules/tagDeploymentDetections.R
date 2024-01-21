@@ -318,8 +318,12 @@ if( length(distinctSites_df > 0 )){
     
     #search for a row in summary containing the target site name 
     res <- subset(summaryFlight_df, site==theSite)
-    res <- subset(res, 
-                  subset = !duplicated(res[c("site", "receiverDeploymentID")]) )
+
+    # this can actually can return multiple... eg is the receiver was redeployed
+    # we don show the deploymentid, only the sitename so doesnt matter
+    #res <- subset(res,  subset = !duplicated(res[c("site", "receiverDeploymentID")]) )
+    res <- subset(res,  subset = !duplicated(res[c("site")]) )
+    
     #if found, use the receiverDeploymentID to overwrite the dummy default value
     if(nrow(res==1)){
       theReceiverDeploymentID<-res$receiverDeploymentID
