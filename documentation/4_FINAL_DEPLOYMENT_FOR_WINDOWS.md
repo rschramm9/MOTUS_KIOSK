@@ -69,20 +69,23 @@ Accept the license, and click through all the standard default installation wiza
 
 Go to C:\Program Files and run OpenKiosk by double-clicking it – It will run in its own browser an it will likely look like your locked onto that screen… (that’s a good thing!)
 
-Shift F1 puts administrator login banner up in the upper-left. Enter ‘admin’ as the password (this is the default password for OpenKiosk.
+- Shift F1 puts administrator login banner up in the upper-left. Enter ‘admin’ as the password (this is the default password for OpenKiosk.
+
 
 While on the admin page:
 
-Select "Home" selector on the sidebar panel.
+- Select "Home" selector on the sidebar panel.
+
 
 * Set "Homepage and new windows" to "localhost:8081" << this port must agree with the shiny app startup task we will create in next section!
 
-Select "OpenKiosk" selector on the sidebar panel.
+- Select "OpenKiosk" selector on the sidebar panel.
+
 
 Verifiy Settings are:
 
 - "Enable Attract Screen" False (unchecked box)
-- "Enable Full Screen" True (checked box) http://
+- "Enable Full Screen" True (checked box) 
 - "Enable Redirect Screen" True (checked box)
 - "Enable URL Filters" False (unchecked box)
 - "Enable Javascript" True (checked box)
@@ -155,7 +158,7 @@ KioskCfgFile="kiosk.cfg"
 
 - Click "New" button ; in the pop-up,  set  it’s 'Begin the task' dropdown to be “Start a  Program”
 - In the "Program/script" section, use the browse button and navigate to the main projects    		      Motus_Kiosk/extras/ MOTUS_MSWINDOWS_STARTSERVER.bat and select it
-- Set the "Start In:" field to C:\MOTUS_USER\Projects\MOTUS_KIOSK\code
+- Set the "Start In:" field to C:\Users\MOTUS_USER\Projects\MOTUS_KIOSK\code
 - Press "OK"  for the action button.
 
 **2.10** - On the "Conditions" tab
