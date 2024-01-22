@@ -86,7 +86,7 @@ Typically for a kiosk we would want to utilize two users accounts - one with adm
 
 If you initially want to just see if you can get something running quickly you certainly can just install and run everything on your local account (if you have admin permissons).  However to deploy either as a public kiosk or to a web server to you will certainly want to revisit these pages and 'harden' the system to be stable and secure.
 
-( If you need help creating user accounts and setting permissions on Windows platforms please see: SETUP_FOR_WINDOWS.md
+If you need help creating user accounts and setting permissions on Windows platforms please see: SETUP_FOR_WINDOWS.md
 
 **2.1** - Create the Admin user account
 
@@ -94,21 +94,38 @@ If you initially want to just see if you can get something running quickly you c
 
 
 
-### 3.0 - Installing R for your platform 
+### 3.0 - Create the user's "Projects" folder
+
+.  *I will use a folder named "Projects"  for the throughout this documentation.*
+
+**3.1** Whichever username you want the code to live under (eg. MOTUS_USER), navigate to that user's home directory and create a new folder to hold the project.  (Eventually the Projects folder may contain different versions of your kiosk project as your site evolves)
+
+Log in as user = MOTUS_USER (or your intended username from above)
+
+``` code
+cd  C:\Users\MOTUS_USER
+mkdir Projects
+```
+
+### 
+
+### 4.0 - Installing R for your platform 
 
 ***In this documentation the administrator account is assumed to be "Admin"*** 
 
 ##### Windows:
 
-Log in as administrator.   
+Log in as administrator.  
+
+NOTE: We will install "R" first - then later install "RStudio" 
 
 If R is not already installed (see: <https://www.r-project.org/>) - Download the installer for your platform to your downloads folder
 
-Double-click the installer.
+NOTE: I recommend not installing R to into C:\Program Files as it makes installing R-package libraries  that are needed later less difficult to manage.
 
- Make sure it says to install into "C:\Program Files\R\R-4.4.2" (or whatever your current downloaded version is)
-
-You also may need to install Rtools to be able to rebuild/install R packages . See: https://cran.r-project.org/bin/windows/Rtools/
+- Double-click the installer.
+- Where the installer asks where to install,  modify it to install into "C:\R\R-4.4.2" (or whatever your current R downloaded version is).  
+- Accept all of the other installer defaults.
 
 **Other Operating systems:**
 
@@ -118,27 +135,29 @@ For Apple OSX current version is  4.3.1 (2023-06-16)
 
 
 
-### 4.0 - Install RStudio IDE Free Edition for your platform
+### 5.0 - Install RStudio IDE Free Edition for your platform
 
 RStudio is the development environment (IDE) that is used to create and test programs in R. 
 
-##### 4.1 - Install RStudio 
+##### 5.1 - Install RStudio 
 
 Log in as administrator
 
 Download RStudio for your platform from <https://www.rstudio.com/products/rstudio/download/>
 
-Typically the installer will be in your "Downloads" folder.  Double-click it and follow the instruction, acccepting allof  the defaults.
+Typically the installer will be in your "Downloads" folder.  Double-click it and follow the instruction, acccepting all of the defaults (This app is ok to install to Program Files)
 
-##### 4.2 - Install Required R Packages
+##### 5.2 - Install Required R Packages
 
 We use quite a few additional packages (software libraries) installed for R.  This can be a somewhat frustrating part depending on which revision levels of R and the various packages are currently considered 'current'. 
 
-An annoying feature is that R by default installs packages in the current users local directories.  It seems desirable to install packages globally once for all users to avoid package version issues and confussion. However the instructions to do this  vary immensely depending on which operating system, which version, version, user permissions etc.
+An annoying default feature is that R is it installs packages in the current users local directories.  Since we are running from two user accounts that means installing packages twice, leading to concerns of which package is being used and packages libries getiing out of sync with upgrades etc.
 
-**So therefore I recommend installing packages twice! ** - once for user=Admin and then for user=MOTUS_USER.  Packages evolve very slowly rarely need updating until the version of R itself needs updating.  We can also use the RStudio IDE "Packages" management tab to track versions and keep each user updated when needed.
+ It seems to me desirable to install packages globally once for all users to avoid package version issues and confusion. However the instructions to do this  vary immensely depending on which operating system, which version, version, user permissions etc.
 
-Advanced system users or administrators that may want to explore more global package installations and configuration. These links may help. 
+**5.2.1** **If you already have previously  installed R in C:\Programs FIles  I recommend you just installing packages twice! ** - once for user=Admin and then for user=MOTUS_USER.  Packages evolve very slowly rarely need updating until the version of R itself needs updating.  We can also use the RStudio IDE "Packages" management tab to track versions and keep each user updated when needed.
+
+New or advanced system users or administrators that may want to explore other global package installations and configuration. These links may help. 
 
 https://cran.r-project.org/doc/manuals/R-admin.html#Managing-libraries
 
@@ -146,13 +165,11 @@ And: https://stackoverflow.com/questions/24387660/how-to-change-libpaths-permane
 
 
 
-**4.2.1** Run R console (as user = Admin).  (You can also enter these as commands in RStudio)  
-
-**4.2.2** Now Log in user=MOTUS_USER, Run R console, and repeat the package installs.
+**5.2.2** Run R console (as user = Admin).  
 
 **Note:** R may ask you to select a mirror site - Use one physically close to you. I used the mirror at OSU in Oregon)
 
-Enter the following install.packages cmds into the R Console just to make sure all are installed for the both the Admin user and MOTUS_USER. I suggest doing them one linr at a time. 
+Enter the following install.packages cmds into the R Console. I suggest doing them one line at a time to waatch for any failures. 
 
     install.packages("shiny")
     install.packages("shinymeta")
@@ -179,11 +196,15 @@ Enter the following install.packages cmds into the R Console just to make sure a
     install.packages("fs")
     install.packages("units")
 
-**TROUBLESHOOTING Failed Package installs.**
+**5.2.3** If you are not installing packages "globally" for all users as describe above in 4.2.1 - then repeat package installation while logged in as user=MOTUS_USER.
+
+
+
+**5.2.4  TROUBLESHOOTING Failed Package installs.**
 
 **Note:** R may cleanly install or may report something like "The binary package is available but source versions are later".  
 
-You can try installing with **install.packages("*thepkgname*", type="source")** to cause a recompile with rTools or  **install.packages("*thepkgname*", type="binary")**  Compiling from source would probably be best to get the latest fixes etc.
+You can try installing with **install.packages("*thepkgname*", type="source")** to cause a recompile with RTools or  **install.packages("*thepkgname*", type="binary")**  Compiling from source would probably be best to get the latest fixes etc.
 
 **Note:** Occasionally a package install may also hang with "package xxxx not found" displayed in the Console. So far that has been cleared by typing directly in the R-Studio Console like:
 
@@ -195,7 +216,7 @@ install.packages('xxxx', dependencies = TRUE, repos='http://cran.rstudio.com/')
 
 
 
-### 5.0 - Install  git
+### 6.0 - Install  git
 
 **git** is the repository checkout program that you will use to access the project on **github**. (github is the cloud repository that contains the code and documentation). Presumably if you are viewing this file you have at least visited the cloud repository. 
 
@@ -203,18 +224,19 @@ You will first (**as user=Admin**) need to install the program 'git' on the mach
 
 NOTE: This install on windows machines can be a bit frustrating due to the variations of Windows 10 installations. WIndows 10 Pro was pretty straight forward. With Windows 10 Home Edition it is challenging to get git.exe recognized on the path. Persistence is key.. the git.exe install should be to C:\Program Files. You may need to 'cd' there in the cmd.exe window to run git...
 
-### 6.0 - Create the user's "Projects" folder
+Most issues involve git not being able to add itself to your "Path" environment variable.  To check/resolve
 
-.  *I will use a folder named "Projects"  for the throughout this documentation.*
+- On windows, in the "Search Box" type "env" and it should show something like: "Edit System Environment Variables".  
 
-**6.1** Whichever username you want the code to live under (eg. MOTUS_USER), navigate to that user's home directory and create a new folder to hold the project.  (Eventually the Projects folder may contain different versions of your kiosk project as your site evolves)
+- Run that application and provide the Admin password when asked.
 
-Log in as user = MOTUS_USER (or your intended username from above)
+- In the "System Properties" popup, select "Environment Variables", 
 
-``` code
-cd  C:\Users\MOTUS_USER
-mkdir Projects
-```
+- In the next Popup, select "Path" in the "System Variables" click "Edit"
+
+- Add a line that says "C:\Program Files\Git\cmd" 
+
+  
 
 ### 7.0 - Getting the code project from Github
 
@@ -270,32 +292,32 @@ KioskCfgFile="kiosk.cfg"
 
 The '~' instructs R to open the kiosk *relative* to the logged in users home directory.
 
-##### 8.3 Check for packages 
+##### 8.3 Check for packages (Again!) 
 
-- Notice the row of tabs on the IDE right-side panel approximately mid page.  Select the 'Files' tab and navigate and open the file  ***code/global.R***  ( "code" is a subdirectory of MOTUS_KIOSK top-level folder).
+- Notice the row of tabs on the RStudio IDE right-side panel approximately mid page.  Select the 'Files' tab and navigate and open the file  ***global.R***  
 
-- Check at the top of the main source code window for a warning regarding several packages that may need still need to be installed... Go ahead and click the "Install" and Wait while it installs numerous package dependencies. This can take around 4 to 5 minutes....
+- Check at the top of the main source code window for a warning regarding several packages that may need still need to be installed... Go ahead and click the "Install" and wait while it installs any more package dependencies. (This can take around 4 to 5 minutes....)
 
 
-​	Note: see hints back in section 4 regarding getting packages to install.
+​	Note: see hints back in section 5 regarding getting packages to install.
 
 ​	Repeat checking for other packages still needing to be installed (if any) for these source code files:
 
-- open and check file: code/ui.R
+- open and check file: ui.R
 
 - open and check file: server.R
 
-  (And in the modules sub-folder....)
+  (Andnow in the in the code/modules sub-folder....)
 
-- open and check file: modules/receiverDeploymentDetections.R
+- open and check file: code/modules/receiverDeploymentDetections.R
 
-- open and check file: modules/ReceiverDetections.R
+- open and check file: code/modules/ReceiverDetections.R
 
-- open and check file: modules/tagDeploymentDetails.R
+- open and check file: code/modules/tagDeploymentDetails.R
 
-- open and check file: modules/tagDeploymentDetections.R
+- open and check file: code/modules/tagDeploymentDetections.R
 
-##### 8.4 Ready to run.
+##### 8.4 Ready to run !
 
 Now close the tabs for all source code files **EXCEPT** global.R, ui.R and server.R
 
@@ -305,7 +327,7 @@ After RStudio builds the app it should pop-up the app in its own browser window.
 
 Watch for warnings or error in the console panel ( lower left quadrant) below the file window. 
 
-Two other things to observe...
+**Two other things to observe...**
 
 1-When the app is running - on the Console tab will be a red stop-sign. Use that to halt the app to make changes or reload the config file etc
 
@@ -315,59 +337,69 @@ Two other things to observe...
 
 ### 9.0 - Make your own kiosk to customize
 
-Next we will create a clone of the DEFAULT kiosk and give it your own name in your own folder.  This will become the kiosk you modify and run, customized with your own content and receivers etc.
+Next we will create a clone of the DEFAULT kiosk and give it your own name in your own folder.  
 
-Do you have a name in mind?  Whatever you like (*no spaces or special characters except underscore should be OK*).  I will use "mycustomkiosk"
+***This will be the kiosk you modify and run, customized with your own content and receivers etc.***
 
-
+Do you have a name in mind?  Use whatever you like (*except no spaces or special characters -  underscore should be OK*).  I strongly suggest you keep it short.  Long names may cause you headaches later on.  I will use the name "customkiosk" here for documentation purposes.
 
 **9.1** Decide where to keep your content. It can be anywhere however there are a couple obvious choices. The goal is to separate your customized site-dependent code from the repository code.
 
-- Best practice is someplace outside of the repository project such as the user's "Documents" folder. eg  C:/Users/MOTUS_USER/Documents (or perhaps Projects). This keeps good separation and protection of your customized content from the files that came from the repository.
+1. Best practice is someplace outside of the repository project such as the user's "Documents" folder. eg  C:/Users/MOTUS_USER/Documents. 
 
-- In the MOTUS_KIOSK/kiosks folder (same as where DEFAULT lives) This is convient as you develop quickly using the IDE - however its messy to maintain once you 'go live' or need to update versions or bug fixesfrom the repository etc. 
+   - This keeps good separation and protection of your customized content from the files that came from the repository. 
+   - It has advantages if you want to use a code repository like github to maintain your content. 
 
-  
+2. Or you may prefer to add it to the MOTUS_KIOSK/kiosks folder (along side where DEFAULT lives).
+
+   - This is convient as you develop quickly using the IDE.
+   - It is somewhat messy to maintain if you intend to add your content to your own it to a github repository.
+
+   *I will assume in this documentation that you will use location 1* (C:/Users/MOTUS_USER/Documents)
 
 **9.2** Open WindowsExplorer (or OSX Finder) and do a copy...
 
 - Navigate to:  C:\Users\MOTUS\_USER\Projects\MOTUS_KIOSK
 
-- "Copy" (right-click) the entire folder kiosks/DEFAULT 
+- "Copy" (right-click) the entire subfolder folder "kiosks" 
 
-- Navigate to your MOTUS_USER\Documents folder
+- Navigate to your MOTUS_USER\Documents\ folder
 
 - "Paste" the copy
 
-- Navigate to that new kiosks folder (C:\Users\MOTUS_USER\Documents\kiosks)
+- Navigate into that new kiosks folder (C:\Users\MOTUS_USER\Documents\kiosks)
 
-- Right-click the "DEFAULT" folder and rename it "mycustomkiosk"
+- Right-click the "DEFAULT" folder and rename it "customkiosk"
 
-  If you have been following along with my conventions for names you should, you should now have a folder:  C:\Users\MOTUS_USER\Documents\kiosks\mycustomkiosk
+  If you have been following along with my conventions for names you should, you should now have a folder:  C:\Users\MOTUS_USER\Documents\kiosks\customkiosk
+  
+  
 
 ### 10.0 - Configuration
 
 ##### 10.1 - Re-Point the starup.cfg to run your new kiosk.
 
-Now back in the RStudio IDE -  select the 'Files' tab again and navigate to the top-level project folder and find startup.cfg.  Open it.
+Now back in the RStudio IDE -  select the 'Files' tab again and navigate to the top-level project folder and find startup.cfg.  Open it in the editor.
 
-Change the StartKiosk value from DEFAULT to whatever path and name you used above. Again we can use relative paths here since we are working as a local user in the IDE.
+- Change the KiosksPath to whatever folder path you used above. 
+- Change the StartKiosk value from DEFAULT to whatever name you used above. Again we can use relative paths here since we are working as a local user in the IDE.
 
 ```
 KiosksPath="~/Documents/kiosks"
-StartKiosk="mycustomkiosk"
+StartKiosk="customkiosk"
 KioskCfgFile="kiosk.cfg"
 ```
 
-Save it and close the Startup.cfg file ( dont forget the 'Save' !)
+- Save it and close the Startup.cfg file ( dont forget the 'Save' !)
 
-Select the global.R file again and click 'Run app' button.  The app should run properly and if you scroll back in the console window and you should see a line like  "global KioskName:mycustomkiosk" 
+- Select the global.R file again and click 'Run app' button.  The app should run properly and if you scroll back in the console window and you should see a line like  "global KioskName:customkiosk" 
+
 
 From now on, you will be running and working to customize your own copy of the kiosk.
 
 ##### 10.2 - Edit your kiosk.cfg file.
 
-In your own kiosk directory (mycustomkiosk)  is a file called kiosk.cfg.  It contains the default set of key/value pairs that do things like set the target motus receiver deployment(s), your icons , banner logos, main title etc.
+In your own kiosk directory (customkiosk)  is a file called kiosk.cfg.  It contains the default set of key/value pairs that do things like set the target motus receiver deployment(s), your icons , banner logos, main title etc.
 
 Jump over to the document **2_CONFIGURATION_GUIDE_README.md** and set the parameters in your kiosk.cfg as described there. 
 
@@ -381,23 +413,39 @@ Then restart the web application in Studio to verify the results.
 
 ### 11.0 - Configure your own "Home" tab content
 
-The descriptive content that appears in the in the main page body when ever the "Home" tab is open comes from a language dependent .html file found in the project sub-directory at **www/homepages**
+The descriptive content that appears in the in the main page body when ever the "Home" tab is open comes from a language dependent .html file.
+
+**WARNING:** Teaching html document structure is beyond the scope of this documentation. Be careful to maintain correct opening and closing html tags as described below and verify that your changes render correctly in an html browser such as firefox or chrome before replacing the existing files.
+
+**Homepage HTML files are found in your kiosk's  www/homespages subdirectory.** If you followed along section 9.0,  that would be your Documents folder at kiosks/customkiosk/www/homepages
 
 I suggest you at minimum modify the page title from "Default Homepage for a Generic Motus Data Kiosk" to something more relevant to you so you have a good visual cue your looking at the correct homepage.
 
-There should be one file for each language that the application supports - currently: English, Spanish and French.  Feel free to copy and edit the default pages provided.  And make sure to set the correct filenames in your kiosk.cfg configuration file
+There will be one file for each language that the application supports - currently: English, Spanish and French. 
 
--   default_homepage_en.html for English
+- Begin by **copying** the default english file from *default_homepage_en.html* to *customkiosk_homepage_en.html* (or name of your choice)
+- Place any images you intend to use into the www/homepages/homepage_images folder.
+- Open the new html file with either an html editor or a plain text text editor.  Any standard text editor (eg Notepad) can be used as the text within these pages is relatively simple to identify.  (An html editor can be useful if you are new to editing html).  Or an editor with color "syntax highlighting" can help identify the content needing modification  (see Figure 1.)
 
--   default_homepage_es.html for Spanish
+ ![Figure1](./md_images/SH_EditHomepage.png)
 
--   default_homepage_fr.html for French
+- Carefully work through the document replace any content within standard html 'tags'. (eg <div> </div>div or <p></p> tags.
 
-Edit these files carefully with an html editor or a text editor of your choice.
+- Link to your own images in the homepages/homepage_images directory by modifying the image links <img> in the html file to point to the correct images.
 
-*Someplace visible in your kiosk you **must** give proper credit to the Motus folks and Birds Canada and should include a statement regarding Acceptable Use.* I have chosen to put that in the section "Credits" on the "Home" screen.
+- *Someplace visible in your kiosk you **must** give proper credit to the Motus folks and Birds Canada and should include a statement regarding Acceptable Use.* I have chosen to put that in the section "Credits" on the "Home" screen.
 
-**WARNING:** Teaching html document structure is beyond the scope of this documentation. Be careful to maintain correct opening and closing html tags and verify that your changes render correctly in an html browser such as firefox or chrome before replacing the existing files.
+- Save your edited file.
+
+- You can easily check your work as you go by opening the file in any web browser. 
+
+- Once you are satified with your new page (using a browser to check)  you need to make files for the other languages your support (ge. _es.html, _es,html files) as described in **Appendix 1**  of this document.
+
+- Test all newly translated files by opening in a web browser.
+
+- Finally - **make sure to set the correct filenames in your kiosk.cfg configuration file.**   Then retest using the kiosk application.
+
+  
 
 ### 12.0 - Configure your own "Species" tab content
 
@@ -405,10 +453,52 @@ Edit these files carefully with an html editor or a text editor of your choice.
 
 The descriptive content that appears in the in the in the "Species" tab when ever a new animal is selected comes from a language dependent .html file in the project sub-directory www/speciespages.
 
-There should be a files for each species you want to describe, one in each language you wish to support.
+**WARNING:**  *when creating species content, it is your responsibility to be sure you have legal permission to use all images, maps and text you incorporate. Be sure to give proper credit for anything you use. Most content taken from the web is protected by copyright or other terms of use.  Many favorite birding sites such as Audubon, EBird and Cornell have prohibitions against repurposing (or reposting) their images and content.  If you cant find and document a clear statement that you have the permission to use - don't use it.*
 
-***File name choice here is critical.*** The software builds a compacted lowercase 'key' using the motus species name field and tries to match that to a file in the speciespages directory.
+There should be several files for each species you want to describe - one in each language you wish to support.  Notice that the filenames must all begin with "species_" and end with the same pattern for the supported languages (eg.   _en.html, _fr.html, _es.html )
 
-To add your own species files, copy any group files (one for each language) to use as templates and edit them carefully with an html editor or a text editor for the species of your choice. Save them using the filename pattern described above.
+***The file name choice here is critical.*** The software builds a compacted lowercase filename using the motus species name field and tries to match that to a file in the speciespages directory.
 
-**WARNING:** Teaching html document structure is beyond the scope of this documentation. Be careful to maintain correct opening and closing html tags and verify that your changes render correctly in an html browser such as firefox or chrome before replacing the existing files.
+So motus detections of an  "American Robin" will match to a file  named "species_americanrobin_en.html" for English and "species_americanrobin_en.html" in Spanish etc.
+
+**Species HTML files are found in your kiosk's  www/speciespages.**
+
+To add your own species files:
+
+- Copy ***one*** of the existing species pages to be used as a template for the new species. For example to make a new page for a Swainson's Thrush, copy *species_americanrobin_en.html* to *species_swainsonsthrush_en.html* (if you prefer to work in French or Spanish, use the _fr or _es file)
+- Place any images you intend to use into the www/speciespages/species_images folder
+- Open the html file with either an html editor or a plain text text editor.  () An html editor can be useful if you are new to editing html).   Or any standard text editor (eg Notepad) can be used as the text within these pages is relatively simple to identify. However an editor with color "syntax highlighting" can help identify the content needing modification (see Figure 2.) 
+  ![Figure2](./md_images/SH_EditHtml.png)
+- Carefully work through the document replace any content within standard html 'tags'. (eg <div> </div>div or <p></p> tags.
+- Link to your own images in the speciespages/species_images directory by modifying the image links <img> in the html file to point to the correct images.
+- Save your edited file following the filename pattern described above.
+- You can easily check your work as you go by opening the file in any web browser. 
+- Once you are satified with your new page (using a browser to check)  you need to make files for the other languages your support (ge. _es.html, _es,html files) as described in **Appendix 1**  of this document.
+
+-  Finally test all new files by opening in a web browser, then retest using the kiosk application.
+
+
+​    
+
+### Appendix 1 - Translating HTML
+
+After you are satified with your new page in your chosen language (using a browser to check)  you need to make files for any other languages you support (e.g.   _es.html,  _es.html )
+
+- Copy the html file you wish to translate to make one each for the other languages  The files will still be in english at this point - but with a new filenames indicating the language you will translate to: some_page_en.html is copied to both some_page_fr.html and some_page_es.html
+
+- If you have an "html page translation application" you can use it to translate each file. 
+
+- Otherwise, you will need to manually translate each file using a free tool such as Goodle Translate
+
+   (http://translate.google.com)
+
+  - Open the just-coped file(s) in an html or plain text editor.
+
+  - Work your way through the file tag by tag or in small sections by selecting and copying the translatable text content and pasting into Google Translate.  
+
+  - Set the target translation language and then then select the translated content and copy (select,copy and paste ) it back into the html file in place of the original English content.
+
+  - When finished with the entire document - save the translated html and then test by opening it in any browser.
+
+  - Repeat for any additional files in other languages.
+
