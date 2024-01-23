@@ -221,8 +221,6 @@ if(hasFooter == 1){
   nrecords <- num.rows
 }
 
-
-
 #build four vectors from table data
 #for(i in 1:num.rows){
 n <- 0
@@ -283,8 +281,7 @@ for (node in a_nodes) {
 # 2022-08-21                    FDSHQ 27.62  -82.71                 5938   1 TRUE     0
 
 summaryFlight_df <-data.frame(date,site,lat,lon,receiverDeploymentID,seq,use,usecs,doy,runstart,runend,runcount)
-
-#print("---------------------tagDeploymentDetections summaryFlight_df line 262 ----------------")
+#print("---------------------tagDeploymentDetections summaryFlight_df line 288 ----------------")
 #print(summaryFlight_df)
 
 # obtain the track data with so we can correctly order the daily summary data
@@ -296,8 +293,8 @@ summaryFlight_df <-data.frame(date,site,lat,lon,receiverDeploymentID,seq,use,use
 tagTrack_df <- tagTrack(tagDeploymentID, 0, 0)
 
 ### NOTE: it appears that motus will only report if at least two detections per day...
-
-
+#print("tagTrack_df at line 300")
+#print(tagTrack_df)
 # we need to add the correct receiverDeploymentID to tagTrack_df to support the
 # ability to filter out specific wild point detections in later steps.
 
@@ -309,9 +306,35 @@ tagTrack_df <- tagTrack(tagDeploymentID, 0, 0)
 #collapse duplicates
 distinctSites_df<-tagTrack_df[!duplicated(tagTrack_df[ , c("site") ]),]
 # for each distinct....
-if( length(distinctSites_df > 0 )){
+#print("distinctSites df at line 313")
+#print(distinctSites_df)
+            
+# handle very rare occurance where we have a detection reported in daily summary
+# data but the json call returns [] (data not processed yet or only
+# one detection but jason filters to two?) 
+if( nrow(distinctSites_df) == 1 ){
+  #only got the tagging site?
+  message("Missing initial detection - fringe case")
+  a_df<-summaryFlight_df[c("site","lat" ,"lon","seq", "usecs", "receiverDeploymentID","date", "doy", "use", "runstart","runend","runcount")]
+
+  the_date <- a_df[["date"]]
+  yr <- as.numeric(strftime(the_date, format = "%Y", tz = "UTC"))
+  jday <- as.numeric(strftime(the_date, format = "%j", tz = "UTC"))
+  doy <- (yr*1000)+jday
+  usecs<-as.numeric(as.POSIXct(the_date))
+  a_df[1,"doy"]<-doy
+  a_df[1,"usecs"]<-usecs
+  a_df[1,"runstart"]<-usecs
+  a_df[1,"runend"]<-usecs
+  a_df[1,"runcount"]<-2
+  distinctSites_df[nrow(distinctSites_df) + 1,] <- a_df
+  tagTrack_df [nrow(tagTrack_df) + 1,] <- a_df
+}
+
+if( nrow(distinctSites_df > 0 )){
   for(i in 1:nrow(distinctSites_df)) {
     row <- distinctSites_df[i,]
+    
     ##. not used  theDate=row[["date"]]
     ## theID=row[["receiverDeploymentID"]]
     theSite=row[["site"]]
@@ -332,7 +355,8 @@ if( length(distinctSites_df > 0 )){
   } # end for each row
 } #endif length distinct sites
 # we now have corrected receiverDeploymentID in tagTrack_df
-
+#print("tagTrack_df at line 337")
+#print(tagTrack_df)
 
 #sort flight detection so most recent appears at bottom of the list
 ## do in tagTrack.R.  tagTrack_df <- tagTrack_df[ order(tagTrack_df$usecs, decreasing = FALSE), ]
