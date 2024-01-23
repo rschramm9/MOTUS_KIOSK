@@ -36,7 +36,7 @@ tagTrack <- function(tagDeploymentID, useReadCache=0, cacheAgeLimitMinutes=60)
   ##url <- "https://motus.org/data/json/track?tagDeploymentId=45113"
   
   #url<-"https://motus.org/data/json/track?tagDeploymentId=944115"
-  message(url)
+  #message(url)
   
   cacheFilename = paste0(config.CachePath,"/tagTrack_",tagDeploymentID,".Rda")
   
