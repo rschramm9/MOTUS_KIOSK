@@ -22,15 +22,15 @@ In this document will guide you along the following path:
 
 At the end of these steps you should have your own copy of the shiny web app up-and-running using R-Studio on your local computer and ready to begin customizing it.
 
-If you intend to deploy as a kiosk you will want to also complete steps in the document SETUP_FOR_WINDOWS.md in the project's top level directory.  Unfortunately there are quite a number of steps and tweaks to Windows 10 and the user accounts settings required to get the full, securely locked-down kiosk behavior we ultimately require. The provided document describes these settings and tweaks in full and painful detail.
+After cusomization, if you intend to deploy as a kiosk you will want to also complete steps in the next two  documents.  SETUP_FOR_WINDOWS.md in the project's documents directory.  This document covers steps and tweaks to Windows 10 and the user account settings required to get the full, securely locked-down kiosk behavior we require. 
 
-The final deployment and configuration of the app to a kiosk-like display using OpenKiosk is described in the third companion document FINAL_DEPLOYMENT.md in the project's top level directory.
+The final deployment and configuration of the app to a kiosk-like display using OpenKiosk is described in the companion document FINAL_DEPLOYMENT_FOR_WINDOWS.md in the project's documents directory.
 
-There is a document that describes  the available configuration parameters and performance 'tweeks' - CONFIGURATION_GUIDE_README.md
+There is a document that describes  all of the available configuration parameters  - the CONFIGURATION_GUIDE_README.md
 
-There is a useful document describing TIPS_TRICKS_AND_MAINTENANCE.md
+There is also useful document describing TIPS_TRICKS_AND_MAINTENANCE.md
 
-If you are wanting to modify or further develop the application there is a fifth document named DEVELOPERS_README.md that may be helpful.
+If you are wanting to modify or further develop the application there is also document named DEVELOPERS_README.md that may be helpful.
 
 #### 1.0 - A Brief Description of "The System"
 
@@ -48,7 +48,7 @@ The 'kiosk system' can be viewed as built on these .
 
 Windows 10 Pro OS was specified a requirement for the Ankeny Hill Nature Center.
 
-Nothing precludes you from choosing a different operation system. I have developed and run everything quite well at home under Mac OSX (v12.6) and then deployed to Windows 10 target. It should also be able to be run on small generic linux machines although I have not attempted to verify.
+Nothing precludes you from choosing a different operating system. I have developed and run everything quite well at home under Mac OSX (v12.6) and then deployed to Windows 10 target. It should also be able to be run on small generic linux machines although I have not attempted to verify.
 
 The kiosk mode of deployment is documented for Windows.  Deployment details for kiosk deployment to other platforms (OSX, linux) is a future (if ever) topic.
 
@@ -107,69 +107,36 @@ cd  C:\Users\MOTUS_USER
 mkdir Projects
 ```
 
-### 
 
-### 4.0 - Installing R for your platform 
 
-***In this documentation the administrator account is assumed to be "Admin"*** 
+### 4.0 - Installing R and packages for your platform 
 
-##### Windows:
+```
+**** IMPORTANT NOTE ****:   it is important to understand where R software 'packages' will be installed.  Packages can be installed 'globally'- once for all 'users', or individually - once for each user account.  If R is already installed on your computer it is likely it defaulted to requireing packages be installed per-user. I describe how to install packages globally below. Just be aware you may need to install packages multiple times. RStudio will help alert you to any missing packages.
+```
 
-Log in as administrator.  
-
-NOTE: We will install "R" first - then later install "RStudio" 
+**4.1**  Download R
 
 If R is not already installed (see: <https://www.r-project.org/>) - Download the installer for your platform to your downloads folder
 
-NOTE: I recommend not installing R to into C:\Program Files as it makes installing R-package libraries  that are needed later less difficult to manage.
+**4.2** Log in as an administrator - User=Admin
 
-- Double-click the installer.
-- Where the installer asks where to install,  modify it to install into "C:\R\R-4.4.2" (or whatever your current R downloaded version is).  
+- Double-click the installer from your Downloads folder.
+
+- The installer asks where to install. **We do not want the default "C:\ProgramFiles"**  Modify it to install into "C:\R\R-4.3.2" (or whatever your current R downloaded version is). 
+
+- ![Install R](./md_images/SH_InstallingR.png)
+
+
+  (Avoiding installation to C:\ProgramFiles is what allows us to install packages globally)
+
 - Accept all of the other installer defaults.
 
-**Other Operating systems:**
-
-See:  https://cran.r-project.org/
-
-For Apple OSX current version is  4.3.1 (2023-06-16)
-
-
-
-### 5.0 - Install RStudio IDE Free Edition for your platform
-
-RStudio is the development environment (IDE) that is used to create and test programs in R. 
-
-##### 5.1 - Install RStudio 
-
-Log in as administrator
-
-Download RStudio for your platform from <https://www.rstudio.com/products/rstudio/download/>
-
-Typically the installer will be in your "Downloads" folder.  Double-click it and follow the instruction, acccepting all of the defaults (This app is ok to install to Program Files)
-
-##### 5.2 - Install Required R Packages
-
-We use quite a few additional packages (software libraries) installed for R.  This can be a somewhat frustrating part depending on which revision levels of R and the various packages are currently considered 'current'. 
-
-An annoying default feature is that R is it installs packages in the current users local directories.  Since we are running from two user accounts that means installing packages twice, leading to concerns of which package is being used and packages libries getiing out of sync with upgrades etc.
-
- It seems to me desirable to install packages globally once for all users to avoid package version issues and confusion. However the instructions to do this  vary immensely depending on which operating system, which version, version, user permissions etc.
-
-**5.2.1** **If you already have previously  installed R in C:\Programs FIles  I recommend you just installing packages twice! ** - once for user=Admin and then for user=MOTUS_USER.  Packages evolve very slowly rarely need updating until the version of R itself needs updating.  We can also use the RStudio IDE "Packages" management tab to track versions and keep each user updated when needed.
-
-New or advanced system users or administrators that may want to explore other global package installations and configuration. These links may help. 
-
-https://cran.r-project.org/doc/manuals/R-admin.html#Managing-libraries
-
-And: https://stackoverflow.com/questions/24387660/how-to-change-libpaths-permanently-in-r
-
-
-
-**5.2.2** Run R console (as user = Admin).  
+**4.3**  Run the R.exe console program as user = Admin to install packages  
 
 **Note:** R may ask you to select a mirror site - Use one physically close to you. I used the mirror at OSU in Oregon)
 
-Enter the following install.packages cmds into the R Console. I suggest doing them one line at a time to waatch for any failures. 
+Enter the following install.packages cmds into the R Console. I suggest doing them a few at a time to watch for any failures.  It can take serveral minutes to completely install some of the larger packages.
 
     install.packages("shiny")
     install.packages("shinymeta")
@@ -196,15 +163,17 @@ Enter the following install.packages cmds into the R Console. I suggest doing th
     install.packages("fs")
     install.packages("units")
 
-**5.2.3** If you are not installing packages "globally" for all users as describe above in 4.2.1 - then repeat package installation while logged in as user=MOTUS_USER.
+**4.4**  If you are not installing packages "globally" for all users as described above in 4.0 - repeat package installations using R console while logged in as user=MOTUS_USER.
 
 
 
-**5.2.4  TROUBLESHOOTING Failed Package installs.**
+**4.5  TROUBLESHOOTING Failed Package installs.**
 
 **Note:** R may cleanly install or may report something like "The binary package is available but source versions are later".  
 
 You can try installing with **install.packages("*thepkgname*", type="source")** to cause a recompile with RTools or  **install.packages("*thepkgname*", type="binary")**  Compiling from source would probably be best to get the latest fixes etc.
+
+RTools is a separate program that must be installed. See https://cran.r-project.org/bin/windows/Rtools/
 
 **Note:** Occasionally a package install may also hang with "package xxxx not found" displayed in the Console. So far that has been cleared by typing directly in the R-Studio Console like:
 
@@ -213,6 +182,20 @@ install.packages('xxxx', dependencies = TRUE)
 or
 install.packages('xxxx', dependencies = TRUE, repos='http://cran.rstudio.com/')
 ```
+
+
+
+### 5.0 - Install RStudio IDE Free Edition for your platform
+
+RStudio is the 'integrated development environment' (IDE) that is used to create and test programs in R. 
+
+##### 5.1 - Install RStudio 
+
+Log in as an **administrator.**
+
+Download RStudio for your platform from <https://www.rstudio.com/products/rstudio/download/>
+
+Typically the installer will be in your "Downloads" folder.  Double-click it to run and follow the instructions, acccepting all of the defaults (This app is ok to install to Program Files)
 
 
 
@@ -226,17 +209,19 @@ NOTE: This install on windows machines can be a bit frustrating due to the varia
 
 Most issues involve git not being able to add itself to your "Path" environment variable.  To check/resolve
 
-- On windows, in the "Search Box" type "env" and it should show something like: "Edit System Environment Variables".  
+On windows, in the "Search Box" type "env" and it should show something like: "Edit System Environment Variables".  
 
-- Run that application and provide the Admin password when asked.
+Run that application and provide the Admin password when asked.
 
-- In the "System Properties" popup, select "Environment Variables", 
+In the "System Properties" popup, select "Environment Variables", 
 
-- In the next Popup, select "Path" in the "System Variables" click "Edit"
+In the next Popup, select "Path" in the "System Variables" click "Edit"
 
-- Add a line that says "C:\Program Files\Git\cmd" 
+Add a line that says "C:\Program Files\Git\cmd" 
 
-  
+![GitPath](./md_images/SHgitpath.png)
+
+
 
 ### 7.0 - Getting the code project from Github
 
@@ -251,11 +236,11 @@ In your Projects folder..  (e.g.  **C:\Users\MOTUS_USER\Projects**)
 Open a command window such as Cmd.exe (windows)  or iTerm (macs) and type:
 
 ``` code
-cd  C:\Users\MOTUS_USER\Projects
+cd  C:\Users\MOTUS_USER\Projects      (or  cd ~/Projects for Macs)
 git clone https://github.com/rschramm9/MOTUS_KIOSK.git
 ```
 
-Git may pop-up an authentication options window in which case you will need to register. -- provide your git credentials via a web browser if asked. Once authenticated, the download should proceed along the lines of:
+Git may pop-up an authentication options window in which case you will need to register an account with GitHub . -- provide your git credentials via a web browser if asked. Once authenticated, the download should proceed along the lines of:
 
 ``` code
 Cloning into 'MOTUS_KIOSK'...
@@ -273,16 +258,22 @@ A complete copy of the repository should now be in subdirectory at: C:\Users\MOT
 
 **8.1** Load project into RStudio.
 
-- Run the RStudio IDE. Once open, Click File \> New Project
+- Run the RStudio IDE.  Once open, Click File \> New Project
 - From the "New Project" popup, select "Existing Directory"
 
 - "Browse" **INTO** the folder: C:\Users\MOTUS\_USER\Projects\MOTUS_KIOSK and click "Open"
 
 - After the  'FileOpen' dialog returns you to the wizard, Click "Create Project" button.
 
+- Familiarize yourself with this diagram as you proceed to run the application in RStudio
+
+![RStudio](./md_images/SH_RStudio.png)
+
+
+
 ##### 8.2 Check the initial startup.cfg
 
-Notice the row of tabs on the IDE right-side panel approximately mid page.  Select the 'Files' tab and navigate to the top-level project folder (MOTUS_KIOSK),  find startup.cfg and open it. It should look like below.
+Notice the row of tabs on the IDE right-side panel approximately mid page.  Select the 'Files' tab and navigate to the top-level project folder (MOTUS_KIOSK),  find startup.cfg and open it. It should look like below in the Editor Panel.
 
 ```
 KiosksPath="~/Projects/MOTUS_KIOSK/kiosks"
@@ -292,14 +283,19 @@ KioskCfgFile="kiosk.cfg"
 
 The '~' instructs R to open the kiosk *relative* to the logged in users home directory.
 
-##### 8.3 Check for packages (Again!) 
+##### 8.3 Check for missing packages (Again!) 
 
-- Notice the row of tabs on the RStudio IDE right-side panel approximately mid page.  Select the 'Files' tab and navigate and open the file  ***global.R***  
+- Notice the row of tabs on the RStudio IDE right-side panel approximately mid page.  Select the 'Files' tab and navigate and open the file  ***global.R***  and open it.
 
-- Check at the top of the main source code window for a warning regarding several packages that may need still need to be installed... Go ahead and click the "Install" and wait while it installs any more package dependencies. (This can take around 4 to 5 minutes....)
+- Check at the top of the code Editor Panel for any warnings regarding several packages that may need still need to be installed... 
+
+![Missing package warning](./md_images/SH_MissingPackage.png)
 
 
-​	Note: see hints back in section 5 regarding getting packages to install.
+- Go ahead and click the "Install" and wait while it installs any more package dependencies. (This can take around 4 to 5 minutes....)
+
+
+​	Note: see hints back in section 4.5 regarding getting packages to install.
 
 ​	Repeat checking for other packages still needing to be installed (if any) for these source code files:
 
@@ -307,7 +303,7 @@ The '~' instructs R to open the kiosk *relative* to the logged in users home dir
 
 - open and check file: server.R
 
-  (Andnow in the in the code/modules sub-folder....)
+  (And now in the in the code/modules sub-folder....)
 
 - open and check file: code/modules/receiverDeploymentDetections.R
 
@@ -325,7 +321,7 @@ With one of those three files selected for view in the code window ( upper left 
 
 After RStudio builds the app it should pop-up the app in its own browser window.
 
-Watch for warnings or error in the console panel ( lower left quadrant) below the file window. 
+Watch for warnings or error in the Console Panel ( lower left quadrant). 
 
 **Two other things to observe...**
 
