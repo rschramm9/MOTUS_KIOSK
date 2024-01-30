@@ -39,6 +39,7 @@ Some ways security may be compromised are:
 - Administrator not correctly configuring the security settings for OpenKiosk
 - Modifying the html homepage, species pages etc by adding hypertext links that go 'off-app' or 'off-site'. The kiosk app would have no way to regain control if you were to allow this.
 -  Sharing or not securing the Administrator account password.
+-  Allowing the computer to be used for other tasks or by other users.
 
 Occasionally someone responsible on-site may need access to power cycle the
 computer if the touchscreen becomes unresponsive. This has been typically due to power
