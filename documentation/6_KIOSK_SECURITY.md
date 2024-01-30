@@ -24,7 +24,7 @@ keyboard.
 - For additional security it is recommended to lock the computer itself in a cabinet along with
 the keyboard so there is no access to the power button. 
 
-The data queries are made withing the application as simple http requests straight to motus.org public access data server.  All of that is hidden within the application completely out of sight and reach of the Motus user.
+The data queries are made within the application as simple http requests straight to motus.org public access data server.  All of that is hidden within the application completely out of sight and reach of the Motus user.
 
 The networking requirements for internet bandwidth for the app is quite low. 
 Data are cached locally to minimize the http requests going out to the motus.org server.
