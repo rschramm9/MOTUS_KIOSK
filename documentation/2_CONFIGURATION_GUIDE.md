@@ -269,7 +269,8 @@ There should be one file for each language that the application supports - curre
 
 ##### 2.12 - "Species" tab content
 
-There is an optional "Species" tab on the ReceiverDetections panel.  You can create and link to species specific content that your users can view when selecting any detectected bird.  It comes from  language dependent html files that you create in the project sub-directory www/speciespages. A few species pages are already written for you to use as templates. If a species is detected that has no content written for it then the default is displayed.
+There is an optional "Species" tab on the ReceiverDetections panel.  You can create and link to species specific content that your users can view when selecting any detectected bird.  It comes from  language dependent html files that you create in the project sub-directory www/speciespages. A few species pages are already written for you to use as templates. If a species is detected that has no content written for it then the default is displayed. (see also:
+START_HERE.md  Section 12.0 - Configure your own "Species" tab content)
 
 ```
 EnableSpeciesInfoTab=1

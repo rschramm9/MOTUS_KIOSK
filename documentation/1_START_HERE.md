@@ -112,7 +112,12 @@ mkdir Projects
 ### 4.0 - Installing R and packages for your platform 
 
 ```
-**** IMPORTANT NOTE ****:   it is important to understand where R software 'packages' will be installed.  Packages can be installed 'globally'- once for all 'users', or individually - once for each user account.  If R is already installed on your computer it is likely it defaulted to requireing packages be installed per-user. I describe how to install packages globally below. Just be aware you may need to install packages multiple times. RStudio will help alert you to any missing packages.
+**** IMPORTANT NOTE ****:   it is important to understand where R software 'packages' will
+ be installed. Packages can be installed 'globally'- once for all 'users', or individually -
+once for each user account.  If R is already installed on your computer it is likely it
+defaulted to requireing packages be installed per-user. I describe how to install packages
+globally below. Just be aware you may need to install packages multiple times.
+RStudio will help alert you to any missing packages.
 ```
 
 **4.1**  Download R
