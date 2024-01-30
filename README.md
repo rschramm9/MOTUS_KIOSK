@@ -13,17 +13,23 @@ The Motus Wildlife Tracking System (Motus) is an international collaborative res
 
 Below are some example screen captures.
 
+*Figure 1 - Kiosk homepage*
 ![Figure1](./documentation/md_images/RM_KioskHomepage.png)
 
-*Figure 1 - Kiosk homepage*
-
-![Figure2](./documentation/md_images/RM_KioskReceiverDetections.png)
 
 *Figure 2 - The Kiosk Receiver Detections tab panel
+![Figure2](./documentation/md_images/RM_KioskReceiverDetections.png)
 
-![Figure3](./documentation/md_images/RM_KioskReceiverDetectionsMap.png)
+
 
 *Figure 3 - The Kiosk Receiver Detections map panel
+![Figure3](./documentation/md_images/RM_KioskReceiverDetectionsMap.png)
+
+
+
+*Figure 4 - Easily customized for your organization.
+![Figure4](./documentation/md_images/RM_HNCHomepage.png)
+
 
 
 
@@ -77,9 +83,7 @@ These are the machines I have used:
 - NUC6CAY Celeron J3455 Processor 1.5Ghz 8GB Ram 120GB SSD w/wifi and Windows10 Pro (eBay $100)
 
 * NUC7i5BNH MiniPC QUadCore i5-78260U 8Gb w/128Gb SSD w/wifi and  Windows 10 Pro. (eBay $185)
-
-* CHUWI Larkbox PRO miniPC 6GbRam QuadCore 2.7Ghz Celeron J4125 with wifi and Windows 10 (Home Ed) $139 Amazon -- not recommended due to possible reliablity concerns, but its cute!
-
+* CHUWI Larkbox PRO miniPC 6GbRam QuadCore 2.7Ghz Celeron J4125 with wifi and Windows 10 (Home Ed) $139 Amazon
 * Apple Macbook Pro (circa 2018) 2.9 Ghz Intel core i9  32Gb w/macOS  12.6  (my development system)
 
 The touchscreen I use is : Dell 24 Touchscreen Model P2418HT (Dell.com $350)
