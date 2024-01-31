@@ -28,8 +28,8 @@ The data queries are made within the application as simple http requests straigh
 
 The networking requirements for internet bandwidth for the app is quite low. 
 Data are cached locally to minimize the http requests going out to the motus.org server.
-Its an asyncronous action. When a user selects a receiver or touches on a detection, a request for only that item is made. 
-Only the minimum required data is requested and then only if it's not available in the cache.
+It is an asyncronous action. When a user selects a receiver or touches on a detection, a request for only that item is made. 
+Only the minimum required data is requested and then only if it's not available in the cache from a prior request.
 
 There is only one small 'background' activity which is a very small http request issued every five minutes just to see if motus.org is online (similar issuing a 'ping' but at the http request/response level)
 
