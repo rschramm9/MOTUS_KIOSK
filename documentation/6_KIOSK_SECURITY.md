@@ -45,7 +45,7 @@ There is only one small 'background' activity which is a very small http request
 There is no motus.org login, password, account etc required to retrieve data from motus.
 Cache use and frequency parameters are set via your kiosk.cfg file.
 
-If the facilities WiFi network topology is separated in to 'guest; and 'internal' partitions, the kiosk application can happily reside in either as long as the connection and authentication credentials (passwords) do not expire. If they are set to auto-expire it would require administrator intervention to rejoin the kiosk computer to the network.
+If the facilities WiFi network topology is separated in to 'guest; and 'internal' LANs, the kiosk application can happily reside in either as long as the connection and authentication credentials (passwords) do not expire. If they are set to auto-expire it would require administrator intervention to rejoin the kiosk computer to the network. Deployment on a 'guest' WiFi network may be more secure as the network router typically blocks access to shared resources such as a disk drives, printers and other computers on the internal LAN.
 
 ***You as administrator are responsible to understand and maintain security.***
 Some ways security may be compromised are:
