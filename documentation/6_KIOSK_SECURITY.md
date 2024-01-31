@@ -36,7 +36,7 @@ There is only one small 'background' activity which is a very small http request
 There is no motus.org login, password, account etc required to retrieve data from motus.
 Cache use and frequency parameters are set via your kiosk.cfg file.
 
-If the facilities network topology is separated in to 'guest; and 'internal' partions, the kiosk application can happily reside in either as long as the connection and authentication credentials (passwords) do not expire. If they are set to auto-expire it would require administrator intervention to rejoin the kiosk computer to the network.
+If the facilities network topology is separated in to 'guest; and 'internal' partitions, the kiosk application can happily reside in either as long as the connection and authentication credentials (passwords) do not expire. If they are set to auto-expire it would require administrator intervention to rejoin the kiosk computer to the network.
 
 ***You as administrator are responsible to understand and maintain security.***
 Some ways security may be compromised are:
