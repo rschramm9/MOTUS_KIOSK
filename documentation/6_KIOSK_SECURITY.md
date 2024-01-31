@@ -6,7 +6,7 @@
 
 ### 1.0 - Keeping your Motus Kiosk secure.
 
-Your computer and  network IT administrators may have concerns regarding allowing your MOTUS_KIOSK on the facilities infrastructure or wifi network. 
+Your computer and network IT administrators may have concerns regarding the risks of allowing your MOTUS_KIOSK on the facilities infrastructure or wifi network. This document is an aid to having that dicussion as well as a guide to you as the kiosk administratoron what your security role includes.
 
 The application was developed to be run at a USFWS Nature Center on the Ankeny National Wildlife Refuge. The center is used as a classroom by local school groups, as a meeting room for local non-profit organizations, and for refuge events.
 Refuge staff are often not available on site to supervise so security against misuse is a top priority.
