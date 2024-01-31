@@ -6,7 +6,7 @@
 
 ### 1.0 - Keeping your Motus Kiosk secure.
 
-Your computer and  network IT staff may have concerns regarding allowing your MOTUS_KIOSK on their infrastructure or wifi network. 
+Your computer and  network IT administrators may have concerns regarding allowing your MOTUS_KIOSK on the facilities infrastructure or wifi network. 
 
 The application was developed to be run at a USFWS Nature Center on the Ankeny National Wildlife Refuge. The center is used as a classroom by local school groups, as a meeting room for local non-profit organizations, and for refuge events.
 Refuge staff are often not available on site to supervise so security against misuse is a top priority.
@@ -35,6 +35,8 @@ There is only one small 'background' activity which is a very small http request
 
 There is no motus.org login, password, account etc required to retrieve data from motus.
 Cache use and frequency parameters are set via your kiosk.cfg file.
+
+If the facilities network topology is separated in to 'guest; and 'internal' partions, the kiosk application can happily reside in either as long as the connection and authentication credentials (passwords) do not expire. If they are set to auto-expire it would require administrator intervention to rejoin the kiosk computer to the network.
 
 ***You as administrator are responsible to understand and maintain security.***
 Some ways security may be compromised are:
