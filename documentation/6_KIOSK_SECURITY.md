@@ -15,20 +15,29 @@ One of the core requirements of the app is as a "kiosk" it needs to be 'complete
 A great deal of attention was paid to securing the kiosk as we did not want anyone to access user
 accounts or go browsing off to where they shouldnt. 
 - no one can access the user accounts or windows desktop.
+
 - no one can access the cmd console to run commands or programs
+
 - no one can browse to off-site or off-kiosk web sites or URL's
+
 - runs without an attached keyboard - no access to keyboard keycombo escapes 
+
 - only the system administrator account has access to a windows desktop via
-an OpenKiosk password protected escape sequence that requires a connected
-keyboard.
+  an OpenKiosk password protected escape sequence that requires a connected
+  keyboard.
+
 - For additional security it is recommended to lock the computer itself in a cabinet along with
-the keyboard so there is no access to the power button. 
+  the keyboard so there is no access to the power button. 
 
 The data queries are made within the application as simple http requests straight to motus.org public access data server.  All of that is hidden within the application completely out of sight and reach of the Motus user.
 
+![KioskArchitectureRev2](./md_images/BUILDING_KioskArchitectureRev2.png)
+
 The networking requirements for internet bandwidth for the app is quite low. 
+
 Data are cached locally to minimize the http requests going out to the motus.org server.
 It is an asyncronous action. When a user selects a receiver or touches on a detection, a request for only that item is made. 
+
 Only the minimum required data is requested and then only if it's not available in the cache from a prior request.
 
 There is only one small 'background' activity which is a very small http request issued every five minutes just to see if motus.org is online (similar issuing a 'ping' but at the http request/response level)
