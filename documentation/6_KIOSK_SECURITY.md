@@ -9,7 +9,7 @@
 Your computer and  network IT staff may have concerns regarding allowing your MOTUS_KIOSK on their infrastructure or wifi network. 
 
 The application was developed to be run at a USFWS Nature Center on the Ankeny National Wildlife Refuge. The center is used as a classroom by local school groups, as a meeting room for local non-profit organizations, and for refuge events.
-Refuge staff is often not available on site to supervise so security against misuse is a top priority.
+Refuge staff are often not available on site to supervise so security against misuse is a top priority.
 
 One of the core requirements of the app is as a "kiosk" it needs to be 'completely locked down'.
 A great deal of attention was paid to securing the kiosk as we did not want anyone to access user
@@ -28,7 +28,10 @@ The data queries are made within the application as simple http requests straigh
 
 The networking requirements for internet bandwidth for the app is quite low. 
 Data are cached locally to minimize the http requests going out to the motus.org server.
+Its an asyncronous action. When a user selects a receiver or touches on a detection, a request for only that item is made. 
 Only the minimum required data is requested and then only if it's not available in the cache.
+
+There is only one small 'background' activity which is a very small http request issued every five minutes just to see if motus.org is online (similar issuing a 'ping' but at the http request/response level)
 
 There is no motus.org login, password, account etc required to retrieve data from motus.
 Cache use and frequency parameters are set via your kiosk.cfg file.
