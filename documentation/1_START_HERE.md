@@ -456,11 +456,17 @@ The descriptive content that appears in the in the in the "Species" tab when eve
 
 **WARNING:**  *when creating species content, it is your responsibility to be sure you have legal permission to use all images, maps and text you incorporate. Be sure to give proper credit for anything you use. Most content taken from the web is protected by copyright or other terms of use.  Many favorite birding sites such as Audubon, EBird and Cornell have prohibitions against repurposing (or reposting) their images and content.  If you cant find and document a clear statement that you have the permission to use - don't use it.*
 
-There should be several files for each species you want to describe - one in each language you wish to support.  Notice that the filenames must all begin with "species_" and end with the same pattern for the supported languages (eg.   _en.html, _fr.html, _es.html )
+There should be several files for each species you want to describe - one in each language you wish to support.  
+Notice that the filenames must all begin with "species_"  and end with the same pattern for the supported languages (eg.  _en.html, _fr.html, _es.html )
 
-***The file name choice here is critical.*** The software builds a compacted lowercase filename using the motus species name field and tries to match that to a file in the speciespages directory.
+The file name choice here is critical. The software builds a compacted lowercase filename using the motus plain english species name field.
+ All special characters (~!@#$%^&*(){}+:"<>?,./;'[]-=) and any white space are removed.  The program builds the filename string by adding the leading "species"  and the trailing "_en.html" and then tries to match that to a file in the speciespages directory.  
 
 So motus detections of an  "American Robin" will match to a file  named "species_americanrobin_en.html" for English and "species_americanrobin_en.html" in Spanish etc.
+
+Similarly a motus species name of "Swainson's Trush" compacted and formatted become filename of "species_swainsonsthrush_en.html"   (or _es.html and _fr.html for other languages)
+
+A motus species name of "Eastern Whip-poor-will" compacted and formatted become filename of "species_easternwhippoorwiil_en.html" (or _es.html and _fr.html for other languages)
 
 **Species HTML files are found in your kiosk's  www/speciespages.**
 
