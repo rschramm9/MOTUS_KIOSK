@@ -113,7 +113,8 @@ Shiny kiosk App.R is the background server application needed by the kiosk web p
 
 ​	2.2.1  Using the File Explorer, examine folder C:\Program Files\R. Make a note of the path where R is installed (eg. R-4.3.2)
 
-​	2.2.2 Using the File Explorer navigate to the file: MOTUS_MSWINDOWS_STARTSERVER.bat 
+​	2.2.2 Using the File Explorer find and navigate to your kiosks file: MOTUS_MSWINDOWS_STARTSERVER.bat  
+** make sure your editing the .bat file in your own kiosk (not in the DEFAULT). eg If your kiosk directory is in C:/MOTUS_USER/Documents/kiosks/myownkiosk then you will find the .bat file in the "extras" subdirectory there.
 
 ​	2.2.3  Right-click to edit (in notepad) 
 
