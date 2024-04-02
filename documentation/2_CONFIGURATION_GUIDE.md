@@ -45,9 +45,13 @@ KioskCfgFile="kiosk.cfg"
 To locate all of your desired receiver's deployment IDs: Go to motus.org
 - Click "Explore Data" on the tab "Explore Data"
 - Find the link for "Project, Receiver and Tag Exploration".
-- That takes you to a list of projects.  Find your project on the list (hint use the "Filter" textbox to enter your projectID or your project name)
-- Select your project (click on the link) that takes you to your project's description.
-- Look for the item named "Receivers" and click the link next to it saying ""(Table)". Locate the ID# for your active receiver deployment. ( *NOTE: a Receiver may have multiple Deployments - we are looking for the currently active **deploymentID, (not the receiverID**) )* 
+- That takes you to a list of all Motus projects.
+- Find your project on the list (hint use the "Filter" textbox to enter your projectID if you know it, or your project name)
+- Select your project (click on the link) that takes you to a description of your project.
+- Look for the item named "Receivers" and click the link next to it saying ""(Table)".
+- That should take you to the "Active Receiver Deployments" for your project.
+- Locate the ID# for your ***currently active*** receiver deployment for the station you want to monitor. This should be the ID# displayed in the table on this page.
+( *NOTE: in Motus terminology, a Project may have multiple Receivers. A Reciever may have multiple RecieverDeployments - we are looking for the currently active **ReceiverDeploymentID**)* 
 
 **TIP:** If you want your kiosk to display detections from multiple receivers, simply make a list of the all of the active ReceiverDeploymentIDs and names to use in the next step.
 
@@ -61,9 +65,11 @@ You will be using that file path in a moment.
 
 ##### 1.4 - Edit your kiosk.cfg file.
 
-In your own kiosk directory (e.g. *top-level-project-dir/kiosks/yourkioskname*)  is a file called kiosk.cfg.  It contains the default set of key value pairs that do things like set the target motus receiver deployment using its Motus database ID.
+The contents of the github project's DEFAULT ***kiosk.cfg*** file are shown below.  You should not modify the DEFAULT kiosk's config file.
 
-The contents of the default ***kiosk.cfg*** file for the are shown.  You will modify your own copy of  this file in your own kiosk directory.
+Instead, you should make and modify your own copy of this file which must reside your own custom kiosk's directory as described below.
+
+In your own kiosk directory (e.g. *top-level-project-dir/kiosks/yourkioskname*) is a file called kiosk.cfg.  It contains the default set of key value pairs that do things like set the target motus receiver deployment using its Motus database ID.
 
 Edit your ***kiosk.cfg*** file to contain your own site's ID, your banner logo file and title etc.  For many custom kiosks,  you may be able to just set the  'startup.cfg ' (above) and perhaps the first 3-5 elements of the kiosk.cfg to get your kiosk up and running and looking like its your very own site.     
 
