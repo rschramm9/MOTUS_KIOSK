@@ -42,9 +42,12 @@ KioskCfgFile="kiosk.cfg"
 
 ##### 1.2 - Locate your site's motus receiver deployment ID.
 
-To locate all of your desired receiver's deployment IDs: Go to motus.org Then : ExploreData\>Projects
-
-Find your ProjectID, then click on the link that takes you to your project's description. Look for the item named "Receivers" and click the link next to it saying ""(Table)". Locate the ID# for your active receiver deployment. ( *NOTE: a Receiver may have multiple Deployments - we are looking for the currently active **deploymentID, (not the receiverID**) )* 
+To locate all of your desired receiver's deployment IDs: Go to motus.org
+- Click "Explore Data" on the tab "Explore Data"
+- Find the link for "Project, Receiver and Tag Exploration".
+- That takes you to a list of projects.  Find your project on the list (hint use the "Filter" textbox to enter your projectID or your project name)
+- Select your project (click on the link) that takes you to your project's description.
+- Look for the item named "Receivers" and click the link next to it saying ""(Table)". Locate the ID# for your active receiver deployment. ( *NOTE: a Receiver may have multiple Deployments - we are looking for the currently active **deploymentID, (not the receiverID**) )* 
 
 **TIP:** If you want your kiosk to display detections from multiple receivers, simply make a list of the all of the active ReceiverDeploymentIDs and names to use in the next step.
 
