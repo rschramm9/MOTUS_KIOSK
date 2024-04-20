@@ -1,7 +1,7 @@
 
 ######## I put github release version and other data here ############
 ######## so it can be displayed on the footer of the kiosk window ####
-gblFooterText <- "MOTUS_KIOSK  vsn 5.1.2  23-Jan-2024"
+gblFooterText <- "MOTUS_KIOSK  vsn 5.1.3  20-Apr-2024"
 
 ###############################################################################
 # Copyright 2022-2023 Richard Schramm
