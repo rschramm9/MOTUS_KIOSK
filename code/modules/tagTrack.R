@@ -83,7 +83,16 @@ tagTrack <- function(tagDeploymentID, useReadCache=0, cacheAgeLimitMinutes=60)
       
       lat <-  c( lat, json[[i]]  )
       lon <-  c( lon, json[[i+1]] )
-      site <- c( site, json[[i+2]] )
+      
+      #V5.1.3. need to trim hidden leadin and trailing whitespace from json sitenames
+      # so we can match up with  sitenames from summary flight data further down.
+      # also need to fix any apostrophes "'" that json converts encoding to "&#39;"  
+      stmp <- str_trim( as.character(json[[i+2]]))
+      stmp<-gsub("&#39;", "'", stmp, ignore.case = TRUE)
+      #print(paste0("tagTrack at 89 sitename:" , stmp, " length of site:", nchar(str_trim( stmp))))
+      #site <- c( site, json[[i+2]] )
+      site <- c( site, stmp )    
+      
       usecs <- c( usecs, json[[i+3]][[j]] )
       #bump counter, append to seq array
       n<-n+1
