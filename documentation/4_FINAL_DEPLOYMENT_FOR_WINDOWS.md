@@ -109,16 +109,21 @@ Shiny kiosk App.R is the background server application needed by the kiosk web p
 
 **2.1** - Login as administrator Admin
 
-**2.2** - Edit the start command .bat file to set the path to the installed version of R
+**2.2** - In this section we edit the start command .bat file to set the path to the installed version of R
 
-​	2.2.1  Using the File Explorer, examine folder C:\Program Files\R. Make a note of the path where R is installed (eg. R-4.3.2)
+**WARNING**:  Depending on if you installed R into C:\R or into C:\Program Files\R (see document START_HERE Section 4.2)
+ 
+​	2.2.1  Using the File Explorer,navigat to where you installed R, make a note of both the the path and the version where your R is installed (eg. C:\R and R-4.3.3) 
 
 ​	2.2.2 Using the File Explorer find and navigate to your kiosks file: MOTUS_MSWINDOWS_STARTSERVER.bat  
-** make sure your editing the .bat file in your own kiosk (not in the DEFAULT). eg If your kiosk directory is in C:/MOTUS_USER/Documents/kiosks/myownkiosk then you will find the .bat file in the "extras" subdirectory there.
 
-​	2.2.3  Right-click to edit (in notepad) 
+** WARNING**: Make sure your editing the .bat file in your own kiosk (not in the DEFAULT). eg If your kiosk directory is in C:/MOTUS_USER/Documents/kiosks/myownkiosk then you will find the .bat file in the "extras" subdirectory there.
 
-​	2.2.4  Set the path in the cmd shown to the version discovered above and "Save" it.
+​	2.2.3 Right-click on MOTUS_MSWINDOWS_STARTSERVER.bat to open for edit in notepad)
+
+​	2.2.4  Set the path and the version in the cmd shown to the values discovered above
+ 2.2.5  Set the corret path to the Logs file for your kiosk.  eg. If your kiosk's content is in C:/MOTUS_USER/Documents/kiosks/yourkioskname then the log directory path should be set to match.
+ 2.2.6 "Save" the bat file.
 
 **2.3** Edit the startup.cfg to eliminate any relative paths (expand ~/ path into absolute path)
 
