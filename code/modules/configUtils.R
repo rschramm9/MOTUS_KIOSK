@@ -299,7 +299,7 @@ getKioskConfig <- function() {
   #print("------------ ReceiverDeploymentID --------------")
   # set global parms of both the list and the first item on the list
   #the default target receiver is the first list item (set in global.R after processing config)
-  config.ReceiverDeployments <<- keyValueToList(configtbl,'ReceiverDeploymentID')
+  config.ReceiverDeployments <<- str_squish(keyValueToList(configtbl,'ReceiverDeploymentID'))
   
   if( is.null(config.ReceiverDeployments)  ){
     message("Config is missing list of Receiver Deployment IDs")
