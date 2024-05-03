@@ -109,18 +109,36 @@ Shiny kiosk App.R is the background server application needed by the kiosk web p
 
 **2.1** - Login as administrator Admin
 
-**2.2** - Edit the start command .bat file to set the path to the installed version of R
+**2.2** - First we need to make a couple of edits a startup command .bat file to set the path to the installed version of the R language, the user account to run as, and a path to a directory for log files etc
 
-​	2.2.1  Using the File Explorer, examine folder C:\Program Files\R. Make a note of the path where R is installed (eg. R-4.3.2)
+​	**2.2.1**  Using the File Explorer, find the folder where you installed R.  If your followed recommendations then is should be in C:\R.  If its not there then most likely its in C:\Program Files\R  
 
-​	2.2.2 Using the File Explorer find and navigate to your kiosks file: MOTUS_MSWINDOWS_STARTSERVER.bat  
-** make sure your editing the .bat file in your own kiosk (not in the DEFAULT). eg If your kiosk directory is in C:/MOTUS_USER/Documents/kiosks/myownkiosk then you will find the .bat file in the "extras" subdirectory there.
+​	**2.2.1** Open the folder and then make not of the version of R.  (e.g R-4..3.3)  folder C:\Program Files\R. 
 
-​	2.2.3  Right-click to edit (in notepad) 
+Make a note of the **BOTH** the path and the version for use below.
 
-​	2.2.4  Set the path in the cmd shown to the version discovered above and "Save" it.
+​	**2.2.2** Using the File Explorer navigate to your 'extras' directory that contains the .bat file we need to edit.  Likely C:\MOTUS_USER\Documents\kiosks\yourkioskname\extras 
+
+​	**2.2.3** Open this file for editing in notepad.  MOTUS_MSWINDOWS_STARTSERVER.bat  
+
+** WARNING:** make sure your editing the .bat file in your own kiosk (not in the DEFAULT kiosk). 
+
+** IMPORTANT Pay close attention to the user of forward-slash and back-slash characters in the paths in the .bat file.  DOS requires paths using forward-slash,  R likes to see 'linux' type paths using bask-slash. Notice where the DOS portion of the cmd line uses forward-slash and the parts that get passed to R use the back-slash form.
+
+	 - Set the path to R in the cmd shown to the location discovered above.
+	 - Set the R version field in the path to match your installed version discovered above.
+  - Check the username. If you chose to run as a different user than MOTUS_USER
+    then substitute that username below in two places.
+  - check the path to the logs directory. You will want to have logs written
+    in with your kiosk specific directory. If you have followed recommendations then that
+    logs directory will be in the same place as your kiosk.cfg file - (likely in
+    the C:/Users/MOTUS_USER/Documents/kiosks/yourkioskname path)
+
+​	**2.2.4**   "Save" the file and exit.
 
 **2.3** Edit the startup.cfg to eliminate any relative paths (expand ~/ path into absolute path)
+
+NOTE: R likes to see 'linux' type paths here - notice the slash in "C:/Users" 
 
 ```
 # KiosksPath="~/Documents/kiosks" expands to become
