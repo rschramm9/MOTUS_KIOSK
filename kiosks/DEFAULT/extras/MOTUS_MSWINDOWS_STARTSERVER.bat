@@ -19,5 +19,9 @@ REM in with your kiosk specific directory. If you have followed recommendations 
 REM logs directory will be in the same place as your kiosk.cfg file - (likely in
 REM the C:/Users/MOTUS_USER/Documents/kiosks/yourkioskname path)
 
+REM ** IMPORTANT Pay close attention to the user of "\" and "/" in the paths below
+REM DOS requires paths using "\", R likes to see 'linux' type paths here - notice in the below
+REM how the DOS portion of the cmd uses "\" and the parts that get passed to R use the "/" form 
+
 cmd /c ""C:\R\R-4.3.3\bin\R.exe" -e "shiny::runApp('C:/Users/MOTUS_USER/Projects/MOTUS_KIOSK/code',port=8081)"" > "C:/Users/MOTUS_USER/Documents/kiosks/DEFAULT/logs/Log_%date:~10,4%%date:~4,2%%date:~7,2%_%time:~0,2%%time:~3,2%%time:~6,2%.txt" 2>&1
 EXIT /B %ERRORLEVEL%
