@@ -109,21 +109,16 @@ Shiny kiosk App.R is the background server application needed by the kiosk web p
 
 **2.1** - Login as administrator Admin
 
-**2.2** - In this section we edit the start command .bat file to set the path to the installed version of R
+**2.2** - Edit the start command .bat file to set the path to the installed version of R
 
-**WARNING**:  Depending on if you installed R into C:\R or into C:\Program Files\R (see document START_HERE Section 4.2)
- 
-​	2.2.1  Using the File Explorer,navigat to where you installed R, make a note of both the the path and the version where your R is installed (eg. C:\R and R-4.3.3) 
+​	2.2.1  Using the File Explorer, examine folder C:\Program Files\R. Make a note of the path where R is installed (eg. R-4.3.2)
 
 ​	2.2.2 Using the File Explorer find and navigate to your kiosks file: MOTUS_MSWINDOWS_STARTSERVER.bat  
+** make sure your editing the .bat file in your own kiosk (not in the DEFAULT). eg If your kiosk directory is in C:/MOTUS_USER/Documents/kiosks/myownkiosk then you will find the .bat file in the "extras" subdirectory there.
 
-** WARNING**: Make sure your editing the .bat file in your own kiosk (not in the DEFAULT). eg If your kiosk directory is in C:/MOTUS_USER/Documents/kiosks/myownkiosk then you will find the .bat file in the "extras" subdirectory there.
+​	2.2.3  Right-click to edit (in notepad) 
 
-​	2.2.3 Right-click on MOTUS_MSWINDOWS_STARTSERVER.bat to open for edit in notepad)
-
-​	2.2.4  Set the path and the version in the cmd shown to the values discovered above
- 2.2.5  Set the corret path to the Logs file for your kiosk.  eg. If your kiosk's content is in C:/MOTUS_USER/Documents/kiosks/yourkioskname then the log directory path should be set to match.
- 2.2.6 "Save" the bat file.
+​	2.2.4  Set the path in the cmd shown to the version discovered above and "Save" it.
 
 **2.3** Edit the startup.cfg to eliminate any relative paths (expand ~/ path into absolute path)
 
@@ -223,41 +218,22 @@ It must open in its "own shell" - not the normal explorer.exe shell to prevent t
 
 **3.1** Log in as MOTUS_USER
 
-3.2 First we need to find the MOTUS_USER ‘security identifier’ or SID.
+**3.2** In the Windows Search Box - type Powershell
 
-·   	- you must be logged in as user=MOTUS_USER 
+**3.3** When the Powershell console app is displayed, right-click on it and select 'Run as administrator'
 
-·   	- Open a CMD.exe window
+**3.4** Following enter command:   Set-ExecutionPolicy unrestricted
 
-·		- Type the command :  wmic useraccount get name,sid
+**3.5** Following enter command:  (all on one line) ( *Substitute your correct username if you arent using MOTUS_USER !!)*
 
-· 		- Look at results to locate the Sid for MOTUS_USER
+powershell -File  "C:\Users\MOTUS_USER\Projects\MOTUS_KIOSK\code\SetOpenKioskAutostart.ps1" MOTUS_USER
 
-.			Example:  S-1-5-21-195043977-3097296022-4082461035-1012
+**3.6** Finally, enter command (to) restore the restriction for safety).
+Set-ExecutionPolicy restricted
 
-**3.2 **Next we prepare a comand string using a temporary text file.
+**3.7** Log out, then log back in as MOTUS_USER You should see the auto-started kiosk app
 
-. 		- Right-click anywhere on the Desktop and select 'New' > 'Text file' and open it for editing
-
-.		- Cut and paste this line into the file exactly as shown into the file (as a single line).
-
-```code
-reg add "HKEY_USERS\####\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" /v Shell /t REG_SZ /d """"c:\Program Files\OpenKiosk\OpenKiosk.exe""" http://localhost:8081"
-```
-
-.		- cut the MOTUS_USER Sid SID from the command window
-
-.		- paste the into the "reg add cmd" in the text file - replacing only the four #### characters
-
-**3.3** Now copy (control-c) and paste (control-v)  the fully assembled command string into the Cmd.exe window and press 'Enter'
-
-It should say all is good
-
-**3.4** Log out, then log back in as MOTUS_USER You should see the auto-started kiosk app
-
-**3.5** Click in kiosk window and type: Shift + F9  (to quit) and type the kiosk admin password.
-
-**3.6** You can now delete the temporary text file from the Desktop
+**3.8** Click in kiosk window and type: Shift + F9  (to quit) and type the kiosk admin password.
 
 **Troubleshooting:**  WARNING: Sometimes on system reboot, the kiosk will come up blank with "Unable To Connect"
 
