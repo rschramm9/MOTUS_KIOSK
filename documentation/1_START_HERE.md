@@ -102,6 +102,12 @@ If you need help creating user accounts and setting permissions on Windows platf
 
 Log in as user = MOTUS_USER (or your intended username from above)
 
+- Open Windows File Explorer or (OSX Finder) 
+- Navigate to the MOTUS_USER home directory (C:\Users\MOTUS_USER)
+- File> NewFolder
+- Rename the new folder to Projects
+
+Or if your prefer to work in a cmd.exe terminal, enter the following
 ``` code
 cd  C:\Users\MOTUS_USER
 mkdir Projects
@@ -133,7 +139,7 @@ If R is not already installed (see: <https://www.r-project.org/>) - Download the
 - ![Install R](./md_images/SH_InstallingR.png)
 
 
-  (Avoiding installation to C:\ProgramFiles is what allows us to install packages globally)
+  (Avoiding installation to C:\Program Files is what allows us to install packages globally)
 
 - Accept all of the other installer defaults.
 
@@ -208,9 +214,9 @@ Typically the installer will be in your "Downloads" folder.  Double-click it to 
 
 **git** is the repository checkout program that you will use to access the project on **github**. (github is the cloud repository that contains the code and documentation). Presumably if you are viewing this file you have at least visited the cloud repository. 
 
-You will first (**as user=Admin**) need to install the program 'git' on the machine you wish to download the project to. (See: <https://git-scm.com/book/en/v2/Getting-Started-Installing-Git>)
+You will first (**as user=Admin**) need to install the program 'git' on the machine you wish to download the project to.  Below you will be looking to install the 64-bit version for your computer when you click here:  <https://git-scm.com/book/en/v2/Getting-Started-Installing-Git> 
 
-NOTE: This install on windows machines can be a bit frustrating due to the variations of Windows 10 installations. WIndows 10 Pro was pretty straight forward. With Windows 10 Home Edition it is challenging to get git.exe recognized on the path. Persistence is key.. the git.exe install should be to C:\Program Files. You may need to 'cd' there in the cmd.exe window to run git...
+NOTE: This install on windows machines can be a bit frustrating due to the variations of Windows 10 and 11 installations. WIndows 10 Pro was pretty straight forward. With Windows 10 Home Edition it is challenging to get git.exe recognized on the path. Persistence is key.. the git.exe install should be to C:\Program Files. You may need to 'cd' there in the cmd.exe window to run git...
 
 Most issues involve git not being able to add itself to your "Path" environment variable.  To check/resolve
 
@@ -228,11 +234,11 @@ Add a line that says "C:\Program Files\Git\cmd"
 
 
 
-### 7.0 - Getting the code project from Github
+### 7.0 - Getting the Motus Kiosk code project from Github
 
 Log in as user = MOTUS_USER (or your intended username from above)
 
-This and all other accompanying documentation assumes a particular Windows10 user account (username=MOTUS_USER) and project directory structure: C:\Users\MOTUS_USER\_KIOSK\Projects
+This and all other accompanying documentation assumes a particular Windows user account (username=MOTUS_USER) and project directory structure: C:\Users\MOTUS_USER\_KIOSK\Projects
 
 In your Projects folder..  (e.g.  **C:\Users\MOTUS_USER\Projects**)
 
@@ -261,7 +267,7 @@ A complete copy of the repository should now be in subdirectory at: C:\Users\MOT
 
 ### 8.0 - Your first test build
 
-**8.1** Load project into RStudio.
+**8.1** Getting the project into RStudio.
 
 - Run the RStudio IDE.  Once open, Click File \> New Project
 - From the "New Project" popup, select "Existing Directory"
@@ -362,7 +368,7 @@ Do you have a name in mind?  Use whatever you like (*except no spaces or special
 
 - Navigate to:  C:\Users\MOTUS\_USER\Projects\MOTUS_KIOSK
 
-- "Copy" (right-click) the entire subfolder folder "kiosks" 
+- **"Copy" (right-click, copy) the entire subfolder folder "kiosks"** 
 
 - Navigate to your MOTUS_USER\Documents\ folder
 
