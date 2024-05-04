@@ -84,20 +84,33 @@ While on the admin page:
 
 Verifiy Settings are:
 
-- "Enable Attract Screen" False (unchecked box)
-- "Enable Full Screen" True (checked box) 
-- "Enable Redirect Screen" True (checked box)
-- "Enable URL Filters" False (unchecked box)
-- "Enable Javascript" True (checked box)
+- "Enable Attract Screen" FALSE (unchecked box)
+- "Enable Full Screen" TRUE (checked box) 
+- "Enable Redirect Screen" TRUE (checked box)
+- "Enable URL Filters" FALSE (unchecked box)
+- "Enable Javascript" TRUE (checked box)
 - "Enable Network Protocol Filters". Both blob and data should be checked
 - Section "Reset Session" check the box for "Set Inactive terminal" and reset after 5 minutes
 - Section "Reset Session" check the box for "Enable Countdown" and show for 10 seconds
 - Section "Reset Session" check the box for "Enable Countdown on Manual Reset" (True)
-- "Enable Tabbed Browsing" False (box unchecked)
-- "Enable URL Toolbar" False (box unchecked)
-- In the "Quit" section, "Enable Quit Button Password" True (checked box)
-- "Allow Multiple Displays" False
+- "Enable Tabbed Browsing" FALSE (box unchecked)
+- "Enable URL Toolbar" FALSE (box unchecked)
+- In the "Quit" section, "Enable Quit Button Password" TRUE (checked box)
+- "Allow Multiple Displays" FALSE
+  
+- In section "Keyboard Shortcuts"
+- 	"Enable Back/Forward navigation keys" TRUE  <<<< CRITICALLY IMPORTANT!
+- 	"Enable Settings keys" TRUE  <<<< CRITICALLY IMPORTANT!
+  
 - In the "Password" section - you may wish to change the OpenKiosk admin password - but r*emember it - there is no password recovery mechanism!!*
+
+**CRITICALLY IMPORTANT **
+Before you quit - double check that:
+- Enable Back/Forward navigation keys is TRUE 
+- Enable Settings keys TRUE
+  
+Otherwise you risk completely locking yourself out of your computer with absolutely no way to recover except by reinstalling the operating system.
+
 
 "Quit" the OpenKiosk (button on upper right of the main panel)
 
