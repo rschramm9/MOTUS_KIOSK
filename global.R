@@ -1,7 +1,7 @@
 
 ######## I put github release version and other data here ############
 ######## so it can be displayed on the footer of the kiosk window ####
-gblFooterText <- "MOTUS_KIOSK  vsn 5.1.5  03-Mar-2024"
+gblFooterText <- "MOTUS_KIOSK  vsn 5.1.6  23-Jul-2024"
 
 ###############################################################################
 # Copyright 2022-2023 Richard Schramm
@@ -121,6 +121,7 @@ message(paste0("codedir is:", codedir))
 source(paste0(codedir,"/modules/configUtils.R"))
 source(paste0(codedir,"/modules/utility_functions.R"))
 source(paste0(codedir,"/modules/ReceiverDetections.R"))
+source(paste0(codedir,"/modules/tagInfo.R"))      
 source(paste0(codedir,"/modules/tagDeploymentDetails.R"))          #tagDeploymentDetails
 source(paste0(codedir,"/modules/tagDeploymentDetections.R"))       #the flightpath
 source(paste0(codedir,"/modules/receiverDeploymentDetections.R"))  #whats been at our receiver
