@@ -112,18 +112,12 @@ testPagePnodes <-function(page,target){
   }
 }
 
-
-
-
-
-
-
-
 ################################################################################
 # given table with two columns: key and value, will return the value for
 #the key (if found) else "unknown"
 ################################################################################
 find4me <-function(mytbl,target){
+  
   idxarray <-which(mytbl == target, arr.ind = TRUE)
   if( nrow(idxarray) > 0 ){
     idx=idxarray[1]
