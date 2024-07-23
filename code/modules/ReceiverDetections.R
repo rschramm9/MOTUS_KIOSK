@@ -439,8 +439,43 @@ SERVER_ReceiverDetections <- function(id, i18n_r, lang, rcvr) {
           DebugPrint("tagDeploymentDetails request from Inactive cache failed, set to empty df")
           tagdetails_df <- empty_tagDeploymentDetails_df()
         }
-        
       }
+      
+      #print("*********************tagdetails_df*************************")
+      #print (tagdetails_df)
+      #print("*********************tagdetails_df*************************")
+      
+      if (is.na(tagDepID )) {
+        DebugPrint("input$mytable_rows_selected observeEvent() - is.na tagDepID")
+        ###colnames(mydf) <- c('project','contact','manufacturer','manufacturerid','type','model','frequency','burstinterval')
+        tagInfo_df <- empty_tagInfo_df()
+      } else {
+        s <- str_extract_all(tagdetails_df[1,1],"\\(?[0-9,.-]+\\)?")
+        tagID <- s
+        DebugPrint(paste0("calling tagInfo w/tagID=",tagID))
+        #next get and render the tagDeploymentDetails (who tagged, where, when etc)
+        tagInfo_df <- tagInfo(tagID, config.EnableReadCache, config.ActiveCacheAgeLimitMinutes)
+        DebugPrint("back from tagDeploymentInfo")
+        
+        if(nrow(tagInfo_df)<=0) {  # failed to get results from active cache so try the inactive cache
+          DebugPrint("tagDeploymentDetails request failed - try Inactive cache")
+          tagInfo_df <- tagInfo(tagID, config.EnableReadCache, config.InactiveCacheAgeLimitMinutes)
+        }
+        
+        if(nrow(tagInfo_df)<=0) {  # still failed to get results from via the inactive cache
+          DebugPrint("tagInfo request from Inactive cache failed, set to empty df")
+          tagInfo_df <- empty_tagInfo_df()
+        }
+      }
+      #print("**********************************************")
+      #print(tagInfo_df)
+      #print("**********************************************")     
+      
+      tagdetails_df$mfg <- tagInfo_df[1,3]
+      tagdetails_df$tagsn <- tagInfo_df[1,4]
+      tagdetails_df$freq <- tagInfo_df[1,7]
+      tagdetails_df$interval <- tagInfo_df[1,8]
+      
       
       DebugPrint("input$mytable_rows_selected observeEvent() - renderTable")
       output$tagdetail <- DT::renderDataTable(tagdetails_df,
@@ -480,9 +515,10 @@ SERVER_ReceiverDetections <- function(id, i18n_r, lang, rcvr) {
       } else {
 
         
+        
         #next get all of the detections associated with this tag deployment
         # note this is a local variable assignment
-        DebugPrint(paste0("input$mytable_rows_selected observeEvent() - tagID NOT NA so call tagDeploymentDetections with tagDepID:",tagDepID))
+        DebugPrint(paste0("input$mytable_rows_selected observeEvent() - tagDepID NOT NA so call tagDeploymentDetections with tagDepID:",tagDepID))
  
                
         tagflight_df <- tagDeploymentDetections(tagDepID, config.EnableReadCache, config.ActiveCacheAgeLimitMinutes, withSpinner=TRUE, spinnerText=usespinnertext) 
