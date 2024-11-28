@@ -417,9 +417,9 @@ SERVER_ReceiverDetections <- function(id, i18n_r, lang, rcvr) {
       updateSpeciesInfo()
       DebugPrint("back from updateSpeciesInfo")
   
-
+      DebugPrint("try to get tagDeploymentDetails")
       if (is.na(tagDepID )) {
-        DebugPrint("input$mytable_rows_selected observeEvent() - is.na tagDepID")
+        DebugPrint("tagDepID is.na - setting tagdetails_df to empty_tagDeploymentDetails_df ")
         ####mydf <- data.frame( matrix( ncol = 9, nrow = 1) )
         ###colnames(mydf) <- c('tagid', 'project', 'contact', 'started','species','lat','lon','ndays', 'nreceivers')
         ###tagdetails_df <- mydf
@@ -444,9 +444,9 @@ SERVER_ReceiverDetections <- function(id, i18n_r, lang, rcvr) {
       #print("*********************tagdetails_df*************************")
       #print (tagdetails_df)
       #print("*********************tagdetails_df*************************")
-      
+      DebugPrint("try to get tagInfo_df")
       if (is.na(tagDepID )) {
-        DebugPrint("input$mytable_rows_selected observeEvent() - is.na tagDepID")
+        DebugPrint("tagDepID is.na - setting tagInfo_df to empty_tagInfo_df ")
         ###colnames(mydf) <- c('project','contact','manufacturer','manufacturerid','type','model','frequency','burstinterval')
         tagInfo_df <- empty_tagInfo_df()
       } else {
@@ -471,10 +471,14 @@ SERVER_ReceiverDetections <- function(id, i18n_r, lang, rcvr) {
       #print(tagInfo_df)
       #print("**********************************************")     
       
-      tagdetails_df$mfg <- tagInfo_df[1,3]
-      tagdetails_df$tagsn <- tagInfo_df[1,4]
-      tagdetails_df$freq <- tagInfo_df[1,7]
-      tagdetails_df$interval <- tagInfo_df[1,8]
+      # append tagInfo to tagDetails
+      if( (nrow(tagdetails_df)>=1) & (nrow(tagInfo_df)>=1) ) {
+        DebugPrint("appending tagInfo to tagdetails")
+        tagdetails_df$mfg <- tagInfo_df[1,3]
+        tagdetails_df$tagsn <- tagInfo_df[1,4]
+        tagdetails_df$freq <- tagInfo_df[1,7]
+        tagdetails_df$interval <- tagInfo_df[1,8]
+      }
       
       
       DebugPrint("input$mytable_rows_selected observeEvent() - renderTable")
