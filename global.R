@@ -1,8 +1,8 @@
 
 ######## I put github release version and other data here ############
 ######## so it can be displayed on the footer of the kiosk window ####
-gblFooterText <- "MOTUS_KIOSK  vsn 5.1.6  23-Jul-2024"
-
+gblFooterText <- "MOTUS_KIOSK  vsn 5.2.0  27-Nov-2024"
+mytoggle<<-FALSE #useful global variable for debugging
 ###############################################################################
 # Copyright 2022-2023 Richard Schramm
 # 
@@ -130,7 +130,6 @@ source(paste0(codedir,"/modules/tagTrack.R"))
 source(paste0(codedir,"/modules/AboutMotus.R"))
 source(paste0(codedir,"/modules/MotusNews.R"))  
 
-
      #read the startup configuration file (see configUtils.R)
      # to find which kiosk
      badCfg = getStartConfig()
@@ -139,8 +138,6 @@ source(paste0(codedir,"/modules/MotusNews.R"))
        FatalPrint("There is a fatal error in your startup.cfg file")
        stop("Stopping because there is a serious error in your cfg file")
      }
-     
-     
     
      #message(paste0("Starting Kiosk named:", config.StartKiosk))
      InfoPrint(paste0("[global.R] Starting Kiosk named:", config.StartKiosk))
@@ -150,7 +147,6 @@ source(paste0(codedir,"/modules/MotusNews.R"))
          stop("Stopping because there is a serious error in your cfg file")
      }
      #printConfig()
-     
      
      #print("-----------------Done processing config----------------------------------")
      #set your desired log level in your config file
@@ -233,8 +229,6 @@ source(paste0(codedir,"/modules/MotusNews.R"))
      }
      #print(gblIgnoreAllDetectionsAtReceiver_df) 
 
-
-
      #set some resource paths 
      
      # Generally about resourcePaths....
@@ -256,13 +250,11 @@ source(paste0(codedir,"/modules/MotusNews.R"))
      # the physical subdirectory (aboutmotuspages) but it is important to 
      # know that it is both the virtual prefix and the physical subdir.
      
-     
      #moved from server.R
      s = paste0(config.SiteSpecificContentWWW,"/homepages/homepage_images")
      #message(paste0("setting homepage resource path:",s))
      addResourcePath("homepage_images", s)
 
-     
      #moved from AboutMotus
      therealdir<-paste0(config.SiteSpecificContentWWW,"/aboutmotuspages")
      addResourcePath(prefix = "aboutmotuspages", directoryPath = therealdir)
@@ -271,10 +263,10 @@ source(paste0(codedir,"/modules/MotusNews.R"))
      s = paste0(config.SiteSpecificContentWWW,"/images/icons")
      addResourcePath("images/icons", s)
      
-     
      s = paste0(config.SiteSpecificContentWWW,"/speciespages")
      addResourcePath("speciespages", s )
-     # these appear to be not needed if resource path for speciesspages is above
+ 
+     # these appear to be not needed if resource path for speciespages is above
      # as of vsn 5.0.0
      #s = paste0(config.SiteSpecificContentWWW,"/speciespages/species_images")
      #addResourcePath("species_images", s)
@@ -324,26 +316,36 @@ source(paste0(codedir,"/modules/MotusNews.R"))
      # we want these to be global variables... (note the <<- ) 
      InfoPrint(paste0("global.R Make initial call to motus for receiverDeploymentDetections of receiver:", receiverDeploymentID))
      
+
+     #25Nov2024 Just populate an empty df - disable the looping otherwise the app
+     #would hang in the loop if restarted while motus was offline and it wasnt
+     #obvious to the kiosk user what was happening
+     detections_df <<-empty_receiverDeploymentDetection_df()
+     
      # the shiny server and ui havent been initialized yet, and they need some initial
      # set of receivers to start... so here I contact motus an create the initial dataframe of receivers
      # if it cant connect at first it just endlessly keeps trying
-     DONE<-FALSE
-     while(!DONE){
+     # DONE<-FALSE
+     # while(!DONE){
         #first connection attempt with motus.org
-        detections_df <<- receiverDeploymentDetections(receiverDeploymentID, config.EnableReadCache, config.ActiveCacheAgeLimitMinutes, withSpinner=FALSE)
-        if(nrow(detections_df)<=0) {  # failed to get results... try the inactive cache
-           InfoPrint("initial receiverDeploymentDetections request failed - try Inactive cache")
-           detections_df <<- receiverDeploymentDetections(receiverDeploymentID, config.EnableReadCache, config.InactiveCacheAgeLimitMinutes, withSpinner=FALSE)
-        } else {
-          DONE <-TRUE
-        }
-        if(nrow(detections_df)<=0) {
-          message("Unable to connect to Motus.org. Sleep 5 seconds and try again")
-          Sys.sleep(5)
-        }
-     } #end while
+     #   detections_df <<- receiverDeploymentDetections(receiverDeploymentID, config.EnableReadCache, config.ActiveCacheAgeLimitMinutes, withSpinner=FALSE)
+     #   if(nrow(detections_df)<=0) {  # failed to get results... try the inactive cache
+     #      InfoPrint("initial receiverDeploymentDetections request failed - try Inactive cache")
+     #      detections_df <<- receiverDeploymentDetections(receiverDeploymentID, config.EnableReadCache, config.InactiveCacheAgeLimitMinutes, withSpinner=FALSE)
+     #   } else {
+     #     DONE <-TRUE
+     #   }
+     #   if(nrow(detections_df)<=0) {
+     #     message("Unable to connect to Motus.org. Sleep 5 seconds and try again")
+     #    DONE<-TRUE
+     #     #Sys.sleep(5)
+     #   }
+     #} #end while
+     
      detections_subset_df<<-detections_df[c("tagDetectionDate", "tagDeploymentID","species" )]
 
+     ## WARNING: below is javascript NOT R code !
+     
      ## javascript idleTimer to reset gui when its been inactive 
      ## see also server.R  observeEvent(input$timeOut)
      #numInactivityTimeoutSecond <- 30 #seconds
