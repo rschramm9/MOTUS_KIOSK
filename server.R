@@ -40,6 +40,8 @@
 # Additionally, common module UI is called for each module (output, source code, system version)
 # 
 
+
+
 # Add all server functions from each module here
 server <- function(input, output, session) {
 
@@ -58,37 +60,76 @@ server <- function(input, output, session) {
   
   i18n$set_translation_language(default_UI_lang)
   
+
   ##############################################################
-  #reactive variable for displaying motus on/off status on GUI
+  #reactive variable for displaying motus on/off status at bottom of GUI
   #result<-receiverDeploymentDetails(defaultReceiverID, useReadCache=0) 
-  #this creates and sets a global variable 'motus' to be a reactive value so
-  #it can be observed
-
-  motusServer<<-reactiveValues(status=FALSE,
-               msg=paste("<span style=\"background-color:#fffb00\">MotusStatus:Unknown</span>"))
-
+  #this creates and sets a global variable 'motusServerStatusReactive1' to be a reactive
+  #value so it can be observed and bound to a ui element
+  # Note: these reactives are recreated whenever the touchscreen/mouse
+  # inactivity timer fires which causes a session$reload()
+  motusServerStatusReactive1<<-reactiveValues(status=FALSE,
+       msg=paste("<span style=\"background-color:#fffb00\">MotusStatus:Unknown</span>"))
+  
   # this binds the observer (an output widget) to the reactive value
-  output$motusState<-renderText({motusServer$msg})
+  output$motusState<-renderText({motusServerStatusReactive1$msg})
+  
 
+  ############################################################## 
+  # another reactive variable and it's bound ui element followed
+  # by a function that can be called withing the server at
+  # points that need to update the status and its bound control
+  motusServerStatusReactive2<<-reactiveValues( status=FALSE, msg = paste("status unknown") )
+  output$main_page_subtitle<-renderText(motusServerStatusReactive2$msg)  #bind the msg to the UI control
+  
   ##############################################################
-  #reactive timer to go test Motus periodically to see if online
-  #autoInvalidate <- reactiveTimer(numCheckMotusUpIntervalSeconds) #60 seconds
+  # Function to manage the motusServerStatusReactive2 message
+  # when it changes
+  manageTitlebarMotusStatusMessage <- function(value=TRUE) {
+    x=input$lang_pick
+    motusServerStatusReactive2$status<<-value
+    if(value){
+       s <- paste("")
+    } else {
+       if(x=='en'){
+          s<-"Warning: The Motus.org data server is temporarily offline or unreachable."
+       } else if (x=='es'){ 
+          s<-"Lo sentimos, el servidor de datos de Motus.org está temporalmente inaccesible."
+       } else if (x=='fr'){ 
+          s<-"Désolé, le serveur de données Motus.org est temporairement inaccessible."
+       } else {
+         s<-"languge not recognized"
+       }
+    }
+    #update the reactive variable that causes the bound UI elements to render
+    motusServerStatusReactive2$msg<<-paste(s)  
+  }
+  
+ ##############################################################
+  #reactive timer to go test Motus.org periodically to see if online.
   millisecs <- config.CheckMotusIntervalMinutes*60*1000 #milliseconds #see config file settings
   autoInvalidate <- reactiveTimer(millisecs)
-  
+
+  ##############################################################    
   # render the versioning text string set in global.R to the
   # main page footer output
   output$footer<-renderText({gblFooterText})
+
+
+ ##############################################################  
+ # this button is for debugging 
+ # if you enable the observer here, also enable th button in ui.R
+ # observeEvent(input$btnCommand, { 
+ # add your code here...
+ #   WarningPrint("Button pressed.")
+ #   mytoggle<<-!mytoggle  #a variable declared in global.R
+ #  
+ # })
   
-# this button is for debugging 
-#if you enable the observer here, also enable it in the ui.R
-#  observeEvent(input$btnCommand, { 
-#    WarningPrint("Button pressed.")
-#  })
   
-  
-  #watch for timer to fire, reset it  and then go check on motus
-  #sets reactive (global) variable
+  ##############################################################  
+  #watch for the timer to fire, reset it and then go check on
+  #motus.org Note its sets reactive (global) variable
   observe({
     ## Invalidate and re-execute this reactive expression
     ## every time the timer fires.
@@ -98,49 +139,52 @@ server <- function(input, output, session) {
     # result<-receiverDeploymentDetails(defaultReceiverID, useReadCache=numEnableCache) 
     # for the purpose of testing if Motus.org is up, we dont want to use cache to
     # force the function to hit the remote server.
-    start_time <- Sys.time()
+    # start_time <- Sys.time()
     result<-receiverDeploymentDetails(defaultReceiverID, useReadCache=0) #dont care about cache age...
-    end_time <- Sys.time()
-    elapsedtime=(end_time-start_time)
-    InfoPrint(paste0("Back from html call - Elapsed time:",elapsedtime," secs"))
+    # end_time <- Sys.time()
+    # elapsedtime=(end_time-start_time)
+    # InfoPrint(paste0("Back from html call - Elapsed time:",elapsedtime," secs"))
+    
+    #Note to self: motusServer is a reactive variable that is bound to the UI htmlOutput("motusState") 
     
     if(nrow(result) > 0){
-        if( motusServer$status == FALSE){ 
+        if( motusServerStatusReactive1$status == FALSE){ 
            WarningPrint("Motus status changed to online.")
-           motusServer$status<<-TRUE 
-           motusServer$msg<<-paste("<span style=\"background-color:#8aff0c\">MotusStatus:Online</span>")
+           motusServerStatusReactive1$status<<-TRUE 
+           motusServerStatusReactive1$msg<<-paste("<span style=\"background-color:#8aff0c\">MotusStatus:Online</span>")
+           manageTitlebarMotusStatusMessage(TRUE)
         }
-     
-    } else { #is the empty_df
-        if( motusServer$status == TRUE){
+     } else { #is the empty_df
+        if( motusServerStatusReactive1$status == TRUE){
            WarningPrint("Motus status changed to offline due (no response timeout).")
-           motusServer$status<<-FALSE
-           motusServer$msg<<-paste("<span style=\"background-color:#fffb00\">MotusStatus:Offline</span>")
+           motusServerStatusReactive1$status<<-FALSE
+           motusServerStatusReactive1$msg<<-paste("<span style=\"background-color:#fffb00\">MotusStatus:Offline</span>")
+           manageTitlebarMotusStatusMessage(FALSE)
         }
-    }
-
-    
-  })
+     } #end else
+  }) #end timer observe()
   
-  
-  # On inactivity timeout, reset the dashboard UI to startup defaults
+  ############################################################## 
+  # On mouse/touchscreen inactivity timeout, 
+  # reset the dashboard UI to startup defaults
   observeEvent(input$timeOut, { 
     #print(paste0("Session (", session$token, ") timed out at: ", Sys.time()))
     session$reload()
   })
   
-
-  # Language picker
+  ##############################################################
+  # Language picker change event
+  # all the UI elements that need to change if the language changes
+  ##############################################################
   observeEvent(input$lang_pick, {
     # 07Feb2023 workaround bug found in shiny.i18n package update_lang() function
     # order of arguments reversed issue.. specify arguments by name instead of
     # by position.
     update_lang(session=session, language=input$lang_pick)
     
-
-    
     #choose the correct homepage given language selected on UI
     x=input$lang_pick
+    
     xxx = config.HomepageEnglish
     if(x=='en'){
       thefile<-xxx 
@@ -160,9 +204,8 @@ server <- function(input, output, session) {
         thefile <- paste0("www/DEFAULT/homepages/default_homepage_fr.html")
       } 
     }
-    
 
-    DebugPrint(paste0("********* the HOMEPAGE:",thefile, "  ************"))
+    #DebugPrint(paste0("********* the HOMEPAGE:",thefile, "  ************"))
     # Refresh homepage file on the main home page tab of the navbar
     removeUI(selector ="#readmediv", immediate = TRUE)
     insertUI(immediate = TRUE,
@@ -172,7 +215,7 @@ server <- function(input, output, session) {
              )
     )
  
-    # need to make sure the aboutMotus image gets set to correct language
+    # need to make sure the 'About Motus' image gets set to correct language
     # even if its tab is not currently selected (exposed)
     xxx <- as.character(i18n$get_translations()["ui_about_motus_default",input$lang_pick])
     output$about_motus <- renderUI({
@@ -189,13 +232,19 @@ server <- function(input, output, session) {
     } else {
       titletext<-config.MainTitleEnglish 
     }
-    output$main_page_title<-renderText({
-      dynamic_title <- input$receiver_pick
-      paste(titletext, dynamic_title)})
     
-  })  #end observeEvent langpick
+    output$main_page_title<-renderText({
+    dynamic_title <- input$receiver_pick
+    paste(titletext, dynamic_title)})
+    
+    #manage the titlebar message using what ever the current status is
+    manageTitlebarMotusStatusMessage(motusServerStatusReactive2$status)
+    
+}) #end language picker change event
   
-  
+##############################################################
+# receiver picker input reactive observer
+##############################################################
   # the receiver picker input reactive observer need to update
   # the main page title when a new receiver is picked
   # note the SERVER_ReceiverDetections() also has an event observer for
@@ -219,11 +268,7 @@ server <- function(input, output, session) {
     
   })  #end observeEvent input$receiver_pick
   
-  #mainlogo = paste0(config.SiteSpecificContent,"/",config.MainLogoFile)
-  #mainlogo = paste0(config.SiteSpecificContent,"/",config.MainLogoFile)
-  #DebugPrint(paste0("********** MAIN LOGO:", mainlogo))
-  
-  
+
   # Pass language selection into the module for Server-side translations
   # If not done, some UI elements will not be updated upon language change
   # Also pass the receiver picker as it will need to be observed by a reactive
