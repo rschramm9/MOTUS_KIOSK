@@ -60,7 +60,6 @@ server <- function(input, output, session) {
   
   i18n$set_translation_language(default_UI_lang)
   
-
   ##############################################################
   #reactive variable for displaying motus on/off status at bottom of GUI
   #result<-receiverDeploymentDetails(defaultReceiverID, useReadCache=0) 
@@ -114,17 +113,19 @@ server <- function(input, output, session) {
   # render the versioning text string set in global.R to the
   # main page footer output
   output$footer<-renderText({gblFooterText})
+    observeEvent(input$goToPlot, {
+    updateTabsetPanel(session, inputId = "navbar", selected = "Receivers")  # Switch to "Receivers" tab
+    updateTabsetPanel(session, inputId = "receiverTabs", selected = "details")  # Switch to "Details" sub-tab by value
+  })
 
-
- ##############################################################  
- # this button is for debugging 
- # if you enable the observer here, also enable th button in ui.R
- # observeEvent(input$btnCommand, { 
- # add your code here...
- #   WarningPrint("Button pressed.")
- #   mytoggle<<-!mytoggle  #a variable declared in global.R
- #  
- # })
+   ##############################################################  
+   # this is the observer for the optional button used for debugging 
+   # if you enable the observer here, also enable the button in ui.R
+  observeEvent(input$btnCommand, {
+     # add your code here...
+     #WarningPrint("Button pressed.")
+     mytoggle<<-!mytoggle  #a variable declared in global.R
+  })
   
   
   ##############################################################  
