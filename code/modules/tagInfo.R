@@ -119,7 +119,7 @@ tagInfo  <- function(tagID, useReadCache=1, cacheAgeLimitMinutes=60)
   # motus.org may just redirect us to the motus.org home page. Here I test for the homepage title
   ans=testPageTitlenodes(page, "Motus Wildlife Tracking System")
   if (ans==TRUE) {
-    WarningPrint("Motus redirected to homepage. Likely no receiver deployment found with ID. Returning empty df (Redirected) ")
+    WarningPrint(paste0("Motus redirected to homepage. Likely no tag deployment found with ID: ", tagID," Returning empty df (Redirected) "))
     return(onError_df)
   }
   
