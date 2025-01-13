@@ -158,7 +158,7 @@ ui_titlebar <- fluidRow(
            div(style="display: inline-block;vertical-align:top;width:120px",
                pickerInput(inputId = "receiver_pick",
                label = i18n$t("ui_mainpage_available_receivers"),
-               width = 120,
+               width = 200,
                choices = config.ReceiverShortNames,
                options = pickerOptions(container = "body")
            )) ,
