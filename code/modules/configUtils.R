@@ -498,14 +498,6 @@ getKioskConfig <- function() {
   }
   
   #print("------------ path to translations ----------------")
-  #list1 <- keyValueToList(configtbl,'TranslationsPath')
-  #if( is.null(list1) ){
-  #  badCfg<-TRUE 
-  #  config.LogLevel<<-LOG_LEVEL_WARNING
-  #} else {
-  #  #I ultimately want a string
-  #  config.LogLevel<<- toString(list1[1])  
-  #}
   config.TranslationsPath<<-paste0( config.SiteSpecificContent,"/data/translations")
   #message(paste0("configUtils.config.TranslationsPath:", config.TranslationsPath))
   return(badCfg)
