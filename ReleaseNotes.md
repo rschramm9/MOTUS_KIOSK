@@ -1,3 +1,12 @@
+##### 5.2.1 (2025-01-13)
+
+Begin to implement a feature that will allow the config file to specify if the app should open ito the homepage or to the tag detection map tab.
+
+- ReceiverDetections.R - Add id's to to navbar tab panels
+- Ui.R fixed reported issue #2 available receivers picklist/dropdon too small.
+
+
+
 ##### 5.2.0 (2024-11-28)
 
 Removed the test at startup that would block server from completing
@@ -5,7 +14,7 @@ initialization until motus.org was reachable. This would make the
 kiosk show a blank screen on boot until motus.org and/or the network
 was up. Instead, add a line above the kiosk main titlebar to display warning
 message if motus.org appears to be offline/unreachable.  Also quite a bit
-of code cleanup and comments in ui.R and server.R
+of code cleanup and comments in ui.R and server.R  (see ReleaseNotes)
 
 global.R
 
@@ -23,12 +32,19 @@ ui.R
 server.R
 
 - implement fluidRow above the main titlebar to display status if motus.org offline
+
 - added reactive value motusServerStatusReactive2 to handle the new ui_motus_statusbar
+
 - add function manageTitlebarMotusStatusMessage() to handle setting the ui_motus_statusbar
   language translation
+  
 - renamed reactive value motusServer to motusServerStatusReactive1 
+
 - clean up reformat a lot of code for readability
+
 - add a lot more comments
+
+  
 
 ##### 5.1.6 (2024-07-23)
 
