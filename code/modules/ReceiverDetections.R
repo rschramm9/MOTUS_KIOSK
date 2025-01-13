@@ -86,11 +86,14 @@ UI_ReceiverDetections <- function(id, i18n) {
       mainPanel(width = 8,
                 
                 tabsetPanel(type = "tabs",
-                            tabPanel(i18n$t("ui_RCVR_detections_details_tab_label"), 
+                            id = "tagInfoTabs",  # Add an ID for the sub-tabsetPanel
+                           tabPanel(title=i18n$t("ui_RCVR_detections_details_tab_label"), 
+                                     value="tagdetailstab",
                                      helpText(i18n$t("ui_RCVR_detections_details_tab_helptext")),
                                      DT::dataTableOutput( ns('tagdetail') )
                             ),
-                            tabPanel(i18n$t("ui_RCVR_detections_flightpath_tab_label"), 
+                            tabPanel(title=i18n$t("ui_RCVR_detections_flightpath_tab_label"), 
+                                     value="flighthistorytab",
                                      helpText(i18n$t("ui_RCVR_detections_flightpath_tab_helptext")),
                                      DT::dataTableOutput( ns('flightpath') )
                                      
@@ -106,7 +109,9 @@ UI_ReceiverDetections <- function(id, i18n) {
                             
                             #NOTE: vh = viewport height
                             
-                            tabPanel(i18n$t("ui_RCVR_detections_leaflet_tab_label"), 
+                            #tabPanel(i18n$t("ui_RCVR_detections_leaflet_tab_label"), 
+                                tabPanel(title=i18n$t("ui_RCVR_detections_leaflet_tab_label"),  
+                                    value="maptab",
                                      helpText(i18n$t("ui_RCVR_detections_leaflet_tab_helptext")),
                                      actionButton( ns("fly"),    label = i18n$t("ui_RCVR_fly_button_caption")),
                                      actionButton( ns("stop"),   label = i18n$t("ui_RCVR_stop_button_caption")),
@@ -524,7 +529,8 @@ SERVER_ReceiverDetections <- function(id, i18n_r, lang, rcvr) {
         # note this is a local variable assignment
         DebugPrint(paste0("input$mytable_rows_selected observeEvent() - tagDepID NOT NA so call tagDeploymentDetections with tagDepID:",tagDepID))
  
-               
+        #print(paste0("************** tagflight_df with tagDepID: ",tagDepID)  )     
+        
         tagflight_df <- tagDeploymentDetections(tagDepID, config.EnableReadCache, config.ActiveCacheAgeLimitMinutes, withSpinner=TRUE, spinnerText=usespinnertext) 
         if(nrow(tagflight_df)<=0) {  # failed to get results... try the inactive cache
           DebugPrint("tagDeploymentDetections request failed - try Inactive cache")
@@ -589,12 +595,13 @@ SERVER_ReceiverDetections <- function(id, i18n_r, lang, rcvr) {
            idx <- nrow(tagflight_df)
            a_df <- tagflight_df[idx,] #the last row
            tagflight_df <- insertRow(tagflight_df, a_df, idx)
-   
-           # now walk tagflight_df and compute velocity of adjacent detections
-           DONE<-FALSE
-           idx <- 2 #always start on row 2
-           while(!DONE){
-             if(idx > nrow(tagflight_df)){
+           
+          if(input$enablefilter){ ### NEW CODE
+            # now walk tagflight_df and compute velocity of adjacent detections
+            DONE<-FALSE
+            idx <- 2 #always start on row 2
+            while(!DONE){
+              if(idx > nrow(tagflight_df)){
                DONE <- TRUE
              } else {
                takeoff<-tagflight_df[idx-1,]
@@ -638,6 +645,8 @@ SERVER_ReceiverDetections <- function(id, i18n_r, lang, rcvr) {
              } #end else
            
            } #end while(!DONE)
+           
+          } ### end if NEW CODE
   
            #and drop the extra first and last rows we added above...
            tagflight_df = tagflight_df[-1,, drop=F] #the first row
