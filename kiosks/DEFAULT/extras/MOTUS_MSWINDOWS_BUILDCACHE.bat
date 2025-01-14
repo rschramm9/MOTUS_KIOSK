@@ -1,5 +1,6 @@
 REM  MOTUS_MSWINDOWS_BUILDCACHE.bat
 REM  14-Jan-2025
+REM  Version 1.0
 
 REM  Runs the BuildCache.R script to walks all receivers in the user's
 REM  kiosk.cfg file and create a complete
@@ -10,8 +11,8 @@ REM  Configure this script to be run nightly by the Windows task manager
 
 REM  As you must customize this file with names and paths specific to your kiosk,
 REM  it lives in the kiosk-specific directory in the 'extras' folder of the
-REM  just below the directory with yur kiosk.cfg file. 
-REM  e.g. C:\Users\MOTUS_KIOSK\Documents\your-kiosk-name\extras
+REM  just below the directory with your kiosk.cfg file. 
+REM  e.g. C:\Users\MOTUS_USER\Documents\kiosks\your-kiosk-name\extras
 
 @echo off
 
@@ -21,7 +22,7 @@ REM - Configure the following four items for your configuration
 
 PATH "C:\R\R-4.4.2\bin
 set "SCRIPTS_PATH=C:\Users\MOTUS_USER\Projects\MOTUS_KIOSK"
-set "LOGS_PATH=C:\Users\MOTUS_USER\Documents\kiosks\WLNC\logs"
+set "LOGS_PATH=C:\Users\MOTUS_USER\Documents\kiosks\DEFAULT\logs"
 set "RSCRIPT_FILE=BuildCache.R"
 
 REM - You shouldnt normally need to modify below this line
