@@ -19,11 +19,19 @@ library(tidyr) #for  web scraping
 
 ### read URLs with timeouts
 library(httr)
+
 ###### read configuration key/value pairs
 library(data.table)
 
 library(tictoc)
 
+LOG_LEVEL_DEBUG=5  #print debug messages
+LOG_LEVEL_INFO=4 #print info messages
+LOG_LEVEL_WARNING=3 #print warning messages
+LOG_LEVEL_ERROR=2
+LOG_LEVEL_FATAL=1
+LOG_LEVEL_NONE=0
+LOG_LEVEL = LOG_LEVEL_INFO #set an inital log level, after we read the config file we will overide this
 
 ## RStudio assumes .R code to be in the top level project directory.
 ## I keep it in a sub-directory named 'code' to keep it clearly separate.
@@ -32,8 +40,12 @@ library(tictoc)
 ## variable 'projectdir'. Also set variable codedir a a subdir so we can
 ## source the necessary modules etc.
 
+begin_usec  <- as.numeric(Sys.time())
+begin_datetime <- Sys.time()
+print(paste0("BuildCache STARTED AT:",begin_datetime))
+
 wd <- getwd()
-message(paste0("getwd():", wd))
+print(paste0("BuildCache.R getwd():", wd))
 
 if( grepl('/code$', wd)){
   message(paste0("modifying working directory"))
@@ -44,10 +56,8 @@ if( grepl('/code$', wd)){
 projectdir <<- wd
 codedir <<- paste0( projectdir,"/code")
 
-message(paste0("projectdir is:", projectdir))
-message(paste0("codedir is:", codedir))
-
-
+print(paste0("projectdir is:", projectdir))
+print(paste0("codedir is:", codedir))
 
 # Add individual modules here
 source(paste0(codedir,"/modules/configUtils.R"))
@@ -62,9 +72,6 @@ source(paste0(codedir,"/modules/tagTrack.R"))
 
 
 LOG_LEVEL<<-4 #WARNING
-
-begin_datetime <- Sys.time()
-print(paste0("BuildCache STARTED AT:",begin_datetime))
 
 #read the startup configuration file (see configUtils.R)
 # to find which kiosk
@@ -82,7 +89,91 @@ if( badCfg == TRUE){
   FatalPrint("There is a fatal error in your kiosk.cfg file")
   stop("Stopping because there is a serious error in your cfg file")
 }
+
 #printConfig()
+
+#print("-----------------Done processing config----------------------------------")
+
+#set your desired log level in your config file ## I WILL OVERIDE THEI DOWN BELOW
+#convert the string from config file to numeric constant from above
+LOG_LEVEL=switch(
+  config.LogLevel,
+  "LOG_LEVEL_DEBUG"=LOG_LEVEL_DEBUG,
+  "LOG_LEVEL_INFO"=LOG_LEVEL_INFO,
+  "LOG_LEVEL_WARNING"=LOG_LEVEL_WARNING,
+  "LOG_LEVEL_ERROR"=LOG_LEVEL_ERROR,
+  "LOG_LEVEL_FATAL"=LOG_LEVEL_FATAL,
+  "LOG_LEVEL_NONE"=LOG_LEVEL_NONE,
+)
+
+#Overide the log level set in the users kiosk.cfg file
+LOG_LEVEL<<-LOG_LEVEL_INFO
+
+#message(paste0("in global.R, config.SiteSpecificContent is:", config.SiteSpecificContent))
+
+# read a csv file for any bad or tags by tagID we want the gui to
+# ignore. any receiver detection of a tag with matching TagID
+# would have all detections of this tag at the receiver ignored
+# eg for a 'test tag' used a site where we dont want to show the public user
+# our test data
+thefile<-paste0(config.SiteSpecificContent,"/data/ignoredetections/ignore_tags.csv") 
+message(paste0("attempting to load ignore file:",thefile))
+gblIgnoreTag_df <<- ReadCsvToDataframe(thefile)
+if( is.null(gblIgnoreTag_df) ) {
+  #message("the FIRST csv file returned NULL")
+} else {
+  #message("loaded FIRST csv file")
+}
+#print(gblIgnoreTag_df) 
+
+# read a csv file for any bad or tags by tagDeploymentID we want the gui to
+# ignore. any receiver detection of a tag with matching tagDeploymentID
+# would have all detections of this tag at the receiver ignored
+# eg for a 'test tag' that may be redeployed later on an animal
+# where we dont want to show the public user the test data
+####f <- paste0(getwd(),"/data/ignore_tag_deployments",".csv")
+####gblIgnoreTagDeployment_df <<- ReadCsvToDataframe(f)
+
+thefile<-paste0(config.SiteSpecificContent,"/data/ignoredetections/ignore_tag_deployments.csv") 
+#message(paste0("attempting to load file:",thefile))
+gblIgnoreTagDeployment_df <<- ReadCsvToDataframe(thefile)
+if( is.null(gblIgnoreTag_df) ) {
+  # message("SECOND csv file returned NULL")
+} else {
+  # message("loaded SECOND csv file")
+}
+#print(gblIgnoreTagDeployment_df) 
+
+
+# read a csv file for any known bad tag detections at some receiver that we want the gui to ignore
+# these are individual detections of a tag at some receiver - eg wild point where the animal 
+# flies across the continent in a day = a false detections that motus hasnt filtered
+# this hack isnt scalable but for now....
+thefile<-paste0(config.SiteSpecificContent,"/data/ignoredetections/ignore_date_tag_receiver_detections.csv") 
+
+# message(paste0("attempting to load file:",thefile))
+gblIgnoreDateTagReceiverDetections_df <<- ReadCsvToDataframe(thefile)
+if( is.null(gblIgnoreTag_df) ) {
+  #message("THIRD csv file returned NULL")
+} else {
+  #message("loaded THIRD csv file")
+}
+#print(gblIgnoreDateTagReceiverDetections_df) 
+
+
+# read a csv file for any known bad receiver that we want the gui to ignore
+# these are all detections of a tag at receiver - eg a known very noisy receiver
+# this hack isnt scalable but for now...
+thefile<-paste0(config.SiteSpecificContent,"/data/ignoredetections/ignore_all_detections_at_receiver.csv") 
+
+# message(paste0("attempting to load file:",thefile))
+gblIgnoreAllDetectionsAtReceiver_df <<- ReadCsvToDataframe(thefile)
+if( is.null(gblIgnoreTag_df) ) {
+  #message("FOURTH csv file returned NULL")
+} else {
+  #message("loaded Forth csv file")
+}
+#print(gblIgnoreAllDetectionsAtReceiver_df) 
 
 
 # construct data frame to support the available receivers picklist
@@ -94,8 +185,9 @@ gblReceivers_df <<- data.frame(unlist(config.ReceiverShortNames),unlist(config.R
 names(gblReceivers_df) = c("shortName","receiverDeploymentID")
 #print(gblReceivers_df)
 
+
      ##################################################
-     # enable this code block to run to completely rebuild cache
+     # code below here will completely rebuild cache
      # WARNING - For many receivers... this will take awhile and also
      # hits the motus.org server many times....
      ##################################################
@@ -153,10 +245,12 @@ names(gblReceivers_df) = c("shortName","receiverDeploymentID")
        }
        
        print("****** Finished processing all receivers.")
-       begin_datetime <- Sys.time()
-       print(paste0("BuildCache STARTED AT:",begin_datetime))
+       
+       end_usec  <- as.numeric(Sys.time())
        end_datetime <- Sys.time()
+       print(paste0("BuildCache STARTED AT:",begin_datetime))
        print(paste0("BuildCache ENDED AT:",end_datetime))
+       print(paste0("BuildCache ELAPSED MINUTES:", (end_usec - begin_usec)/60))
        
      } #endif 1==1
      
