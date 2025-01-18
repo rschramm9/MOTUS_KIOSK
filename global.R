@@ -1,7 +1,7 @@
 
 ######## I put github release version and other data here ############
 ######## so it can be displayed on the footer of the kiosk window ####
-gblFooterText <- "MOTUS_KIOSK  vsn 5.2.1  13-Jan-2025"
+gblFooterText <- "MOTUS_KIOSK  vsn 6.0.0  16-Jan-2025"
 mytoggle<<-FALSE #useful global variable for debugging
 ###############################################################################
 # Copyright 2022-2023 Richard Schramm
@@ -90,7 +90,8 @@ LOG_LEVEL_WARNING=3 #print warning messages
 LOG_LEVEL_ERROR=2
 LOG_LEVEL_FATAL=1
 LOG_LEVEL_NONE=0
-LOG_LEVEL = LOG_LEVEL_INFO #set an inital log level, after we read the config file we will overide this
+
+LOG_LEVEL_INFO #set an inital log level, after we read the config file we will overide this
 
 ###### read configuration key/value pairs
 library(data.table)
@@ -113,6 +114,9 @@ if( grepl('/code$', wd)){
 
 projectdir <<- wd
 codedir <<- paste0( projectdir,"/code")
+
+#####gblMainTabName <<- ""
+#####gblMapTabName <<-""
 
 message(paste0("projectdir is:", projectdir))
 message(paste0("codedir is:", codedir))
@@ -146,7 +150,8 @@ source(paste0(codedir,"/modules/MotusNews.R"))
          FatalPrint("There is a fatal error in your kiosk.cfg file")
          stop("Stopping because there is a serious error in your cfg file")
      }
-     #printConfig()
+     
+     ####printConfig()
      
      #print("-----------------Done processing config----------------------------------")
      #set your desired log level in your config file
@@ -250,6 +255,10 @@ source(paste0(codedir,"/modules/MotusNews.R"))
      # the physical subdirectory (aboutmotuspages) but it is important to 
      # know that it is both the virtual prefix and the physical subdir.
      
+     # resource path so that ui.R can find the kiosk-specifc.css file
+     s = paste0(config.SiteSpecificContentWWW,"/css")
+     addResourcePath("css", s)
+     
      #moved from server.R
      s = paste0(config.SiteSpecificContentWWW,"/homepages/homepage_images")
      #message(paste0("setting homepage resource path:",s))
@@ -321,26 +330,6 @@ source(paste0(codedir,"/modules/MotusNews.R"))
      #would hang in the loop if restarted while motus was offline and it wasnt
      #obvious to the kiosk user what was happening
      detections_df <<-empty_receiverDeploymentDetection_df()
-     
-     # the shiny server and ui havent been initialized yet, and they need some initial
-     # set of receivers to start... so here I contact motus an create the initial dataframe of receivers
-     # if it cant connect at first it just endlessly keeps trying
-     # DONE<-FALSE
-     # while(!DONE){
-        #first connection attempt with motus.org
-     #   detections_df <<- receiverDeploymentDetections(receiverDeploymentID, config.EnableReadCache, config.ActiveCacheAgeLimitMinutes, withSpinner=FALSE)
-     #   if(nrow(detections_df)<=0) {  # failed to get results... try the inactive cache
-     #      InfoPrint("initial receiverDeploymentDetections request failed - try Inactive cache")
-     #      detections_df <<- receiverDeploymentDetections(receiverDeploymentID, config.EnableReadCache, config.InactiveCacheAgeLimitMinutes, withSpinner=FALSE)
-     #   } else {
-     #     DONE <-TRUE
-     #   }
-     #   if(nrow(detections_df)<=0) {
-     #     message("Unable to connect to Motus.org. Sleep 5 seconds and try again")
-     #    DONE<-TRUE
-     #     #Sys.sleep(5)
-     #   }
-     #} #end while
      
      detections_subset_df<<-detections_df[c("tagDetectionDate", "tagDeploymentID","species" )]
 
