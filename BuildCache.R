@@ -192,7 +192,7 @@ names(gblReceivers_df) = c("shortName","receiverDeploymentID")
      # hits the motus.org server many times....
      ##################################################
 
-     be_nice <- 1 #seconds between hitting motus.org data server
+     be_nice <- 2 #seconds between hitting motus.org data server
 
      if (1==1){ #rebuild cache
        for (i in 1:nrow(gblReceivers_df)) {  #for each receiver
