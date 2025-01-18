@@ -1,18 +1,19 @@
 ui|fr
 ui_nav_page_main|Maison
 ui_nav_page_help|Aide / Commentaires
+ui_jump_to_button_text|Appuyez pour accéder à la carte des détections de balises
 
 ui_mainpage_lang|Sélectionnez la langue de l'interface utilisateur
 ui_mainpage_available_receivers|Récepteurs disponibles
 ui_mainpage_loading|Chargement...
 
 ui_MotusNews_title|Nouvelles Motus!
-ui_motusnews_loading|Chargement des actualités
+ui_motusnews_loading|Chargement de la page...
 
 ui_AboutMotus_title|En savoir plus sur Motus
 ui_about_motus_loading|À propos du chargement Motus
 
-ui_RCVR_title|Détections de récepteur
+ui_RCVR_title|Détections
 
 ui_RCVR_detections_details_tab_label|Détails de la balise
 ui_RCVR_detections_details_tab_helptext|Informations sur le déploiement de l'oiseau marqué sélectionné.
