@@ -38,6 +38,10 @@
 # UI "skeleton" of the whole app.
 # Individual module UI is attached via UI_<module_name> functions
 
+
+library(shinyjs)
+
+
 ## languages supported is determined by presence of translations csv files
 ## available in the data/translations dir
 
@@ -76,6 +80,59 @@ df$img = c(
   en, es, fr
 ) 
 
+######### NEW ##########
+ui_headerbar <- fluidRow(
+  div(  
+    id = "main_page_headerbar",
+    actionButton("gotoMap", "Page Loading...", style = "height: 95%"),
+    div( class = "headerbar-container",
+         textOutput("headerbar_text")
+    ),
+    div(
+      class = "lang-picker",
+      tags$div(  tags$style(".jhr{
+         display: inline;
+         vertical-align: middle;
+         padding-left: 10px;
+      }")),
+      
+      pickerInput(
+        inputId = "lang_pick",
+        label = NULL,
+        choices = df$val,
+        choicesOpt = list(content = df$img),
+        options = pickerOptions(container = "body"),
+        width = "170px"
+      )
+    )
+  )
+)
+
+ui_titlebar<- fluidRow( class = "title-bar",
+                        
+   tags$img(
+     #src = "images/logos/ankenyhill_logo_hires_cropped.jpg",
+     src = config.MainLogoFile,
+     alt = "AHNC Logo"
+     ) ,
+   
+   div( class = "title-bar-content",
+       textOutput("main_page_title", inline = TRUE)
+   ),
+                        
+   div( class = "picker-container",
+      textOutput("available_receivers", inline = TRUE),
+                             
+      pickerInput(
+      inputId = "receiver_pick",
+      label = NULL,  # No label inside the picker
+      choices = config.ReceiverShortNames,
+      options = pickerOptions(container = "body"),
+      width = "200px"
+       )
+    )
+)
+
 
 ###############################################################################
 # Define Main "Home Page Readme" ui panel.
@@ -93,7 +150,6 @@ ui_mainpage <- fluidPage(
                tags$h4(i18n$t("ui_mainpage_loading"))
            )
   )
-
 )  # end of main page layout
 
 
@@ -103,163 +159,71 @@ ui_mainpage <- fluidPage(
 ## defined in modules
 ## *** note how the language translation is passed into the function**
 ###############################################################################
-#10Dec2022 - give the navbar and the tabpanels id's so we can specify them in the server on page reset
 
-navbar_css = paste(config.SiteSpecificContentWWW,"my-custom-theme.css")
-ui_navbar <-  div( class="navbar1",  style="font-family: Verdana font-style: normal;font-size: 20px;",
+ui_navbar <-  div( class="navbar1", 
  
-     navbarPage("",id="inTabset",theme=navbar_css,
+     navbarPage("",id="navbartabset",
 
-     tabPanel(value="panel1", i18n$t("ui_nav_page_main"),style="color:#000000;font-style: normal;font-size: 12px;",
+     tabPanel(value="panel1", i18n$t("ui_nav_page_main"), 
        ui_mainpage
      ),
        
-     tabPanel(value="panel2", i18n$t("ui_RCVR_title"),style="color:#000000;font-style: normal;font-size: 14px;",
+     tabPanel(value="panel2", i18n$t("ui_RCVR_title"),  
        UI_ReceiverDetections("ReceiverDetections", i18n=i18n),
      ),
                  
-     if (config.EnableMotusNewsTab) { tabPanel(value="panel3", i18n$t("ui_MotusNews_title"),style="color:#000000;font-style: normal;font-size: 10px;",
+     if (config.EnableMotusNewsTab) { tabPanel(value="panel3", i18n$t("ui_MotusNews_title"),  
         UI_MotusNews("MotusNews", i18n=i18n),
      )},
             
-     if (config.EnableLearnAboutMotusTab) { tabPanel(value="panel4", i18n$t("ui_AboutMotus_title"),style="color:#000000;font-style: normal;font-size: 10px;",
+     if (config.EnableLearnAboutMotusTab) { tabPanel(value="panel4", i18n$t("ui_AboutMotus_title"), 
         UI_AboutMotus("AboutMotus", i18n=i18n),
      )},
+     
    ),
 ) #end the ui_navbar definition div
 
-###############################################################################
-##  define the titlebar panel that holds the logo, main title and the
-## language selector.  It will appear on all pages.
-###############################################################################
-#to recover vertical space..value determined by trial and error
-#now is a configuration setting in your config file 
-#TODO: Test more - not clear if this is actually making a difference.
 
-# need to fix scope of this css string so outside of the fluidRow function
-strLogoOffset=paste0("display: inline-block; margin-top:", as.character(config.MainLogoTopOffsetPixels), "px;" )
-
-ui_titlebar <- fluidRow(
-
-  titlePanel(   
-    tagList(
-    
-      div(style=strLogoOffset, img(src = config.MainLogoFile, height = config.MainLogoHeight)),
-   
-      #span(style="color:#8FBC8F;font-style: italic;font-size: 25px;",
-      span(style=paste0("color:",config.TitlebarColor,";font-style: italic;font-size: 25px;"), 
-           
-           div(style="display:inline-block;vertical-align:middle; width: 50%;", textOutput("main_page_title")),
-           
-           # optional utility action button on titlebar for debugging
-           # if you enable this, also enable the observer function in server.R
-           # actionButton("btnCommand","Command"),
-           
-           div(style="display: inline-block;vertical-align:top;width:120px",
-               pickerInput(inputId = "receiver_pick",
-               label = i18n$t("ui_mainpage_available_receivers"),
-               width = 200,
-               choices = config.ReceiverShortNames,
-               options = pickerOptions(container = "body")
-           )) ,
-           
-           span(
-             tags$div(  tags$style(".jhr{
-                       display: inline;
-                       vertical-align: middle;
-                       padding-left: 10px;
-                        }")),
-             
-             pickerInput(inputId = "lang_pick",
-                         label = "",
-                         width = 170,
-                         choices = df$val,
-                         choicesOpt = list( content=df$img),
-                         options = pickerOptions(container = "body")
-             ),
-             
-             style = "position:absolute;right:2em;"
-           ), #end span2
-           
-      ), #end span1
-      
-    ) # end taglist
-    
-  ), #end titlepanel
-  
-)  #end the ui_title fluidRow
-
-###############################################################################
-# this new (Nov2024) status warning that only appears at the top of the page
-# if the motus servers are offline or somehow unreachable.  Its more
-# obviously visible than the footer motusState indicator. 
-ui_motus_statusbar <- fluidRow(
-  
-  titlePanel(   
-    tagList(
-      
-      span(style=paste0("color:","#FFBF00", ";font-style: italic;font-size: 14px;
-      text-shadow: 0px 0px 0px black;"),
-           
-           div(style=". margin-bottom: 1px;
-                        margin-top: -10px;
-                        margin-left: 20px;
-                        text-align: center;
-                        width: 100%;", textOutput("main_page_subtitle")),
-
-      ) #end span1
-    ) #end taglist
-  ) #end titlepanel
-)  #end the ui_motus_statusbar fluidRow
-
-###############################################################################
-ui_footer <-  fluidRow (
-  # horizontal line and a small plain text footer 
+ui_hrow<-fluidRow(
+  # horizontal line 
   hr(style="display: block;
             padding: 1px;
             margin-top: 0.25em;
             margin-bottom: 0.25em;"
-  ),
+  )
+)
 
-  span(
-  div(
-    textOutput("footer")%>% 
-      tagAppendAttributes(style= 'font-size: 10px;
-                        padding: 1px;
-                        margin-bottom: 1px;
-                        margin-top: 1px;
-                        margin-left: 10px;
-                        display: inline-block;
-                        ') ,
-    
-    htmlOutput("motusState")%>% 
-      tagAppendAttributes(style= 'font-size: 12px;
-                        padding: 1px;
-                        margin-bottom: 1px;
-                        margin-top: 1px;
-                        margin-left: 10px;
-                        display: inline-block;
-                        position:absolute;right:2em;
-                        ') 
-  ) # end div
-) # end span
-)# end ui_footer fluid row
+ui_footer<-fluidRow(
+   div(class = "footer-row",
+      div(uiOutput("versionInfo"), class = "version-info"), 
+      div(uiOutput("motusState"), class = "motus-state") 
+  )
+)
+
 
 ###############################################################################
-## assemble the UI from the pieces
+## assemble the UI from the pieces defined above
 ###############################################################################
 
 ui <- fluidPage( 
-   tags$head( 
-      tags$title("Motus Kiosk"),
-      tags$script(src="scripts/var_change.js")
-   ),
+  useShinyjs(), # Initialize shinyjs so we can use dynamic css to set colors
+  
+  # link it to the CSS style sheet in the www/css directory
+  # uses a css resource path set in global.R
+  
+  tags$head( 
+    tags$link(rel = "stylesheet", type = "text/css", href = "css/motus_kiosk_default.css"),
+    tags$title("Motus Kiosk"),
+    tags$script(src="scripts/var_change.js"),
+    tags$script(inactivity)
+  ),
              
-   tags$script(inactivity),
+   ###tags$script(inactivity),
              
-   ui_motus_statusbar,   #motus_statusbar is a fluidRow holding a titlePanel
+   ui_headerbar,
    ui_titlebar,
    ui_navbar,
+   ui_hrow,
    ui_footer,
   
 )   # end of ui definition
