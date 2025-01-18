@@ -41,46 +41,51 @@
 # 
 
 
-
 # Add all server functions from each module here
 server <- function(input, output, session) {
 
   # Load translations
-  # setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
-  
-  session$sendCustomMessage("color_change",config.NavbarColor)
-
   #suppress translator warning re. 'no translation yaml file' 
   warn = getOption("warn")
   options(warn=-1)
-  #message(paste0("In server.R config.TranslationsPath:", config.TranslationsPath))
+  # print(paste0("In server.R config.TranslationsPath:", config.TranslationsPath))
   i18n <- Translator$new(translation_csvs_path = config.TranslationsPath,
                        separator_csv="|")
   options(warn=warn)
   
   i18n$set_translation_language(default_UI_lang)
   
+
   ##############################################################
   #reactive variable for displaying motus on/off status at bottom of GUI
-  #result<-receiverDeploymentDetails(defaultReceiverID, useReadCache=0) 
-  #this creates and sets a global variable 'motusServerStatusReactive1' to be a reactive
-  #value so it can be observed and bound to a ui element
+  #this creates and sets a global variable 'motusServerStatusReactive1'
+  # to be a reactive value so it can be observed and bound to a ui element
   # Note: these reactives are recreated whenever the touchscreen/mouse
   # inactivity timer fires which causes a session$reload()
-  motusServerStatusReactive1<<-reactiveValues(status=FALSE,
-       msg=paste("<span style=\"background-color:#fffb00\">MotusStatus:Unknown</span>"))
   
-  # this binds the observer (an output widget) to the reactive value
-  output$motusState<-renderText({motusServerStatusReactive1$msg})
+  motusServerStatusReactive1<<-reactiveValues(
+       status=FALSE,
+       msg=paste("MotusStatus:Unknown") )
   
+       # this binds the observer (an output widget) to the reactive value
+       output$motusState<-renderUI({
+         msg <- motusServerStatusReactive1$msg
+         background_color <- if (msg == "MotusStatus:Online") "lawngreen" else "yellow"
+         div(class = "motus-state",
+             style = paste("background-color:", background_color, "; color: black; padding: 5px;"),
+             msg
+         )
+       })
+         
+      
 
   ############################################################## 
   # another reactive variable and it's bound ui element followed
   # by a function that can be called withing the server at
   # points that need to update the status and its bound control
   motusServerStatusReactive2<<-reactiveValues( status=FALSE, msg = paste("status unknown") )
-  output$main_page_subtitle<-renderText(motusServerStatusReactive2$msg)  #bind the msg to the UI control
-  
+  #output$main_page_subtitle<-renderText(motusServerStatusReactive2$msg)  #bind the msg to the UI control
+  output$headerbar_text<-renderText(motusServerStatusReactive2$msg)  #bind the msg to the UI control
   ##############################################################
   # Function to manage the motusServerStatusReactive2 message
   # when it changes
@@ -109,23 +114,40 @@ server <- function(input, output, session) {
   millisecs <- config.CheckMotusIntervalMinutes*60*1000 #milliseconds #see config file settings
   autoInvalidate <- reactiveTimer(millisecs)
 
+  if(config.AppOpensToMap == 0){ 
+    
+  } else {
+    updateNavbarPage(session, inputId = "navbartabset", selected = "panel2")
+    updateTabsetPanel(session, inputId = "detectedtaginfotabset", selected = "tagflightmaptab")
+  }
+  
   ##############################################################    
   # render the versioning text string set in global.R to the
   # main page footer output
-  output$footer<-renderText({gblFooterText})
-    observeEvent(input$goToPlot, {
-    updateTabsetPanel(session, inputId = "navbar", selected = "Receivers")  # Switch to "Receivers" tab
-    updateTabsetPanel(session, inputId = "receiverTabs", selected = "details")  # Switch to "Details" sub-tab by value
+  #output$footer<-renderText({gblFooterText})
+  ###output$versionInfo<-renderText({gblFooterText})
+
+  # Set the footer version message
+  # note this one is a uiOutput
+  output$versionInfo <- renderUI({
+    # div(class = "versionInfo", gblFooterText)
+    div(class = "version-info", gblFooterText)
   })
 
-   ##############################################################  
-   # this is the observer for the optional button used for debugging 
-   # if you enable the observer here, also enable the button in ui.R
+  # Switch to "Receivers -> Flight Map" tab when the button is pressed
+  observeEvent( input$gotoMap, {
+    updateNavbarPage(session, inputId = "navbartabset", selected = "panel2")
+    updateTabsetPanel(session, inputId = "detectedtaginfotabset", selected = "tagflightmaptab")
+  }) #end observeEvent
+
+ ##############################################################  
+ # this button is for debugging 
+ # if you enable the observer here, also enable th button in ui.R
   observeEvent(input$btnCommand, {
-     # add your code here...
-     #WarningPrint("Button pressed.")
-     mytoggle<<-!mytoggle  #a variable declared in global.R
-  })
+ # add your code here...
+    WarningPrint("Button pressed.")
+    mytoggle<<-!mytoggle  #a variable declared in global.R
+})
   
   
   ##############################################################  
@@ -152,14 +174,14 @@ server <- function(input, output, session) {
         if( motusServerStatusReactive1$status == FALSE){ 
            WarningPrint("Motus status changed to online.")
            motusServerStatusReactive1$status<<-TRUE 
-           motusServerStatusReactive1$msg<<-paste("<span style=\"background-color:#8aff0c\">MotusStatus:Online</span>")
+           motusServerStatusReactive1$msg<<-paste("MotusStatus:Online")
            manageTitlebarMotusStatusMessage(TRUE)
         }
      } else { #is the empty_df
         if( motusServerStatusReactive1$status == TRUE){
            WarningPrint("Motus status changed to offline due (no response timeout).")
            motusServerStatusReactive1$status<<-FALSE
-           motusServerStatusReactive1$msg<<-paste("<span style=\"background-color:#fffb00\">MotusStatus:Offline</span>")
+           motusServerStatusReactive1$msg<<-paste("MotusStatus:Offline")
            manageTitlebarMotusStatusMessage(FALSE)
         }
      } #end else
@@ -238,6 +260,15 @@ server <- function(input, output, session) {
     dynamic_title <- input$receiver_pick
     paste(titletext, dynamic_title)})
     
+    updateActionButton(session, "gotoMap", label = i18n$t("ui_jump_to_button_text"))
+    
+    output$available_receivers<-renderText({  i18n$t("ui_mainpage_available_receivers") })
+    
+    xxx <- as.character(i18n$get_translations()["ui_about_motus_default",input$lang_pick])
+    
+    gblMainTabName <<- as.character(i18n$get_translations()["ui_RCVR_title",input$lang_pick])
+    gblMapTabName <<- as.character(i18n$get_translations()["ui_RCVR_detections_leaflet_tab_label",input$lang_pick])
+    
     #manage the titlebar message using what ever the current status is
     manageTitlebarMotusStatusMessage(motusServerStatusReactive2$status)
     
@@ -269,6 +300,30 @@ server <- function(input, output, session) {
     
   })  #end observeEvent input$receiver_pick
   
+  
+  # Observe tab change to hide/show "gotoMap" button
+  observe({
+    if (input$navbartabset == "panel2") { # Check the value of the selected tab
+      shinyjs::hide("gotoMap")
+    } else {
+      shinyjs::show("gotoMap")
+    }
+  })
+  
+  # Dynamically update the CSS variables for the desired colors etc
+  s <- paste0(config.MainLogoHeight,"px")
+  shinyjs::runjs(sprintf("document.documentElement.style.setProperty('--titlebar-logo-height', '%s');", s))
+
+  shinyjs::runjs(sprintf("document.documentElement.style.setProperty('--titlebar-text-color', '%s');", config.TitlebarTextColor ))
+  shinyjs::runjs(sprintf("document.documentElement.style.setProperty('--titlebar-background-color', '%s');", config.TitlebarBackgroundColor ))
+  shinyjs::runjs(sprintf("document.documentElement.style.setProperty('--navbar-text-color', '%s');", config.NavbarTextColor ))
+  shinyjs::runjs(sprintf("document.documentElement.style.setProperty('--navbar-background-color', '%s');", config.NavbarBackgroundColor ))
+  shinyjs::runjs(sprintf("document.documentElement.style.setProperty('--base-page-background-color', '%s');", config.BodyPageBackgroundColor ))
+  shinyjs::runjs(sprintf("document.documentElement.style.setProperty('--selected-tab-background-color', '%s');", config.SelectedTabBackgroundColor ))
+  shinyjs::runjs(sprintf("document.documentElement.style.setProperty('--selected-tab-text-color', '%s');", config.SelectedTabTextColor ))
+  shinyjs::runjs(sprintf("document.documentElement.style.setProperty('--base-page-text-color', '%s');", config.BodyPageTextColor ))
+  shinyjs::runjs(sprintf("document.documentElement.style.setProperty('--jump-to-button-color', '%s');", config.JumpToButtonColor ))
+  shinyjs::runjs(sprintf("document.documentElement.style.setProperty('--offline-text-color', '%s');", "darkorange" ))
 
   # Pass language selection into the module for Server-side translations
   # If not done, some UI elements will not be updated upon language change
@@ -277,5 +332,7 @@ server <- function(input, output, session) {
  SERVER_ReceiverDetections("ReceiverDetections"  ,i18n_r = reactive(i18n), lang = reactive(input$lang_pick), rcvr= reactive(input$receiver_pick))
  SERVER_MotusNews("MotusNews",i18n_r = reactive(i18n), lang = reactive(input$lang_pick), rcvr= reactive(input$receiver_pick))
  SERVER_AboutMotus("AboutMotus",i18n_r = reactive(i18n), lang = reactive(input$lang_pick))
+ 
+
  }
 
