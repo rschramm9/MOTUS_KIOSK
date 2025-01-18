@@ -4,7 +4,9 @@ ui_nav_page_help|Help / Feedback
 
 ui_mainpage_lang|Select UI language
 ui_mainpage_available_receivers|Receptores Disponibles
-ui_mainpage_loading|Loading...
+ui_mainpage_loading|Cargando página...
+
+ui_jump_to_button_text|Haga clic para saltar al mapa de detecciones de etiquetas
 
 ui_MotusNews_title|Noticias Motus!
 ui_motusnews_loading|Noticias cargando
@@ -12,7 +14,7 @@ ui_motusnews_loading|Noticias cargando
 ui_AboutMotus_title|Más información sobre Motus
 ui_about_motus_loading|Acerca de la carga de Motus
 
-ui_RCVR_title|Detecciones del receptor
+ui_RCVR_title|Detecciones
 
 ui_RCVR_detections_details_tab_label|Detalles
 ui_RCVR_detections_details_tab_helptext|La información de despliegue del ave etiquetada seleccionada.
