@@ -42,51 +42,62 @@ library(DT)
 
 library(anytime)
 
-
 UI_ReceiverDetections <- function(id, i18n) {
   
   ns <- NS(id)
   
-  fluidPage(
+  #fluidPage(
     
-    useShinyjs(),
     
-    tags$head(
-      tags$style(HTML("hr {border-top: 1px solid #000000;}"))
-    ),
     
-    titlePanel(
-      span(
-        div(
-          textOutput("table_title"),
-          i18n$t("ui_RCVR_title"), 
-          style="display:inline-block;vertical-align:top;text-align:right !important;color:#8FBC8F;font-style: italic;font-size: 25px; background-color:white",
-          #style="color:#8FBC8F;font-style: italic;font-size: 25px; background-color:white",
-        ), #end div
+    # Receiver Detections Tab
+    tabPanel(
+    
+      useShinyjs(),
+      
+      
+#    tags$head(
+#      tags$style(HTML("hr {border-top: 1px solid #000000;}"))
+#    ),
+    
 
-        div(
-          shinyjs::hidden(checkboxInput(ns("enablefilter"), label=i18n$t("ui_filter_velocity_checkbox_label"), value = FALSE, width = NULL)),
-          style="display:inline-block;position:absolute;right:2em;vertical-align:top;text-align:right!important;color:#8FBC8F;font-style: italic;font-size: 18px;",
-        ), #end div
-        
+    # this is the header above detected tag list 
+    # it has to be styled here locally not in the .csss theme 
+    titlePanel(
+       span(
+          div(
+           i18n$t("ui_RCVR_title"), 
+           style="display:inline-block;
+           vertical-align:top;
+           text-align:right !important;
+           color:#8FBC8F;
+           font-style: italic;
+           font-size: 20px;
+           background-color:white",
+         ), #end div
+    
+         div(
+           shinyjs::hidden(checkboxInput(ns("enablefilter"), label=i18n$t("ui_filter_velocity_checkbox_label"), value = FALSE, width = NULL)),
+           style="display:inline-block;
+           position:absolute;
+           right:2em;
+           vertical-align:top;
+           text-align:right!important;
+           color:#8FBC8F;
+           font-style: italic;
+           font-size: 18px;",
+         ), #end div
       ) # end span1
     ), #end titlepanel
-    
-    #), #end fluid row
-    
+ 
     sidebarLayout(
       sidebarPanel(width = 4,
-                   #hr(),
-                   #helpText(i18n$t("ui_RCVR_input_requery_label_help_text")),
-                   #actionButton(ns("btnCalculate"),i18n$t("ui_RCVR_input_requery_button_caption")),
-                   #p(),
-                   DT::dataTableOutput( ns('mytable') )
-                   
+      DT::dataTableOutput( ns('mytable') )
       ),
       mainPanel(width = 8,
                 
                 tabsetPanel(type = "tabs",
-                            id = "tagInfoTabs",  # Add an ID for the sub-tabsetPanel
+                            id = "detectedtaginfotabset",  # Add an ID for the sub-tabsetPanel
                            tabPanel(title=i18n$t("ui_RCVR_detections_details_tab_label"), 
                                      value="tagdetailstab",
                                      helpText(i18n$t("ui_RCVR_detections_details_tab_helptext")),
@@ -111,7 +122,7 @@ UI_ReceiverDetections <- function(id, i18n) {
                             
                             #tabPanel(i18n$t("ui_RCVR_detections_leaflet_tab_label"), 
                                 tabPanel(title=i18n$t("ui_RCVR_detections_leaflet_tab_label"),  
-                                    value="maptab",
+                                    value="tagflightmaptab",
                                      helpText(i18n$t("ui_RCVR_detections_leaflet_tab_helptext")),
                                      actionButton( ns("fly"),    label = i18n$t("ui_RCVR_fly_button_caption")),
                                      actionButton( ns("stop"),   label = i18n$t("ui_RCVR_stop_button_caption")),
@@ -146,9 +157,17 @@ SERVER_ReceiverDetections <- function(id, i18n_r, lang, rcvr) {
   
   moduleServer(id, function(input, output, session) {
     
+    
     # !!! session$ns is needed to properly address reactive UI elements from the Server function
     ns <- session$ns
+    
+
   
+  #  message("********* were are calling it...***********")
+  #  output$detected_tag_list_label <- renderText({
+  #    "Warning: The Motus.org"
+  #  })
+    
     #show or hide the enablefilter checkbox on the UI
     if(config.EnableSuspectDetectionFilter==0){
       shinyjs::hide("enablefilter")
@@ -523,8 +542,7 @@ SERVER_ReceiverDetections <- function(id, i18n_r, lang, rcvr) {
         tagflight_df<-empty_tagDeploymentDetection_df()
       } else {
 
-        
-        
+      
         #next get all of the detections associated with this tag deployment
         # note this is a local variable assignment
         DebugPrint(paste0("input$mytable_rows_selected observeEvent() - tagDepID NOT NA so call tagDeploymentDetections with tagDepID:",tagDepID))
@@ -596,12 +614,12 @@ SERVER_ReceiverDetections <- function(id, i18n_r, lang, rcvr) {
            a_df <- tagflight_df[idx,] #the last row
            tagflight_df <- insertRow(tagflight_df, a_df, idx)
            
-          if(input$enablefilter){ ### NEW CODE
-            # now walk tagflight_df and compute velocity of adjacent detections
-            DONE<-FALSE
-            idx <- 2 #always start on row 2
-            while(!DONE){
-              if(idx > nrow(tagflight_df)){
+    if(input$enablefilter){ ### NEW CODE
+           # now walk tagflight_df and compute velocity of adjacent detections
+           DONE<-FALSE
+           idx <- 2 #always start on row 2
+           while(!DONE){
+             if(idx > nrow(tagflight_df)){
                DONE <- TRUE
              } else {
                takeoff<-tagflight_df[idx-1,]
@@ -646,7 +664,7 @@ SERVER_ReceiverDetections <- function(id, i18n_r, lang, rcvr) {
            
            } #end while(!DONE)
            
-          } ### end if NEW CODE
+    } ### wns if NEW CODE
   
            #and drop the extra first and last rows we added above...
            tagflight_df = tagflight_df[-1,, drop=F] #the first row
@@ -824,7 +842,21 @@ SERVER_ReceiverDetections <- function(id, i18n_r, lang, rcvr) {
       
       
       message(paste("set rcvr title to:",strReceiverShortName ))
-      output$table_title<-renderText({strReceiverShortName})
+      #output$table_title<-renderText({strReceiverShortName})
+      
+      tmp <- paste0("Tags detected at ", strReceiverShortName)
+      
+      # Dynamic tag detections label
+      #output$detected_tag_list_label <- renderUI({
+      #  tagList(
+      #    tags$div(class = "detected_tag_list_label", "Tags detected:")
+      # )
+      #  
+      #})
+      #output$detected_tag_list_label <- renderText({
+     #   "Warning: The Motus.org"
+     # })
+      
       
     })  #end observeEvent input$receiver_pick
     
