@@ -1,3 +1,29 @@
+##### 6.0.0 (2025-01-17)
+
+Major rework of the application layout and css.  Added numerous kiosk.cfg parameters to allow easy configuration of background colors and text colors of most of the main page elements.
+
+Change the layout so now the language picker sticks to the upper right corner..
+
+Added a jump to tag detection map button (completing the implemention begun in v5.2.1)
+
+Implemented the configuration option to make the default opening page be the normal homepage or the tag filight map page per a users request.
+
+New css layout eliminated the need for configuration item MainLogoOffsetPixels
+
+For clarity configration item NavbarColor has been renamed to NavbarBackgroundColor
+
+For clarity configration item TitlebarColor has been renamed to TitlebarTextColor
+
+Added items such as NavbarTextColor , NavbarSelectedTabTextColor, NavbarSelectedTabBackgroundColor.  See the Configuration Guide for details.
+
+Required extensive changes to ui.R ,  server.R, global.R as well as ReceiverDetections.R and of course configUtils.R
+
+Completely replaced the massive uniteligable .css file with greatly simplified .css with lots of inline comments. 
+
+Discovered some tagged birds with very large datasets. They were taking more than 30-40 seconds to just get the data from motus.org making the UI frustrating to use.  Added an optional script (BuildCache.R) and a .bat fille that can run it.  If run nightly it will generate a complete data cache so that the daytime user interfacve stays responsive.
+
+
+
 ##### 5.2.1 (2025-01-13)
 
 Begin to implement a feature that will allow the config file to specify if the app should open ito the homepage or to the tag detection map tab.
