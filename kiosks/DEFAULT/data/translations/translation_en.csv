@@ -1,10 +1,11 @@
 ui|en
 ui_nav_page_main|Home
 ui_nav_page_help|Help / Feedback
+ui_jump_to_button_text|Press to jump to tag detections map
 
 ui_mainpage_lang|Select UI language
 ui_mainpage_available_receivers|Available Receivers
-ui_mainpage_loading|Loading...
+ui_mainpage_loading|Page Loading...
 
 ui_MotusNews_title|Motus News!
 ui_motusnews_loading|News loading
@@ -12,7 +13,7 @@ ui_motusnews_loading|News loading
 ui_AboutMotus_title|Learn More About Motus
 ui_about_motus_loading|About Motus loading
 
-ui_RCVR_title|Receiver Detections
+ui_RCVR_title|Detections
 
 ui_RCVR_detections_details_tab_label|Tag Detail
 ui_RCVR_detections_details_tab_helptext|The selected tagged bird's deployment information.
@@ -23,7 +24,7 @@ ui_RCVR_detections_flightpath_tab_helptext|The selected bird's flight history de
 ui_RCVR_detections_leaflet_tab_label|Flight Map
 ui_RCVR_detections_leaflet_tab_helptext|Use the buttons below to simulate the approximate path the bird flew. Note data may contain 'wild point' false detections that we do not attempt to filter out.
 
-ui_filter_velocity_checkbox_label|Remove suspected false detections
+ui_filter_velocity_checkbox_label|Remove suspect detections.
 
 ui_RCVR_detections_species_tab_label|Species
 ui_RCVR_detections_species_tab_helptext|Information about the species of the selected bird.
