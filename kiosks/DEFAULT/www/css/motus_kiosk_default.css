@@ -1,0 +1,238 @@
+/* CSS style for the version6 motus_kiosk */
+/* should live in your projects www/css folder */
+
+        /* create variables for the users Titlebar, Navbar and Mainbody colors  */
+        :root {
+         --titlebar-logo-height: 100px; /* Default titlebar height */
+         --titlebar-text-color: darkslategray; /* Default titlebar text color */
+         --titlebar-background-color: white; /* Default titlebar text color */
+         --navbar-text-color: darkslategray; /* Default navbar color */
+         --navbar-background-color: white; /* Default navbar background color */
+         --selected-tab-text-color: darkslategray; 
+         --selected-tab-background-color: pink /* backgroundcolor of the selected navbar tab*/
+         --base-page-background-color: white; /* Default backgroundcolor of the body */
+         --jump-to-button-color: yellow; /* Default jump to backgroundcolor */
+         --offline-text-color: orange; /*the color of the text displayed in headerbar when offline*/
+        }
+       /**************************************/
+       /** CSS section for the base page that all contents sits in **/
+      /**************************************/
+        /* fluid container holds all of the page content. We need */
+        /* content like titlebars and navbars to extend all the way */
+        /* to the edges of the screen */
+       .container-fluid {
+        padding: 0 !important;
+        margin: 0 !important;
+      }
+      
+      /* The background color of the main document window */
+      body {
+        background-color: var(--base-page-background-color) !important; /* Use the CSS variable */ 
+        color: var(--base-page-text-color) !important; /* Use the CSS variable */ 
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+      
+      /**************************************/
+      /*** CSS for the top headerbar    ****/
+      /**************************************/
+      
+      /* the container that the headerbar item sit in */ 
+      #main_page_headerbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 40px;
+        padding: 10px; /* Adjust this for consistent spacing */
+        background-color: var(--titlebar-background-color) !important; /* Use the CSS variable */
+      }
+      
+       /* this is css for the headerbar motus online status text */
+      .headerbar-container {
+        flex-grow: 1;
+        text-align: center;
+        align-self: center;
+        font-family: Verdana, sans-serif !important;
+          font-style: italic !important;
+          font-size: 14px !important;
+          color: var(--offline-text-color); /* Set text color */
+          /*text-shadow: 0px 0px 0px black;*/
+          background-color: var(--titlebar-background-color) !important; /* Use the CSS variable */ 
+          /*border: 2px solid black;*/
+      }
+      
+      .lang-picker {
+        margin-top: 15px !important; /* Increase margin to ensure visible space above */
+        margin-right: 20px !important; /* Keep space to the right */
+      }
+      
+      .lang-picker .btn {
+        padding: 0 !important;
+        height: 30px !important;
+        margin-top: 0 !important;
+      }
+      
+      /* Keyframes for blinking border animation on the gotMap button */
+        @keyframes blink-border {
+        0% { border-color: darkgray; }
+        25% { border-color: slategray; }
+        50% { border-color: darkslategray; }
+        75% { border-color: lightslategray; }
+        100% { border-color: darkgray; }
+        }
+        
+      #gotoMap {
+        height: 30px !important;
+        margin-left: 20px;
+        margin-top: 0;
+        color: black; /*text color*/
+        background-color: var(--jump-to-button-color);*/
+        border: 4px solid gray; /* Initial border color */
+        animation: blink-border 1s infinite; /* Apply animation */
+      }
+      
+      /**************************************/ 
+      /** CSS for the main titlebar. ***/   
+      /**************************************/
+    
+      /* The color and styling of the titlebar */
+      /* note 'color' sets the text color */
+      .title-bar {
+        background-color: var(--titlebar-background-color) !important; /* Use the CSS variable */
+         color: black;   /* the text color */
+         padding: 0 !important;
+         margin: 0 !important;
+         font-family: Verdana, sans-serif !important;
+         font-style: italic !important;
+         font-size: 24px !important;
+         font-weight: bold;
+         display: flex;
+         align-items: center;
+         justify-content: center; /* Center the title and picker vertically*/
+         position: relative;
+         width: 100vw !important;
+         left: 0;
+         /*border: 2px solid black !important;*/
+      }
+  
+      .title-bar img {
+        /*height: var(--titlebar-height) !important;*/
+        height: var(--titlebar-logo-height) !important;
+        width: auto;
+        margin-left: 20px; /* Add padding of 30px to the left */
+        margin-right: 0px; /* Add space between image and text */
+        /*border: 2px solid black !important;*/
+      }
+      
+      /* Styling for main titlebar caption */ 
+      .title-bar-content {
+        flex-grow: 1;
+        text-align: center;
+        font-size: 30px; 
+        color: var(--titlebar-text-color); /* Use the CSS variable to match the user specified TitlebarTextColor */
+      }
+      
+      /* Styling for the 'Available Receivers' picker */
+      .picker-container {
+        display: flex;
+        padding-right: 20px; /* Add padding from the right edge of window */
+        flex-direction: column;
+        align-items: flex-start; /* Align caption to the left */
+        margin-left: 20px; /* Add spacing from the title */
+        color:var(--titlebar-text-color); 
+      }
+      
+      /* Ensures dropdown list when active is displayed above */
+      /* other elements like the navbar */
+      .dropdown-menu {
+        z-index: 1050 !important; 
+      }
+      
+      /**************************************/
+      /****  CSS for the navbar  ****/ 
+      /**************************************/
+
+      /* the background color of the navbar behind the tabs */
+      .navbar1 .navbar { 
+          background-color: var(--navbar-background-color); /* Use the CSS variable */
+          border: 2px solid lightgray !important;
+          margin: 0 !important;
+          padding: 0 !important;
+      }
+        
+      /* set the color of the navbar 'brand' label text */
+      /* the brand label appears to the right of the navbar tabs if */
+      /* the navbar 'title' is not NULL in the navbarPage() call */
+      .navbar1 .navbar-default .navbar-brand{
+      color: var(--navbar-text-color) !important;
+      }
+        
+      /* The color and styling of the navbar tabs when not selected */
+      /* note 'color' sets the tab text color */
+      /* note 'border' sets the tab outline box and color must include 'solid' */
+      .navbar1 .navbar-nav li a {
+        background-color: var(--navbar-background-color); /* Use the CSS variable */
+        color: var(--navbar-text-color) !important;
+        font-family: Verdana, sans-serif !important;
+        font-style: italic !important;
+        font-size: 20px !important;
+        border: 2px solid var(--navbar-background-color) !important; /* Use the CSS variable */ 
+      }
+                          
+      /* The color and styling of the navbar tab text color when mouse hovered over*/
+      /* note 'color' sets the tab text color */
+      /* note 'border' sets the tab outline box and color must include 'solid' */
+      .navbar1 .navbar-nav li a:hover {
+         color: var(--navbar-text-color) !important;
+         border: 2px solid yellow !important;
+      }
+        
+      /* The color and styling of the navbar tab text color of the selected tab*/
+      /* note 'color' sets the tab text color */
+      /* note 'border' sets the tab outline box and color must include 'solid' */                
+      .navbar1 .navbar-nav > .active > a {
+         background-color: var(--selected-tab-background-color) !important;
+         color: var(--selected-tab-text-color) !important;
+         border: 2px solid lightgray !important;
+      }
+         
+      .tab-content {
+        padding-left: 15px; /* Add 33px padding from the left edge */
+        padding-right: 15px; /* Add 33px padding from the left edge */
+      }
+      
+      .tag-detections-titlepanel {
+      border: 2px solid black;
+      height: 40px;
+      width: 100%;
+      box-sizing: border-box; /* Ensures padding and border are included in the height and width */
+      display: flex;
+      align-items: center; /* Centers content vertically */
+      padding: 0 10px; /* Horizontal padding for inner content */
+      margin-bottom: 20px;
+      /*border: 2px solid red !important;*/
+      }
+    
+     /**************************************/  
+     /***.  CSS for the footer    ***/
+    /**************************************/
+    .footer-row {
+      display: flex;      /* Flexbox for horizontal alignment */
+      align-items: center; /* Vertically align items */
+      padding: 5px ;
+      background-color: #f8f9fa;     /* Light gray background */
+      border-top: 1px solid #dee2e6; /* Top border for separation */
+        /*height: 20px;*/
+    }
+    .version-info {
+      font-size: 12px;
+      padding-left:15px;
+    }
+    .motus-state {
+      font-size: 12px;           
+      margin-left: auto;
+      padding-right: 15px;
+      display: inline-block; 
+    }
+      
+      
