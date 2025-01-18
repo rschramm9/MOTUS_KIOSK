@@ -91,7 +91,7 @@ LOG_LEVEL_ERROR=2
 LOG_LEVEL_FATAL=1
 LOG_LEVEL_NONE=0
 
-LOG_LEVEL_INFO #set an inital log level, after we read the config file we will overide this
+LOG_LEVEL<-LOG_LEVEL_INFO #set an inital log level, after we read the config file we will overide this
 
 ###### read configuration key/value pairs
 library(data.table)
