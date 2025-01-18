@@ -58,19 +58,12 @@ ui.R
 server.R
 
 - implement fluidRow above the main titlebar to display status if motus.org offline
-
 - added reactive value motusServerStatusReactive2 to handle the new ui_motus_statusbar
-
 - add function manageTitlebarMotusStatusMessage() to handle setting the ui_motus_statusbar
   language translation
-  
 - renamed reactive value motusServer to motusServerStatusReactive1 
-
 - clean up reformat a lot of code for readability
-
 - add a lot more comments
-
-  
 
 ##### 5.1.6 (2024-07-23)
 
