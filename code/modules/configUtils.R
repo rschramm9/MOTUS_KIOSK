@@ -122,7 +122,7 @@ getKioskConfig <- function() {
     ErrorPrint("Please check that the name of your KioskCfgFile in the startup.cfg file matches a config file in your kiosk's folder.")
     stop("There is an error reading your kiosk's configuration file.")
     
-  } 
+  }
   
   tryCatch( 
     {
@@ -150,9 +150,9 @@ getKioskConfig <- function() {
   )
   
   configtbl <- data.table(configfrm, key='Key')
-  #print("---------  The configtbl ------------")
+  #print("************* coinfigtbl **************")
   #print(configtbl)
-  #print("-------------------------------------")
+  #print ("**************************************")
   
   badCfg<-FALSE  #assume good config
   
@@ -215,12 +215,13 @@ getKioskConfig <- function() {
   }
   
   #print("------------ MainLogoTopOffsetPixels --------------")
-  list1 <- keyValueToList(configtbl,'MainLogoTopOffsetPixels')
-  if( is.null(list1) ){
-    config.MainLogoTopOffsetPixels <<- -30
-  } else {
-    config.MainLogoTopOffsetPixels <<- as.numeric(list1[1]) #assume length=1
-  }
+  # Not in version 6.x
+  #list1 <- keyValueToList(configtbl,'MainLogoTopOffsetPixels')
+  #if( is.null(list1) ){
+  #  config.MainLogoTopOffsetPixels <<- -30
+  #} else {
+  #  config.MainLogoTopOffsetPixels <<- as.numeric(list1[1]) #assume length=1
+  #}
   
   
   #print("------------ Homepage----------------")
@@ -279,21 +280,106 @@ getKioskConfig <- function() {
   }
   
   
-  #print("------------ NavbarColor ----------------")
-  list1 <- keyValueToList(configtbl,'NavbarColor')
+  #print("------------ NavbarTextColor ----------------")
+  # new for version 6.x 
+  list1 <- keyValueToList(configtbl,'NavbarTextColor')
   if( is.null(list1) ){
-    config.NavbarColor<<-"#8FBC8F"  #ankeny green
+      config.NavbarTextColor<<-"darkslategray"
   } else {
-    #I ultimately want a string
-    config.NavbarColor<<- toString(list1[1])  
+      config.NavbarTextColor<<- toString(list1[1]) 
   }
-  #print("------------ TitlebarColor ----------------")
-  list1 <- keyValueToList(configtbl,'TitlebarColor')
+  
+  #print("------------ NavbarBackgroundColor ----------------")
+  # version 6.x name changed from NavbarColor to NavbarBackgroundColor
+  list1 <- keyValueToList(configtbl,'NavbarBackgroundColor')
   if( is.null(list1) ){
-    config.TitlebarColor<<-"#8FBC8F"  #ankeny green
+    list1 <- keyValueToList(configtbl,'NavbarColor')
+    if( is.null(list1) ){
+      config.NavbarBackgroundColor<<-"#8FBC8F"  #ankeny green
+    } else {
+      config.NavbarBackgroundColor<<- toString(list1[1]) 
+    }
   } else {
     #I ultimately want a string
-    config.TitlebarColor<<- toString(list1[1])  
+    config.NavbarBackgroundColor<<- toString(list1[1]) 
+  }
+  
+  
+  # In version 6.x TitlebarColor has been replaced by TitlebarTextColor
+  #print("------------ TitlebarTextColor ----------------")
+  list1 <- keyValueToList(configtbl,'TitlebarTextColor')
+  if( is.null(list1) ){
+      config.TitlebarTextColor<<-"#8FBC8F"  #ankeny green
+  } else {
+      config.TitlebarTextColor<<- toString(list1[1]) 
+  }
+
+  # In version 6.x or later
+  #print("------------ TitlebarBackgroundColor ----------------")
+  list1 <- keyValueToList(configtbl,'TitlebarBackgroundColor')
+  if( is.null(list1) ){
+    config.TitlebarBackgroundColor<<-"#8FBC8F"  #ankeny green
+  } else {
+    #I ultimately want a string
+    config.TitlebarBackgroundColor<<- toString(list1[1]) 
+  }
+  
+  # In version 6.x or later
+  #print("------------ BodyPageTextColor ----------------")
+  list1 <- keyValueToList(configtbl,'BodyPageTextColor')
+  if( is.null(list1) ){
+    config.BodyPageTextColor<<-"darkslategray"
+  } else {
+    #I ultimately want a string
+    config.BodyPageTextColor<<- toString(list1[1])  
+  }
+  
+  # In version 6.x or later
+  #print("------------ BodyPageBackgroundColor ----------------")
+  list1 <- keyValueToList(configtbl,'BodyPageBackgroundColor')
+  if( is.null(list1) ){
+    config.BodyPageBackgroundColor<<-"white"
+  } else {
+    #I ultimately want a string
+    config.BodyPageBackgroundColor<<- toString(list1[1])  
+  }
+  
+  # In version 6.x or later
+  #print("------------ SelectedTabTextColor ----------------")
+  list1 <- keyValueToList(configtbl,'SelectedTabTextColor')
+  if( is.null(list1) ){
+    config.SelectedTabTextColor<<-"darkslategray"
+  } else {
+    #I ultimately want a string
+    config.SelectedTabTextColor<<- toString(list1[1])  
+  }
+  
+  # In version 6.x or later
+  #print("------------ SelectedTabBackgroundColor ----------------")
+  list1 <- keyValueToList(configtbl,'SelectedTabBackgroundColor')
+  if( is.null(list1) ){
+    config.SelectedTabBackgroundColor<<-"white"
+  } else {
+    #I ultimately want a string
+    config.SelectedTabBackgroundColor<<- toString(list1[1])  
+  }
+  
+  # In version 6.x or later
+  #print("------------ JumpToButtonColor ----------------")
+  list1 <- keyValueToList(configtbl,'JumpToButtonColor')
+  if( is.null(list1) ){
+    config.JumpToButtonColor<<-"#FAFA33" # not quite full-on yellow
+  } else {
+    #I ultimately want a string
+    config.JumpToButtonColor<<- toString(list1[1])  
+  }
+ 
+  #print("------------ AppOpensToMap --------------")
+  list1 <- keyValueToList(configtbl,'AppOpensToMap')
+  if( is.null(list1) ){
+    config.AppOpensToMap<<- 0
+  } else {
+    config.AppOpensToMap<<- as.numeric(list1[1]) #assume length=1
   }
   
   #print("------------ ReceiverDeploymentID --------------")
@@ -498,15 +584,23 @@ getKioskConfig <- function() {
   }
   
   #print("------------ path to translations ----------------")
+  #list1 <- keyValueToList(configtbl,'TranslationsPath')
+  #if( is.null(list1) ){
+  #  badCfg<-TRUE 
+  #  config.LogLevel<<-LOG_LEVEL_WARNING
+  #} else {
+  #  #I ultimately want a string
+  #  config.LogLevel<<- toString(list1[1])  
+  #}
   config.TranslationsPath<<-paste0( config.SiteSpecificContent,"/data/translations")
   #message(paste0("configUtils.config.TranslationsPath:", config.TranslationsPath))
   return(badCfg)
   
 } #end getConfig()
 
-#
-# print global config parameters
-#
+##############################################################################################
+#.             print global config parameters
+###############################################################################################
 printConfig <- function() {
   
   TSprint(paste0("SiteSpecificContent:", config.SiteSpecificContent))
@@ -517,15 +611,27 @@ printConfig <- function() {
   TSprint(paste0("MainTitleFrench:",config.MainTitleFrench))
   
   TSprint(paste0("MainLogoHeight:",config.MainLogoHeight))
-  TSprint(paste0("MainLogoTopOffsetPixels:",config.MainLogoTopOffsetPixels))
+  #TSprint(paste0("MainLogoTopOffsetPixels:",config.MainLogoTopOffsetPixels))
   
   TSprint(paste0("HomepageEnglish:",config.HomepageEnglish))
   TSprint(paste0("SpeciesPageEnglish:",config.SpeciesPageEnglish))
   TSprint(paste0("NewsPageEnglish:",config.NewsPageEnglish))
   TSprint(paste0("AboutMotusPageEnglish:",config.AboutMotusPageEnglish))
   
-  TSprint(paste0("TilebarColor:",config.TitlebarColor))
-  TSprint(paste0("NavbarColor:",config.TitlebarColor))
+ 
+  TSprint(paste0("TitlebarTextColor:",config.TitlebarTextColor))
+  TSprint(paste0("TitlebarBackgroundColor:",config.TitlebarBackgroundColor))
+  
+  TSprint(paste0("NavbarTextColor:",config.NavbarTextColor))
+  TSprint(paste0("NavbarBackgroundColor:",config.NavbarBackgroundColor))
+  TSprint(paste0("SelectedTabBackgroundColor:",config.SelectedTabBackgroundColor))
+  TSprint(paste0("SelectedTabTextColor:",config.SelectedTabTextColor))
+  
+  
+  TSprint(paste0("BodyPageBackgroundColor:",config.BodyPageBackgroundColor))
+  TSprint(paste0("BodyPageTextColor:",config.BodyPageTextColor))
+  TSprint(paste0("JumpToButtonColor:",config.JumpToButtonColor))
+  TSprint(paste0("AppOpensToMap:",config.AppOpensToMap))
   
   if ( is.list( config.ReceiverDeployments)){
     for (i in 1:length(config.ReceiverDeployments)) {
@@ -549,9 +655,9 @@ printConfig <- function() {
   
   TSprint(paste0("CheckMotusIntervalMinutes:",config.CheckMotusIntervalMinutes))
   
-  TSprint(paste0(" EnableReadCache:",config.EnableReadCache))
+  TSprint(paste0("EnableReadCache:",config.EnableReadCache))
   
-  TSprint(paste0(" EnableWriteCache:",config.EnableWriteCache))
+  TSprint(paste0("EnableWriteCache:",config.EnableWriteCache))
   
   TSprint(paste0("ActiveCacheAgeLimitMinutes:",config.ActiveCacheAgeLimitMinutes))
   
@@ -572,7 +678,7 @@ printConfig <- function() {
   TSprint(paste0("EnableSuspectDetectionFilter:",config.EnableSuspectDetectionFilter))
   TSprint(paste0("VelocitySuspectMetersPerSecond:",config.VelocitySuspectMetersPerSecond))
   
-  TSprint(paste0("MapIconFlightDurationSeconds:",config.MapBirdFlightDurationSeconds))
+  TSprint(paste0("MapIconFlightDurationSeconds:",config.MapIconFlightDurationSeconds))
 
   return()
   
