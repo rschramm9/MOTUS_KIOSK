@@ -16,23 +16,7 @@
         }
         
         
-        /* Add border around homepage to give some padding to the homepage. But
-        can be made invisible by setting its color to the same as the page background */
-        #homepagediv {
-        border: 2px solid var(--base-page-background-color); 
-        padding: 15px; /* Optional: Add padding inside the border */
-        border-radius: 5px; /* Optional: Add rounded corners */
-        }
-      
-              
-       /* Add border around news page to give some padding to the news page. But
-        can be made invisible by setting its color to the same as the page background */
-        #newspagediv {
-        border: 2px solid var(--base-page-background-color); 
-        padding: 15px; /* Optional: Add padding inside the border */
-        border-radius: 5px; /* Optional: Add rounded corners */
-        }
-      
+        
       
       
        /**************************************/
@@ -53,6 +37,23 @@
         margin: 0 !important;
         padding: 0 !important;
       }
+      
+      /* Add border around homepage to give some padding to the homepage. But
+        can be made invisible by setting its color to the same as the page background */
+        #homepagediv {
+        border: 2px solid var(--base-page-background-color); 
+        padding: 15px; /* Optional: Add padding inside the border */
+        border-radius: 5px; /* Optional: Add rounded corners */
+        }
+      
+              
+       /* Add border around news page to give some padding to the news page. But
+        can be made invisible by setting its color to the same as the page background */
+        #newspagediv {
+        border: 2px solid var(--base-page-background-color); 
+        padding: 15px; /* Optional: Add padding inside the border */
+        border-radius: 5px; /* Optional: Add rounded corners */
+        }
       
       /**************************************/
       /*** CSS for the top headerbar    ****/
