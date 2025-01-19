@@ -145,10 +145,10 @@ ui_mainpage <- fluidPage(
   #dont get translated (eg. the navbar)
   shiny.i18n::usei18n(i18n),
   
-  tags$div(id = 'readmehere',
-           div(id="readmediv",
-               tags$h4(i18n$t("ui_mainpage_loading"))
-           )
+  tags$div(id = 'homepagehere',
+      div(id="homepagediv",
+      tags$h4(i18n$t("ui_mainpage_loading"))
+      )
   )
 )  # end of main page layout
 
