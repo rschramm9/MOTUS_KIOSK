@@ -14,6 +14,27 @@
          --jump-to-button-color: yellow; /* Default jump to backgroundcolor */
          --offline-text-color: orange; /*the color of the text displayed in headerbar when offline*/
         }
+        
+        
+        /* Add border around homepage to give some padding to the homepage. But
+        can be made invisible by setting its color to the same as the page background */
+        #homepagediv {
+        border: 2px solid var(--base-page-background-color); 
+        padding: 15px; /* Optional: Add padding inside the border */
+        border-radius: 5px; /* Optional: Add rounded corners */
+        }
+      
+              
+       /* Add border around news page to give some padding to the news page. But
+        can be made invisible by setting its color to the same as the page background */
+        #newspagediv {
+        border: 2px solid var(--base-page-background-color); 
+        padding: 15px; /* Optional: Add padding inside the border */
+        border-radius: 5px; /* Optional: Add rounded corners */
+        }
+      
+      
+      
        /**************************************/
        /** CSS section for the base page that all contents sits in **/
       /**************************************/
@@ -151,7 +172,13 @@
       /**************************************/
       /****  CSS for the navbar  ****/ 
       /**************************************/
-
+      .readmehere {
+        backgroud_color:pink;
+        border: 2px solid black !important;
+      }
+      
+      
+      
       /* the background color of the navbar behind the tabs */
       .navbar1 .navbar { 
           background-color: var(--navbar-background-color); /* Use the CSS variable */
