@@ -173,6 +173,7 @@ Enter the following install.packages cmds into the R Console. I suggest doing th
     install.packages("rjson")
     install.packages("fs")
     install.packages("units")
+    install.packages("tictoc")
 
 **4.4**  If you are not installing packages "globally" for all users as described above in 4.0 - repeat package installations using R console while logged in as user=MOTUS_USER.
 
