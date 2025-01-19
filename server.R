@@ -230,10 +230,10 @@ server <- function(input, output, session) {
 
     #DebugPrint(paste0("********* the HOMEPAGE:",thefile, "  ************"))
     # Refresh homepage file on the main home page tab of the navbar
-    removeUI(selector ="#readmediv", immediate = TRUE)
+    removeUI(selector ="#homepagediv", immediate = TRUE)
     insertUI(immediate = TRUE,
-             selector = '#readmehere', session=session,
-             ui = div(id="readmediv",
+             selector = '#homepagehere', session=session,
+             ui = div(id="homepagediv",
              includeHTML(thefile)
              )
     )
