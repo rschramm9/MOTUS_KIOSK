@@ -36,15 +36,9 @@ UI_MotusNews <- function(id, i18n) {
     #this needs to be here or else some parts of ui
     #dont get translated (eg. the navbar)
     shiny.i18n::usei18n(i18n),
-    
-    tags$head(
-      tags$style(HTML("hr {border-top: 1px solid #000000;}"))
-    ),
-
-    
-    tags$div(id = 'newsgoeshere',
-             div(id="readmediv",
-                 #tags$h4(i18n$t("ui_motusnews_loading")),
+  
+    tags$div(id = 'newspagehere',
+             div(id="newspagediv",
                  htmlOutput(ns("news"))
              )
     )
