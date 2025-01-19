@@ -1,6 +1,6 @@
 # Configuration Guide
 
-### For the MOTUS Nature Center Kiosk App v5.0.0
+### For the MOTUS Nature Center Kiosk App v6.0.0
 
 **This** document is a guide on how to configure get the 'Motus Kiosk' Shiny web app. for Version 5.x
 
@@ -20,7 +20,7 @@ StartKiosk="DEFAULT"
 KioskCfgFile="kiosk.cfg"
 ```
 
-The '~' in KiosksPath instructs R to open the kiosk *relative* to the logged in users home directory.
+In the project's top-level directory is a file called startup.cfg.  It contains the path and name of the kiosk you want to start. Your customized kiosk should be installed in another location per instructions. If it was  installed in the expected location then the startup.cfg file is something like:The '~' in KiosksPath instructs R to open the kiosk *relative* to the logged in users home directory.
 
 In the the above example, the DEFAULT directory in the kiosks folder contains all of the site-specific files that make up the content of the DEFAULT kiosk.  
 
@@ -32,13 +32,23 @@ Startup.cfg becomes:
 
 ```
 KiosksPath="~/Documents/kiosks"
-StartKiosk="mycustomkiosk"
+StartKiosk="your-kiosk-name-here"
+KioskCfgFile="kiosk.cfg"
+```
+
+Or..
+
+```
+KiosksPath= "C:/Users/MOTUS_USER/Documents/kiosks"
+StartKiosk="your-kiosk-name-here"
 KioskCfgFile="kiosk.cfg"
 ```
 
 *Note: these values are case sensitive and must match exactly the project directory structure containing your kiosk.*
 
 **TIP:** relative (~) paths are convenient when developing your site using the RStudio IDE.  However when your kiosk 'goes-live' it will likely be run in the background by another account such as Admin.  At some point you will want to modify the startup.cfg to use the full absolute paths (eg.  C:/Users/MOTUS_USER/Documents/kiosks)  (See the FINAL_DEPLOYMENT document Section 2.0)
+
+
 
 ##### 1.2 - Locate your site's motus receiver deployment ID.
 
@@ -73,16 +83,25 @@ In your own kiosk directory (e.g. *top-level-project-dir/kiosks/yourkioskname*) 
 
 Edit your ***kiosk.cfg*** file to contain your own site's ID, your banner logo file and title etc.  For many custom kiosks,  you may be able to just set the  'startup.cfg ' (above) and perhaps the first 3-5 elements of the kiosk.cfg to get your kiosk up and running and looking like its your very own site.     
 
-Below is the content of an entire sample configuration file as of Version 5.0.  Each element is described in the '2.0 Configurable Items' section that follows below.
+Below is the content of an entire sample configuration file for version Version 6.0.  Each element is described in the '2.0 Configurable Items' section that follows below.
 
 ```
-ReceiverDeploymentID=9195,7948,8691
-ReceiverShortName="Ankeny Hill OR", "Bullards Bridge OR", "Nisqually Delta WA"
-MainLogoFile="images/logos/ankenyhill_logo.png"
-NavbarColor="#8FBC8F"
-TitlebarColor="#8FBC8F"
-MainLogoHeight=120
-MainLogoTopOffsetPixels=0
+# See CONFIGURATION_GUIDE.md for details.
+
+ReceiverDeploymentID=9195,11454,10758
+ReceiverShortName="Ankeny Hill OR","Hoodsport", "Newport OR (HMSC)"
+MainLogoFile="images/logos/ankenyhill_logo_hires_cropped.jpg"
+MainLogoHeight=100
+NavbarBackgroundColor="#8FBC8F" 
+NavbarTextColor="darkslategray"
+TitlebarTextColor="#8FBC8F"
+TitlebarBackgroundColor="#fefefe"
+BodyPageTextColor="darkslategray"
+BodyPageBackgroundColor="#fefefe"
+SelectedTabTextColor="darkslategray"
+SelectedTabBackgroundColor="#fefefe"
+JumpToButtonColor="#f9f46d"
+AppOpensToMap=0
 MainTitleEnglish="Motus Receiver at:"
 MainTitleSpanish="Receptor Motus en:"
 MainTitleFrench="Récepteur Motus à:"
@@ -90,14 +109,13 @@ HomepageEnglish="homepages/default_homepage_en.html"
 MovingMarkerIcon="images/icons/motus-bird.png"
 MovingMarkerIconWidth=22
 MovingMarkerIconHeight=22
-MapIconFlightDurationSeconds=3
-InactivityTimeoutSeconds=3600
+InactivityTimeoutSeconds=300
 EnableReadCache=1
 EnableWriteCache=1
 CachePath="data/cache"
-ActiveCacheAgeLimitMinutes=10
+ActiveCacheAgeLimitMinutes=120
 InactiveCacheAgeLimitMinutes=10080
-CheckMotusIntervalMinutes=5
+CheckMotusIntervalMinutes=0.2
 HttpGetTimeoutSeconds=10
 LogLevel=LOG_LEVEL_WARNING
 EnableLearnAboutMotusTab=1
@@ -106,9 +124,9 @@ EnableMotusNewsTab=1
 NewsPageEnglish="newspages/current_news_en.html"
 EnableSpeciesInfoTab=1
 SpeciesPageEnglish="speciespages/species_unknown_en.html"
-EnableSuspectDetectionFilter=1
+EnableSuspectDetectionFilter=0
 VelocitySuspectMetersPerSecond=55
-
+MapIconFlightDurationSeconds=3
 ```
 
 
@@ -145,14 +163,22 @@ The MainLogoFile is relative to the "www" directory:  *top-level-project-dir/kio
 
 ```
 MainLogoFile="images/logos/ankenyhill_logo.png"
-NavbarColor="#8FBC8F"
-TitlebarColor="#8FBC8F"
+NavbarBackgroundColor="#8FBC8F"
+NavbarTextColor="#8FBC8F"
+TitlebarTextColor="#8FBC8F"
+TitlebarBackgroundColor="white"
 MainLogoHeight=140
-MainLogoTopOffsetPixels=0
 MainTitleEnglish="Motus Receiver at:"
 MainTitleSpanish="Receptor Motus en:"
 MainTitleFrench="Récepteur Motus à:"
+BodyPageTextColor="darkslategray"
+BodyPageBackgroundColor="#fefefe"
+SelectedTabTextColor="darkslategray"
+SelectedTabBackgroundColor="#fefefe"
+JumpToButtonColor="#f9f46d"
 ```
+
+The JumpToButton parameter was added in version 6 to make it more obvious for the kiosk user on how to quickly get to the tag detection data .  The JumpToButtonColor sets the background color of that control.
 
 ##### 2.3 - "Home" tab content
 
@@ -189,7 +215,7 @@ MapIconFlightDurationSeconds=3
 
 ##### 2.5 - Inactivity Timeout
 
-This parameter controls a timeout for inactivity of the user  interface.  If there is no touchscreen/mouse activity for the set period, the application will reset to the home screen and defaults. 
+This parameter controls a timeout for inactivity of the user  interface.  If there is no touchscreen/mouse activity for the set period, the application will reset to the home screen and defaults.    (see also 2.14 AppOpensToMap)
 
 ```
 InactivityTimeoutSeconds=3600
@@ -303,3 +329,14 @@ VelocitySuspectMetersPerSecond=55
 
 Currently the algorithm is very unsophisticated and will hopefully be subject to improvements in future releases.    
 
+
+
+##### 2.14 - Application Opens to Map
+
+Starting with MOTUS_KIOSK Version 6.0.0  I have added a feature that allows you to choose if the application opens to the homepage or to the recievers tag flight map.
+
+```
+AppOpensToMap=0
+```
+
+When set to 1, the app opens to the flight map of the most recent detection of the currently selected receiver.  This happens on start and also on session reload whenever the InactivityTimeoutSeconds is reached (see 2.5).
