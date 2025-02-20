@@ -283,11 +283,10 @@ SERVER_ReceiverDetections <- function(id, i18n_r, lang, rcvr) {
     myTagsToTable <- function(x) {
       
       #note <<- is assignment to global variable, also note receiverDeploymentID is global
-      #detections_df <<- receiverDeploymentDetections(receiverDeploymentID)
-      detections_df <<- receiverDeploymentDetections(receiverDeploymentID, config.EnableReadCache, config.ActiveCacheAgeLimitMinutes, withSpinner=FALSE,spinnerText=usespinnertext)
+      detections_df <<- receiverDeploymentDetections(gblReceiverDeploymentID, config.EnableReadCache, config.ActiveCacheAgeLimitMinutes, withSpinner=FALSE,spinnerText=usespinnertext)
       if(nrow(detections_df)<=0) {  # failed to get results... try the inactive cache
         DebugPrint("receiverDeploymentDetections request failed - try Inactive cache")
-        detections_df <<- receiverDeploymentDetections(receiverDeploymentID, config.EnableReadCache, config.InactiveCacheAgeLimitMinutes, withSpinner=FALSE,spinnerText=usespinnertext)
+        detections_df <<- receiverDeploymentDetections(gblReceiverDeploymentID, config.EnableReadCache, config.InactiveCacheAgeLimitMinutes, withSpinner=FALSE,spinnerText=usespinnertext)
       }
       
       remove_modal_spinner() #shown by receiverDeploymentDetections
@@ -395,8 +394,6 @@ SERVER_ReceiverDetections <- function(id, i18n_r, lang, rcvr) {
     #   
     #------------------------------------------------------------------------------------------------------------- 
     updateDetectionsUI <- function() {  
-      
-      
       
       #see:https://stackoverflow.com/questions/55799093/select-and-display-the-value-of-a-row-in-shiny-datatable   
       selectedrowindex <- input$mytable_rows_selected
@@ -516,7 +513,7 @@ SERVER_ReceiverDetections <- function(id, i18n_r, lang, rcvr) {
       
       # trap for rare edge case for when motus.org is offline and the InactiveCache returns nothing 
       if(nrow(tagdetails_df)<=0){
-        tagflight_df<-empty_tagDeploymentDetection_df()
+        tagflight_df <- empty_tagDeploymentDetection_df()
         output$flightpath <- DT::renderDataTable(tagflight_df,
                                                  selection = "single", 
                                                  options=list(dom = 'Bfrtip',
@@ -525,8 +522,6 @@ SERVER_ReceiverDetections <- function(id, i18n_r, lang, rcvr) {
                                                               language = list(zeroRecords = motusofflinetext)
                                                  ) #end options
         ) #end renderDataTable()
-        
-        
         
         myLeafletMap = leaflet() %>% addTiles() #render the empty map
         output$leaflet_map = renderLeaflet(myLeafletMap) 
@@ -539,7 +534,7 @@ SERVER_ReceiverDetections <- function(id, i18n_r, lang, rcvr) {
       #if the tag deployment id is null there wont be any flight data, so just make an empty one
       if (is.na(tagDepID )) {
         DebugPrint("input$mytable_rows_selected observeEvent() - tagDepID is null so make dummy mydf")
-        tagflight_df<-empty_tagDeploymentDetection_df()
+        tagflight_df <- empty_tagDeploymentDetection_df()
       } else {
 
       
@@ -547,55 +542,72 @@ SERVER_ReceiverDetections <- function(id, i18n_r, lang, rcvr) {
         # note this is a local variable assignment
         DebugPrint(paste0("input$mytable_rows_selected observeEvent() - tagDepID NOT NA so call tagDeploymentDetections with tagDepID:",tagDepID))
  
-        #print(paste0("************** tagflight_df with tagDepID: ",tagDepID)  )     
-        
         tagflight_df <- tagDeploymentDetections(tagDepID, config.EnableReadCache, config.ActiveCacheAgeLimitMinutes, withSpinner=TRUE, spinnerText=usespinnertext) 
         if(nrow(tagflight_df)<=0) {  # failed to get results... try the inactive cache
           DebugPrint("tagDeploymentDetections request failed - try Inactive cache")
           tagflight_df <- tagDeploymentDetections(tagDepID, config.EnableReadCache, config.InactiveCacheAgeLimitMinutes)
         }
-        #print("--------- ReceiverDetections.R tagflight_df at line 521 --------")
-        #print(tagflight_df)
-        # print("----------------------------------------------------------------")
+        
+        # 17-Feb-2025 - add the tagDepID to all all rows so we can use it to filter ignored detections.
+        tagflight_df$tagDeploymentID <- tagDepID
         
         # Now have records like:
-        # date                         site     lat       lon receiverDeploymentID seq  use      usecs     doy   runstart     runend runcount
-        # 2023-07-29                  tagging site 48.0634 -108.8518                    0   1 TRUE 1690656180 2023210 1690656180 1690656480        2
-        # 2023-07-29                Lake Seventeen 48.0891 -108.8834                 8878   2 TRUE 1690670158 2023210 1690670158 1690671222        4
-        # 2023-07-30                Lake Seventeen 48.0891 -108.8834                 8878   3 TRUE 1690745422 2023211 1690745422 1690754474        4
+        # date                         site     lat       lon receiverDeploymentID seq  use      usecs     doy   runstart     runend runcount     tagDeploymentID
+        # 2023-07-29                  tagging site 48.0634 -108.8518                    0   1 TRUE 1690656180 2023210 1690656180 1690656480        2 43628
+        # 2023-07-29                Lake Seventeen 48.0891 -108.8834                 8878   2 TRUE 1690670158 2023210 1690670158 1690671222        4  43628
+        # 2023-07-30                Lake Seventeen 48.0891 -108.8834                 8878   3 TRUE 1690745422 2023211 1690745422 1690754474        4  43628
         # NOTE: one record per day
         
         # apply any flight data exclusions from .csv file read by global.R
-        # this is the at Date, ReceiverID exclusion
-        if( length(gblIgnoreDateTagReceiverDetections_df > 0 )){
-          for(i in 1:nrow(gblIgnoreDateTagReceiverDetections_df)) {
-            row <- gblIgnoreDateTagReceiverDetections_df[i,]
-            theDate=row[["date"]]
-            theID=row[["receiverDeploymentID"]]
-            theSite=row[["site"]]
-            #print(paste0("exclude"," date:",theDate, "  id:", theID,"  site:", theSite))
-            tagflight_df <- tagflight_df[!(tagflight_df$receiverDeploymentID == theID & tagflight_df$date == theDate),] 
-          }
-        }
+        # this is the tag at at specific Date and ReceiverID exclusion
+      
 
+        if( length(gblIgnoreByTagReceiverDate_df > 0 )){
+           for(i in 1:nrow(gblIgnoreByTagReceiverDate_df)) {
+             row <- gblIgnoreByTagReceiverDate_df[i,]
+             theDate=row[["date"]]
+             theTagID=row[["tagDeploymentID"]]
+             theRcvrID=row[["receiverDeploymentID"]]
+             theNote=row[["briefNote"]]
+            
+            #print(paste0("exclude"," class(date):", class(theDate),
+            #              " date:", theDate, "  tagDeploymentID:", theTagID,"  receiverDeploymentID:", theRcvrID,"  Note:", theNote))
+             tagflight_df <- filter(tagflight_df,
+                             !( receiverDeploymentID == theRcvrID &
+                              date == theDate &
+                              tagDeploymentID == theTagID))
+            }
+        }
+        
+        if( length(gblIgnoreByTagReceiver_df > 0 )){
+          for(i in 1:nrow(gblIgnoreByTagReceiver_df)) {
+            row <- gblIgnoreByTagReceiver_df[i,]
+            theTagID=row[["tagDeploymentID"]]
+            theRcvrID=row[["receiverDeploymentID"]]
+            theNote=row[["briefNote"]]
+ 
+            tagflight_df <- filter(tagflight_df,
+                                   !( receiverDeploymentID == theRcvrID & tagDeploymentID == theTagID))
+            }
+        }
+        
         # apply any flight data exclusions from .csv file read by global.R
-        # this is the at ReceiverID on all dates exclusion
-        if( length(gblIgnoreAllDetectionsAtReceiver_df > 0 )){
-          for(i in 1:nrow(gblIgnoreAllDetectionsAtReceiver_df)) {
-            row <- gblIgnoreAllDetectionsAtReceiver_df[i,]
+        # this is all tags at ReceiverID on all dates exclusion
+        if( length(gblIgnoreByReceiver_df > 0 )){
+          for(i in 1:nrow(gblIgnoreByReceiver_df)) {
+            row <- gblIgnoreByReceiver_df[i,]
             theLocalID=row[["localReceiverDeploymentID"]]
             theRemoteID=row[["remoteReceiverDeploymentID"]]
-            theSite=row[["site"]]
-            #print(paste0("exclude"," localID:",theLocalID, "  remoteID", theRemoteID,"  site:", theSite))
-            if(theLocalID == receiverDeploymentID ){
-                #print("localId matches")
+            theNote=row[["briefNote"]]
+           
+            #note this is the currently selected receiver stored in a global variable
+            if(theLocalID == gblReceiverDeploymentID ){ 
                 # the localId matches the currently selected receiver so do it
                 tagflight_df <- tagflight_df[ !(tagflight_df$receiverDeploymentID == theRemoteID),] 
-            }
+            } 
           } #end for
         }   #endif
-        #print(tagflight_df)
-        
+
         if(config.EnableSuspectDetectionFilter==1){
            # Get ready to compute velocities and filter
            # add three columns to the dataframe
@@ -667,7 +679,7 @@ SERVER_ReceiverDetections <- function(id, i18n_r, lang, rcvr) {
     } ### wns if NEW CODE
   
            #and drop the extra first and last rows we added above...
-           tagflight_df = tagflight_df[-1,, drop=F] #the first row
+           tagflight_df <- tagflight_df[-1,, drop=F] #the first row
            tagflight_df <- tagflight_df[-nrow(tagflight_df),]  #the last row
        
            # filter the data
@@ -834,9 +846,9 @@ SERVER_ReceiverDetections <- function(id, i18n_r, lang, rcvr) {
       #to populate the sidebar with a new list of detections
       
       selectedreceiver <- filter(gblReceivers_df, shortName == strReceiverShortName)      
-      receiverDeploymentID <<- selectedreceiver["receiverDeploymentID"]
+      gblReceiverDeploymentID <<- selectedreceiver["receiverDeploymentID"]
       
-      DebugPrint(paste0("recvr picker observerEvent receiverDeploymentID", receiverDeploymentID))
+      DebugPrint(paste0("recvr picker observerEvent receiverDeploymentID", gblReceiverDeploymentID))
       myTagsToTable()
       DebugPrint("recvr picker observerEvent back from tags to table")
       
