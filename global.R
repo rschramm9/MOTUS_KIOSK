@@ -1,7 +1,6 @@
-
 ######## I put github release version and other data here ############
 ######## so it can be displayed on the footer of the kiosk window ####
-gblFooterText <- "MOTUS_KIOSK  vsn 6.0.0  16-Jan-2025"
+gblFooterText <- "MOTUS_KIOSK  vsn 6.1.0  19-Feb-2025"
 mytoggle<<-FALSE #useful global variable for debugging
 ###############################################################################
 # Copyright 2022-2023 Richard Schramm
@@ -115,9 +114,6 @@ if( grepl('/code$', wd)){
 projectdir <<- wd
 codedir <<- paste0( projectdir,"/code")
 
-#####gblMainTabName <<- ""
-#####gblMapTabName <<-""
-
 message(paste0("projectdir is:", projectdir))
 message(paste0("codedir is:", codedir))
 
@@ -168,71 +164,65 @@ source(paste0(codedir,"/modules/MotusNews.R"))
      
      #message(paste0("in global.R, config.SiteSpecificContent is:", config.SiteSpecificContent))
      
-     
-     # read a csv file for any bad or tags by tagID we want the gui to
-     # ignore. any receiver detection of a tag with matching TagID
-     # would have all detections of this tag at the receiver ignored
+     # ambiguois detections
+     # read a csv file for any bad or tags by tagDeploymentID. we want the gui to
+     # ignore. Any receiver detection of a tag with matching TagDeploymentID
+     # would have all detections of this tag at ANY receiver ignored
      # eg for a 'test tag' used a site where we dont want to show the public user
-     # our test data
-     thefile<-paste0(config.SiteSpecificContent,"/data/ignoredetections/ignore_tags.csv") 
-     message(paste0("attempting to load ignore file:",thefile))
-     gblIgnoreTag_df <<- ReadCsvToDataframe(thefile)
-     if( is.null(gblIgnoreTag_df) ) {
-       #message("the FIRST csv file returned NULL")
+     # our test data.
+     # these are filtered in receiverDeploymentDetections.R
+     thefile<-paste0(config.SiteSpecificContent,"/data/ignoredetections/ignore_by_tag_receiver.csv")
+     gblIgnoreByTagReceiver_df <<- ReadCsvToDataframe(thefile)
+     if( is.null(gblIgnoreByTagReceiver_df) ) {
+       ErrorPrint(paste0("Read of csv file returned NULL. File:",thefile))
      } else {
        #message("loaded FIRST csv file")
      }
-     #print(gblIgnoreTag_df) 
-     
     
-     # read a csv file for any bad or tags by tagDeploymentID we want the gui to
-     # ignore. any receiver detection of a tag with matching tagDeploymentID
-     # would have all detections of this tag at the receiver ignored
-     # eg for a 'test tag' that may be redeployed later on an animal
-     # where we dont want to show the public user the test data
-     ####f <- paste0(getwd(),"/data/ignore_tag_deployments",".csv")
-     ####gblIgnoreTagDeployment_df <<- ReadCsvToDataframe(f)
      
-     thefile<-paste0(config.SiteSpecificContent,"/data/ignoredetections/ignore_tag_deployments.csv") 
-     #message(paste0("attempting to load file:",thefile))
-     gblIgnoreTagDeployment_df <<- ReadCsvToDataframe(thefile)
-     if( is.null(gblIgnoreTag_df) ) {
-      # message("SECOND csv file returned NULL")
+     # ------------------------------------------------------------------------
+     # Test tags - by tagDeploymentID
+     # Ignore a tag when seen ANYWHERE .eg "test tags"
+     # read a csv file for any bad or test tags by tagDeploymentID 
+     # we want the gui to ignore ANY receiver detection of a tag with
+     # matching a tagDeploymentID
+     # these are filtered in receiverDeploymentDetections.R and in ReceiverDetections.R
+     thefile<-paste0(config.SiteSpecificContent,"/data/ignoredetections/ignore_by_tag.csv") 
+     #message(paste0("attempting to load ignore file:",thefile))
+     gblIgnoreByTag_df <<- ReadCsvToDataframe(thefile)
+     if( is.null(gblIgnoreByTag_df) ) {
+       ErrorPrint(paste0("Read of csv file returned NULL. File:",thefile))
      } else {
-      # message("loaded SECOND csv file")
+       #message("loaded SECOND csv file")
      }
-     #print(gblIgnoreTagDeployment_df) 
      
-     
+     # ------------------------------------------------------------------------
+     # Wildpoints - by tag, receiver and date
      # read a csv file for any known bad tag detections at some receiver that we want the gui to ignore
      # these are individual detections of a tag at some receiver - eg wild point where the animal 
      # flies across the continent in a day = a false detections that motus hasnt filtered
-     # this hack isnt scalable but for now....
-     thefile<-paste0(config.SiteSpecificContent,"/data/ignoredetections/ignore_date_tag_receiver_detections.csv") 
      
+     thefile<-paste0(config.SiteSpecificContent,"/data/ignoredetections/ignore_by_tag_receiver_date.csv") 
      # message(paste0("attempting to load file:",thefile))
-     gblIgnoreDateTagReceiverDetections_df <<- ReadCsvToDataframe(thefile)
-     if( is.null(gblIgnoreTag_df) ) {
-       #message("THIRD csv file returned NULL")
+     gblIgnoreByTagReceiverDate_df <<- ReadCsvToDataframe(thefile)
+     if( is.null(gblIgnoreByTagReceiverDate_df) ) {
+       ErrorPrint(paste0("Read of csv file returned NULL. File:",thefile))
      } else {
        #message("loaded THIRD csv file")
      }
-     #print(gblIgnoreDateTagReceiverDetections_df) 
      
-     
+     # ------------------------------------------------------------------------
+     # Bad Receiver 
      # read a csv file for any known bad receiver that we want the gui to ignore
-     # these are all detections of a tag at receiver - eg a known very noisy receiver
-     # this hack isnt scalable but for now...
-     thefile<-paste0(config.SiteSpecificContent,"/data/ignoredetections/ignore_all_detections_at_receiver.csv") 
-     
-     # message(paste0("attempting to load file:",thefile))
-     gblIgnoreAllDetectionsAtReceiver_df <<- ReadCsvToDataframe(thefile)
-     if( is.null(gblIgnoreTag_df) ) {
-       #message("FOURTH csv file returned NULL")
+     # these are all detections of ANY tags at receiver - eg a known very noisy receiver
+     thefile<-paste0(config.SiteSpecificContent,"/data/ignoredetections/ignore_by_receiver.csv") 
+     #message(paste0("attempting to load file:",thefile))
+     gblIgnoreByReceiver_df <<- ReadCsvToDataframe(thefile)
+     if( is.null( gblIgnoreByReceiver_df) ) {
+       ErrorPrint(paste0("Read of csv file returned NULL. File:",thefile))
      } else {
        #message("loaded Forth csv file")
      }
-     #print(gblIgnoreAllDetectionsAtReceiver_df) 
 
      #set some resource paths 
      
@@ -313,17 +303,17 @@ source(paste0(codedir,"/modules/MotusNews.R"))
      selectedreceiver <<- filter(gblReceivers_df, shortName == config.ReceiverShortName)
      
      # NOTE the use of global assignments
-     receiverDeploymentID <<- selectedreceiver["receiverDeploymentID"]
-     InfoPrint(paste0("Start with receiver:", config.ReceiverShortName, "  ID:", receiverDeploymentID))
+     gblReceiverDeploymentID <<- selectedreceiver["receiverDeploymentID"]
+     InfoPrint(paste0("Start with receiver:", config.ReceiverShortName, "  ID:", gblReceiverDeploymentID))
  
      # for testing connection status to motus.org, I will always use this ID
-     defaultReceiverID<<-receiverDeploymentID 
+     defaultReceiverID<<-gblReceiverDeploymentID 
        
      # Initially populate the dataframes here
      # dont allow a modal spinner as UI may not be 'up' yet
      
      # we want these to be global variables... (note the <<- ) 
-     InfoPrint(paste0("global.R Make initial call to motus for receiverDeploymentDetections of receiver:", receiverDeploymentID))
+     InfoPrint(paste0("global.R Make initial call to motus for receiverDeploymentDetections of receiver:", gblReceiverDeploymentID))
      
 
      #25Nov2024 Just populate an empty df - disable the looping otherwise the app
