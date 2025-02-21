@@ -1,12 +1,13 @@
-# utility functions for managing kiosk configuration 
+########################################################################################
+# Utility functions for managing kiosk configuration 
+########################################################################################
 
-
-#read the startup.cfg to get the name of the target kiosk
-#then read the appropriat kiosk.cfg
-
+########################################################################################
+# Read the startup.cfg to get the name of the target kiosk etc
 # sets GLOBAL config parameters
 # return TRUE if made it all the way thru or FALSE if there were issues.
 #
+########################################################################################
 getStartConfig <- function() {
   
   tryCatch( 
@@ -19,9 +20,12 @@ getStartConfig <- function() {
       } #else file exists
       
       #attempt to read file from current directory
-      # use assign so you can access the variable outside of the function
-      assign("configfrm", read.table( file=thefile, header=FALSE,
-                                      sep='=',col.names=c('Key','Value')), envir=.GlobalEnv) 
+      configfrm <- read.table( file=thefile,
+                               header=FALSE, 
+                               sep='=',col.names=c('Key','Value'),
+                               strip.white = TRUE, 
+                               stringsAsFactors = FALSE) 
+      
       InfoPrint("Loaded start configuration data from local file startup.cfg")
     },
     
@@ -42,12 +46,10 @@ getStartConfig <- function() {
     }
   )
   
+  # conver from dataframe to datatable 
   configtbl <- data.table(configfrm, key='Key')
-  #print("---------  The configtbl ------------")
-  #print(configtbl)
-  #print("-------------------------------------")
   
-  badCfg<-FALSE  #assume good config
+  badCfg<-FALSE  #assume a good config
   
   #print("------------ StartKiosk ----------------")
   list1 <- keyValueToList(configtbl,'StartKiosk')
@@ -58,7 +60,7 @@ getStartConfig <- function() {
     #I ultimately want a string
     config.StartKiosk<<- toString(list1[1])  
   }
-  #message(paste0("starting cfg for:",config.StartKiosk))
+  #message(paste0("Starting cfg for:",config.StartKiosk))
   
   #print("------------ KiosksPath ----------------")
   list1 <- keyValueToList(configtbl,'KiosksPath')
@@ -79,7 +81,7 @@ getStartConfig <- function() {
     }
     config.KiosksPath<<-xxx
   }
-  message(paste0("Using KioskPath:", config.KiosksPath))
+  #message(paste0("Using KioskPath:", config.KiosksPath))
   
   #print("------------ KioskCfgFile ----------------")
   list1 <- keyValueToList(configtbl,'KioskCfgFile')
@@ -91,16 +93,17 @@ getStartConfig <- function() {
     config.KioskCfgFile<<- toString(list1[1])  
   }
   
-  #message(paste0("starting cfg for:",config.StartKiosk))
+  #message(paste0("Starting cfg for:",config.StartKiosk))
   return(badCfg)
   
 } #end getStartConfig()
 
 
-
-# sets GLOBAL config parameters
+########################################################################################
+# getKioskConfig sets GLOBAL config parameters
 # return TRUE if made it all the way thru or FALSE if there were issues.
-#
+# WARNING:  You must call getStartConfig() before calling getKioskCfg()
+########################################################################################
 getKioskConfig <- function() {
   message(paste0("using global KiosksPath:", config.KiosksPath)) #/users/rich/Projects/kiosks
   message(paste0("using global StartKiosk:", config.StartKiosk))
@@ -121,17 +124,18 @@ getKioskConfig <- function() {
     message(paste0("ERROR: getKioskConfig: kiosk configuration file not found in kiosk's directory at:",thefile))
     ErrorPrint("Please check that the name of your KioskCfgFile in the startup.cfg file matches a config file in your kiosk's folder.")
     stop("There is an error reading your kiosk's configuration file.")
-    
   }
   
   tryCatch( 
     {
-      #message(paste0("Try:",thefile))
       #attempt to read file from current directory
-      # use assign so you can access the variable outside of the function
-      assign("configfrm", read.table(file=thefile, header=FALSE,
-                                     sep='=',col.names=c('Key','Value')), envir=.GlobalEnv) 
-      InfoPrint(paste0("Loading kiosk configuration data from ", thefile))
+      configfrm <- read.table( file=thefile,
+                               header=FALSE, 
+                               sep='=',col.names=c('Key','Value'),
+                               strip.white = TRUE, 
+                               stringsAsFactors = FALSE) 
+      
+       InfoPrint(paste0("Loading kiosk configuration data from ", thefile))
     },
     warning = function( w )
     {
@@ -149,14 +153,13 @@ getKioskConfig <- function() {
     }
   )
   
+  # convert data.frame to data.table
   configtbl <- data.table(configfrm, key='Key')
-  #print("************* coinfigtbl **************")
-  #print(configtbl)
-  #print ("**************************************")
-  
+ 
   badCfg<-FALSE  #assume good config
   
   #config.SiteSpecificContent<<-paste0(projectdir,"/",config.KiosksPath,"/",config.StartKiosk)
+  
   config.SiteSpecificContent<<-paste0(config.KiosksPath,"/",config.StartKiosk)
   #message(paste0("in configUtils, config.siteSpecificContent is:", config.SiteSpecificContent))
   InfoPrint(paste0("Site specific root directory is:", config.SiteSpecificContent))
@@ -214,16 +217,6 @@ getKioskConfig <- function() {
     config.MainLogoHeight <<- as.numeric(list1[1]) #assume length=1
   }
   
-  #print("------------ MainLogoTopOffsetPixels --------------")
-  # Not in version 6.x
-  #list1 <- keyValueToList(configtbl,'MainLogoTopOffsetPixels')
-  #if( is.null(list1) ){
-  #  config.MainLogoTopOffsetPixels <<- -30
-  #} else {
-  #  config.MainLogoTopOffsetPixels <<- as.numeric(list1[1]) #assume length=1
-  #}
-  
-  
   #print("------------ Homepage----------------")
   #must be the _en.html page....
   #HomepageEnglish="homepages/ankeny_homepage_en.html"
@@ -249,7 +242,6 @@ getKioskConfig <- function() {
     #config.SpeciesPageEnglish<<-paste0(config.SiteSpecificContentWWW,"/",tmpstr)
     config.SpeciesPageEnglish<<-tmpstr
   }
-  
   
   #print("------------ Motus News----------------")
   #must be the _en.html page....
@@ -279,14 +271,13 @@ getKioskConfig <- function() {
     #config.AboutMotusPageEnglish<<-paste0("www/",config.SiteSpecificContent,"/",tmpstr)
   }
   
-  
   #print("------------ NavbarTextColor ----------------")
   # new for version 6.x 
   list1 <- keyValueToList(configtbl,'NavbarTextColor')
   if( is.null(list1) ){
-      config.NavbarTextColor<<-"darkslategray"
+    config.NavbarTextColor<<-"darkslategray"
   } else {
-      config.NavbarTextColor<<- toString(list1[1]) 
+    config.NavbarTextColor<<- toString(list1[1]) 
   }
   
   #print("------------ NavbarBackgroundColor ----------------")
@@ -309,11 +300,11 @@ getKioskConfig <- function() {
   #print("------------ TitlebarTextColor ----------------")
   list1 <- keyValueToList(configtbl,'TitlebarTextColor')
   if( is.null(list1) ){
-      config.TitlebarTextColor<<-"#8FBC8F"  #ankeny green
+    config.TitlebarTextColor<<-"#8FBC8F"  #ankeny green
   } else {
-      config.TitlebarTextColor<<- toString(list1[1]) 
+    config.TitlebarTextColor<<- toString(list1[1]) 
   }
-
+  
   # In version 6.x or later
   #print("------------ TitlebarBackgroundColor ----------------")
   list1 <- keyValueToList(configtbl,'TitlebarBackgroundColor')
@@ -373,7 +364,7 @@ getKioskConfig <- function() {
     #I ultimately want a string
     config.JumpToButtonColor<<- toString(list1[1])  
   }
- 
+  
   #print("------------ AppOpensToMap --------------")
   list1 <- keyValueToList(configtbl,'AppOpensToMap')
   if( is.null(list1) ){
@@ -382,24 +373,36 @@ getKioskConfig <- function() {
     config.AppOpensToMap<<- as.numeric(list1[1]) #assume length=1
   }
   
-  #print("------------ ReceiverDeploymentID --------------")
+  print("------------ ReceiverDeploymentID --------------")
   # set global parms of both the list and the first item on the list
   #the default target receiver is the first list item (set in global.R after processing config)
+  #note this is actually an atomic vector of type character.
+  # like: chr [1:13] "9195" "11454" "10758" "8691" "7474" "10626" "9526" "10611" "7948" "10716" "11046" "10780" "10633"
   config.ReceiverDeployments <<- str_squish(keyValueToList(configtbl,'ReceiverDeploymentID'))
   
   if( is.null(config.ReceiverDeployments)  ){
     message("Config is missing list of Receiver Deployment IDs")
     badCfg<-TRUE 
   }
+  
   #print("------------ ReceiverShortName ----------------")
   # set global parms of both the list and the first item on the list
-  config.ReceiverShortNames<<-keyValueToList(configtbl,'ReceiverShortName')
+  
+  #note this is actually a list of type character.
+  #  $ : chr "Ankeny Hill OR"
+  #  $ : chr "Hoodsport"
+  #  $ : chr " Newport OR (HMSC)"
+  #  $ : chr ".......
+  #config.ReceiverShortNames<<-keyValueToList(configtbl,'ReceiverShortName')
+
+  my_list<-keyValueToList(configtbl,'ReceiverShortName')
+  config.ReceiverShortNames<<-lapply(my_list, trimws) #trim any leading/trailing whitespace
   if( is.null(config.ReceiverShortNames) ){
     badCfg<-TRUE
     message("Config is missing list of ReceiverShortNames")
   }
   
-  # these two lists support the receiver Picklist they must be same length
+  # Since these two lists support the receiver Picklist they must be same length
   if( length(config.ReceiverShortNames) != length(config.ReceiverDeployments) ){
     message("There is a problem with your kiosk.cfg file. THe ReceiverShortName list must be same length as ReceiverIDs list")
     badCfg<-TRUE
@@ -483,7 +486,6 @@ getKioskConfig <- function() {
     config.InactiveCacheAgeLimitMinutes<<- as.numeric(list1[1]) #assume length=1
   }
   
-  
   #print("------------ HttpGetTimeoutSeconds --------------")
   list1 <- keyValueToList(configtbl,'HttpGetTimeoutSeconds')
   if( is.null(list1) ){
@@ -491,7 +493,6 @@ getKioskConfig <- function() {
   } else {
     config.HttpGetTimeoutSeconds<<- as.numeric(list1[1]) #assume length=1
   }
-  
   
   #print("------------ CachePath ----------------")
   list1 <- keyValueToList(configtbl,'CachePath')
@@ -521,7 +522,6 @@ getKioskConfig <- function() {
     config.EnableMotusNewsTab<<- as.numeric(list1[1]) #assume length=1
   }
   
-  
   #print("------------ EnableLearnAboutMotusTab --------------")
   list1 <- keyValueToList(configtbl,'EnableLearnAboutMotusTab')
   if( is.null(list1) ){
@@ -530,7 +530,6 @@ getKioskConfig <- function() {
     config.EnableLearnAboutMotusTab<<- as.numeric(list1[1]) #assume length=1
   }
   
-  
   #print("------------ EnableSuspectDetectionFilter  --------------")
   list1 <- keyValueToList(configtbl,'EnableSuspectDetectionFilter')
   if( is.null(list1) ){
@@ -538,7 +537,6 @@ getKioskConfig <- function() {
   } else {
     config.EnableSuspectDetectionFilter<<- as.numeric(list1[1]) #assume length=1
   }
-  
   
   #print("------------ VelocitySuspectMetersPerSecond  --------------")
   list1 <- keyValueToList(configtbl,'VelocitySuspectMetersPerSecond')
@@ -555,8 +553,6 @@ getKioskConfig <- function() {
   } else {
     config.MapIconFlightDurationSeconds<<- as.numeric(list1[1]) #assume length=1
   }
-
-  
   
   #print("------------ LogLevel ----------------")
   list1 <- keyValueToList(configtbl,'LogLevel')
@@ -584,22 +580,17 @@ getKioskConfig <- function() {
   }
   
   #print("------------ path to translations ----------------")
-  #list1 <- keyValueToList(configtbl,'TranslationsPath')
-  #if( is.null(list1) ){
-  #  badCfg<-TRUE 
-  #  config.LogLevel<<-LOG_LEVEL_WARNING
-  #} else {
-  #  #I ultimately want a string
-  #  config.LogLevel<<- toString(list1[1])  
-  #}
   config.TranslationsPath<<-paste0( config.SiteSpecificContent,"/data/translations")
-  #message(paste0("configUtils.config.TranslationsPath:", config.TranslationsPath))
-  return(badCfg)
+  
+  # Note this flag started out FALSE, if anything above failed
+  # then it would have been set TRUE.
+  return(badCfg) 
   
 } #end getConfig()
 
+
 ##############################################################################################
-#.             print global config parameters
+#             print global config parameters
 ###############################################################################################
 printConfig <- function() {
   
@@ -618,7 +609,6 @@ printConfig <- function() {
   TSprint(paste0("NewsPageEnglish:",config.NewsPageEnglish))
   TSprint(paste0("AboutMotusPageEnglish:",config.AboutMotusPageEnglish))
   
- 
   TSprint(paste0("TitlebarTextColor:",config.TitlebarTextColor))
   TSprint(paste0("TitlebarBackgroundColor:",config.TitlebarBackgroundColor))
   
@@ -627,16 +617,14 @@ printConfig <- function() {
   TSprint(paste0("SelectedTabBackgroundColor:",config.SelectedTabBackgroundColor))
   TSprint(paste0("SelectedTabTextColor:",config.SelectedTabTextColor))
   
-  
   TSprint(paste0("BodyPageBackgroundColor:",config.BodyPageBackgroundColor))
   TSprint(paste0("BodyPageTextColor:",config.BodyPageTextColor))
   TSprint(paste0("JumpToButtonColor:",config.JumpToButtonColor))
   TSprint(paste0("AppOpensToMap:",config.AppOpensToMap))
   
-  if ( is.list( config.ReceiverDeployments)){
-    for (i in 1:length(config.ReceiverDeployments)) {
-      TSprint( paste0( "ReceiverDeployment[",i,"]:",config.ReceiverDeployments[[i]] ))
-    }
+  for (i in seq_along(config.ReceiverDeployments)) {
+    TSprint( paste0( "ReceiverDeployment ID [",i,"]:",config.ReceiverDeployments[i] ))
+    #cat(i, ": ", x[i], "\n")
   }
   
   if ( is.list( config.ReceiverShortNames)) {
@@ -662,7 +650,6 @@ printConfig <- function() {
   TSprint(paste0("ActiveCacheAgeLimitMinutes:",config.ActiveCacheAgeLimitMinutes))
   
   TSprint(paste0("InactiveCacheAgeLimitMinutes:",config.InactiveCacheAgeLimitMinutes))
-
   
   TSprint(paste0("CachePath:", config.CachePath))
   
