@@ -295,26 +295,23 @@ receiverDeploymentDetections <- function(receiverDeploymentID, useReadCache=1, c
   
   
   #
-  # First filter we filter out any tags to be ignored from IgnoreTagDeployment file read by global.R
+  # First filter we filter out any tags to be ignored from ignore_by_tag.csv file read by global.R
   #
-  if( length(gblIgnoreTagDeployment_df > 0 )){
-    for(i in 1:nrow(gblIgnoreTagDeployment_df)) {
-      row <- gblIgnoreTagDeployment_df[i,]
-      rID=row[[1]]
-      tID=row[[2]]
-      if(rID == receiverDeploymentID ){ 
-      df <- df[!(df$tagDeploymentID == tID),]
-      }
+  if( length(gblIgnoreByTag_df > 0 )){
+    for(i in 1:nrow(gblIgnoreByTag_df)) {
+      row <- gblIgnoreByTag_df[i,]
+      theTagID=row[["tagDeploymentID"]]
+      df <- df[!(df$tagDeploymentID == theTagID),]
     }
   }
   
   #
   # Second, from remainder we filter out any tags 
-  # to be ignored from ignore_tags.csv file read by global.R
+  # to be ignored from ignore_by_tag_receiver.csv file read by global.R
   # ie all tagDeployments of tag with tagID if seen by this receiver
-  if( length(gblIgnoreTag_df > 0 )){
-    for(i in 1:nrow(gblIgnoreTag_df)) {
-      row <- gblIgnoreTag_df[i,]
+  if( length(gblIgnoreByTagReceiver_df > 0 )){
+    for(i in 1:nrow(gblIgnoreByTagReceiver_df)) {
+      row <- gblIgnoreByTagReceiver_df[i,]
       rID=row[[1]]
       tID=row[[2]]
       if(rID == receiverDeploymentID ){ 
