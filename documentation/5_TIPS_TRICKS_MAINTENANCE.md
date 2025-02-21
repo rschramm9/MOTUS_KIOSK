@@ -1,12 +1,10 @@
 # Tips, Tricks and Maintenance for Motus Kiosk
 
-### For the MOTUS Nature Center Kiosk App v5.1.0
+### For the MOTUS Nature Center Kiosk App v6.1.0
 
 ### Who do I talk to?
 
 -   Owner/Originator: Richard Schramm - [schramm.r@gmail.com](mailto:schramm.r@gmail.com){.email}
-
-
 
 ### 1.0 - One Kiosk Monitoring Multiple Motus Receivers
 
@@ -30,19 +28,21 @@ Create that directory, then copy the 'kiosks'  folder from the the R Project dir
 
 Then point the startup.cfg file to whichever one you want to run at any given time.
 
-### 4.0 - Remove Wild points, false detections or "Test Tags"
+### 4.0 - Remove wild points, false or ambiguous detections or "Test Tags"
 
 #### 4.1 The 'ignore files'
 
-Each kiosk instance has three files in the MOTUS_KIOSK/kiosks/*kioskname*/data/ignoredetections folder.
+Each kiosk instance has three files in the MOTUS_KIOSK/kiosks/*kioskname*/data/ignoredetections folder. See the DEFAULT kiosk for examples at MOTUS_KIOSK/kiosks/DEFAULT/data/ignoredetections
 
-For individual detections:  ignore_date_tag_receiver_detections.csv 
+For a specific tag that we want to block anywhere it is detected see file:  **ignore_by_tag.csv**  The common use case for this would be a known "TestTag"  that we dont ever want to show the user.
 
-For a tag to ignore detections always (eg your test tags):  ignore_tags.csv
+For individual detections of a tag that we want to block if seen at a receiver, use **ignore_by_tag_receiver.csv**  The common use case for this would be the Motus "ambiguous detection"  case where there are two tags out in the world with the same ID. Typically this will stand out on the maps as detections from a tag on receivers on the west coast that suddenly makes jumps to one or more receivers on the east coast.
 
-For a tag to ignore only for duration of one deployment (eg. if your tag was used for awhile but later deployed on an animal):  ignore_tag_deployments.csv
+For individual detections of a tag at a receiver on a specific date see **ignore_by_tag_receiver_date.csv**    The common use case for this would be "false detections"  case where a receiver thinks it has seen a tag more-or-less by chance from some local radio noise source at the same frequency.  If you start getting many of these for a tag then you may be actually be seeing an "ambigous detection"  You may consider block them all regardless of date by using the "ambiguous detections" filter described above
 
-See the DEFAULT kiosk for examples.
+In case you detect a tags at your local receiver, and the flight map of those tags show frequent wild detections from known very noisy receiver, you may want to block that remote receiver.  See **ignore_by_receiver.csv**
+
+
 
 ### 5.0 - Suspect Detections Filter
 
@@ -73,9 +73,11 @@ If a kiosk has its EnableWriteCache set to 1 (default) ,  recently retrieved det
 
 ### 8.0 - Build a complete data cache nightly
 
-The kiosk app utilizes a data cache to improve performance by storing recent data requests in al local file. If  data cached on disk is older than the age threshold set in the kiosk.cfg file, fresh data is requested from motus.org.  Some sites are frequented by birds with high burst rates or significant residence times, that make the motus.org request take 30-445 seconds to load.  This can make the user interface frustrating to use. 
+The kiosk app utilizes a data cache to improve performance by storing recent data requests in al local file. If  data cached on disk is older than the age threshold set in the kiosk.cfg file, fresh data is requested from motus.org.  Some sites are frequented by birds with high burst rates or significant residence times, that make the motus.org request take 30-45 seconds to load.  This can make the user interface frustrating to use. 
 
-One approach to consider to improve performance is to build a complete cache for all detected tags for all of the available receivers in your kiosk.cfg. I you build the cache late at night and set the cache maximum age to 24 hrs then cached data will always be available and up-to-date withing 24 hrs.
+One approach to consider to improve performance is to build a complete cache for all detected tags for all of the available receivers in your kiosk.cfg. If you build the cache late at night and set the cache maximum age to 24 hrs then cached data will always be available and up-to-date within last 24 hrs.  New tags detected and visible at Motus.org at your recievers 'today' will not be shown on your kiosk  until the cached data expires or the cache is rebuilt - eg 'tomorrow'.
+
+Keep in mind if you do this that any changes to your kiosks 'ignore.csv' file also will not take effect until the cached data expires or the cache is rebuilt.
 
 The script BuildCache.R in the main project directory will do this.  It can be made to run from a Windows batch file that is started nightly via the **Windows Task Scheduler**.  (Similar to how the kiosk server is started at boot.)
 
