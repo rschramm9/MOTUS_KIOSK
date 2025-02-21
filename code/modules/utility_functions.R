@@ -49,11 +49,11 @@ ReadCsvToDataframe <-function(fname,hasHeader){
       } else { 
         df <- NULL }
     },
-    warning = function( w )
-    {
-      WarningPrint("") # dummy warning function to suppress the output of warnings
-     df <- NULL
-    },
+    #warning = function( w )
+    #{
+    #   WarningPrint("") # dummy warning function to suppress the output of warnings
+    # df <- NULL
+    #},
     error = function( err )
     {
       ErrorPrint("ReadCsvToDataframe read error")
