@@ -1,4 +1,5 @@
-##### 6.1.0 (2025-02-20)
+- ##### 6.1.0 (2025-02-20)
+
 Fixed known Issues #3 and #4 having to do with broken 'ignore detection by' processing 
 and whitespace appearing in the kiosk.cfg file key/value processing.
 
@@ -8,48 +9,52 @@ ReceiverDetections.R
 
 - add the tagDeploymentID to the tagflight_df dataframe so that
  it can be used to filter the dataframe of wild points instead ofthe tagID
- 
+
  - overhauled all of the tagflight_df ingnore filters, including changed the
  ignore dataframe names to be more obviously and consistently named
- 
+
  - the modified several of the fields in the .csv ignore file to be consistent
  - the above all fix Reported Issue #4
- 
+
  Global.R
  - bump the version number
- - modified the read of the ingnore.csv file.  Filenames and the global dataframe names
- 
+
+ - modified the read of the ignore.csv file.  Filenames and the global dataframe names
+
  - rename receiverDeploymentID to GblReceiverDeploymentID so that anywhere the global
  variable is needed it is obvious it using a global not a local.  ie. it is
- supposed to represent the curently selected reciever
- 
+    supposed to represent the curently selected reciever
+
+ BuildCache.R
+ - modified the read of the ignore.csv file.  Filenames and the global dataframe names. (Same as in Global.R)
+
  configUtils.R
- 
+
  - remove the  assign("configfrm" to global.  It was never used as a global
  - modified the configfrm <- read.table call to strip whitespace. Fixes Reported Issue #3
  - added param SelectedTabTextColor
- 
+
  utility_functions.R
  - comment out the warnings trap in ReadCsvToDataframe().  We want to see warning if any
  are thrown.
- 
+
  tagDeploymentDetections.R
  - remove whitespace around dates when building the summaryFlight_df, was causing
-  problems when filtering dateframe by date.
- 
+    problems when filtering dateframe by date.
+
  receiverDeploymentDetections.R
  -  modify the filters of the dataframe df to use the new names for the 'IgnoreBy'
  dataframe names. (see Global.R above)
- 
+
  ignoredetections files
  - all of the ignore detections files have been renamed to be consisten and much
  clearer about what they do.  Internal, some fieldnames have been modified
- for consistent naming. i.e. TadDepID and TagID were renamed tagDeploymentID
- where necessary.  The files are now:
-  ignore_by_tag.csv
-  ignore_by_receiver.csv
-  ignore_by_tag_receiver.csv
-  ignore_by_tag_receiver_date.csv
+   for consistent naming. i.e. TadDepID and TagID were renamed tagDeploymentID
+   where necessary.  The files are now:
+    ignore_by_tag.csv
+    ignore_by_receiver.csv
+    ignore_by_tag_receiver.csv
+    ignore_by_tag_receiver_date.csv
 
 
 ##### 6.0.0 (2025-01-17)
