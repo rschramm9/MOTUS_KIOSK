@@ -226,7 +226,6 @@ if(hasFooter == 1){
 n <- 0
 for(i in 1:nrecords){
   n<-n+1
-
   date <- c( date,  tbl1[[1]][i]  )
   site <- c( site,  tbl1[[2]][i] )
   lat <-  c( lat,  tbl1[[3]][i]  )
@@ -293,8 +292,6 @@ summaryFlight_df <-data.frame(date,site,lat,lon,receiverDeploymentID,seq,use,use
 tagTrack_df <- tagTrack(tagDeploymentID, 0, 0)
 
 ### NOTE: it appears that motus will only report if at least two detections per day...
-#print("tagTrack_df at line 300")
-#print(tagTrack_df)
 # we need to add the correct receiverDeploymentID to tagTrack_df to support the
 # ability to filter out specific wild point detections in later steps.
 
@@ -355,15 +352,10 @@ if( nrow(distinctSites_df > 0 )){
   } # end for each row
 } #endif length distinct sites
 # we now have corrected receiverDeploymentID in tagTrack_df
-#print("tagTrack_df at line 337")
-#print(tagTrack_df)
+
 
 #sort flight detection so most recent appears at bottom of the list
 ## do in tagTrack.R.  tagTrack_df <- tagTrack_df[ order(tagTrack_df$usecs, decreasing = FALSE), ]
-
-#options(max.print=1000000)
-#print("---------------------tagDeploymentDetections tagTrack_df  line 328 ----------------")
-#print(tagTrack_df)
 
 ## full res record from json like:
 #date                         site     lat       lon receiverDeploymentID seq  use      usecs     doy   runstart     runend runcount
@@ -373,7 +365,6 @@ if( nrow(distinctSites_df > 0 )){
 # NOTE: with all records set TRUE (havent detected value yet)
 # NOTE: in datetime order but sequence number is random
 # NOTE: havent determined receiverDeploymentID yet
-
 
 # we are done with the original summary df
 # we build a new summaryFlight_df from time ordered df sequence number
@@ -398,10 +389,9 @@ if( nrow(tagTrack_df) >= 1 ){
          use<-FALSE
      } else {  # its a new day or new receiver
         usecs <- tagTrack_df[row, "usecs"]
-        date <- tagTrack_df[row, "date"]
+        date <- trimws(tagTrack_df[row, "date"])
         #truncate the datetime to date part only
-        date <- strftime(date, format = "%Y-%m-%d ", tz = "UTC") 
-        
+        date <- strftime(date, format = "%Y-%m-%d", tz = "UTC") 
         site <- tagTrack_df[row, "site"]
         lat <- tagTrack_df[row, "lat"]
         lon <- tagTrack_df[row, "lon"]
@@ -424,10 +414,7 @@ if( nrow(tagTrack_df) >= 1 ){
      }
   }  #end for each row
   
-
 } #endif nrows(tagTrack_df)>0
-
-
 
 
 #options(max.print=1000000)
