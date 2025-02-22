@@ -1,0 +1,7 @@
+KiosksPath="~/Projects/MOTUS_KIOSK/kiosks"
+StartKiosk="DEFAULT"
+KioskCfgFile="kiosk.cfg"
+
+# See CONFIGURATION_GUIDE.md in the MOTUS_KIOSK project's documentation
+# folder for details on configuration.
+
