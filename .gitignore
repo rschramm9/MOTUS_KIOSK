@@ -50,6 +50,10 @@ Logs/*.txt
 
 changes.txt
 
+# v6.1.0 the repository maintains startup.cfg.template. The users
+# create/modify a startup.cfg which will be ignored in the repo
+startup.cfg 
+
 kiosks/AHNC
 kiosks/WLNC
 kiosks/FINLEY
