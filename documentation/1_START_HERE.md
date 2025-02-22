@@ -285,7 +285,9 @@ A complete copy of the repository should now be in subdirectory at: C:\Users\MOT
 
 ##### 8.2 Check the initial startup.cfg
 
-Notice the row of tabs on the IDE right-side panel approximately mid page.  Select the 'Files' tab and navigate to the top-level project folder (MOTUS_KIOSK),  find startup.cfg and open it. It should look like below in the Editor Panel.
+We need to create a file named startup.cfg in the MOTUS_KIOSK top level directory. We will make this using a template file in the MOTUS_KIOSK folder.
+
+**8.2.1** Notice the row of tabs on the IDE right-side panel approximately mid page.  Select the 'Files' tab and navigate to the top-level project folder (MOTUS_KIOSK),  find **startup.cfg.template** and open it. It should look similar to  below in the Editor Panel.
 
 ```
 KiosksPath="~/Projects/MOTUS_KIOSK/kiosks"
@@ -293,7 +295,9 @@ StartKiosk="DEFAULT"
 KioskCfgFile="kiosk.cfg"
 ```
 
-The '~' instructs R to open the kiosk *relative* to the logged in users home directory.
+NOTE: The '~' instructs R to open the kiosk *relative* to the logged in users home directory.
+
+**8.2.2** With the startup.cfg.template file selected in the 'Open files tab', do: File > SaveAs and save as startup.cfg (remove the 'template' from the name.  You are creating a file named startup.cfg in the MOTUS_KIOSK top level directory)
 
 ##### 8.3 Check for missing packages (Again!) 
 
@@ -351,19 +355,20 @@ Next we will create a clone of the DEFAULT kiosk and give it your own name in yo
 
 Do you have a name in mind?  Use whatever you like (*except no spaces or special characters -  underscore should be OK*).  I strongly suggest you keep it short.  Long names may cause you headaches later on.  I will use the name "customkiosk" here for documentation purposes.
 
-**9.1** Decide where to keep your content. It can be anywhere however there are a couple obvious choices. The goal is to separate your customized site-dependent code from the repository code.
+**9.1** Decide where to keep your content. It can be anywhere however there are a couple obvious choices. The goal is to separate your customized site-dependent kiosk code from the repository code.
 
 1. Best practice is someplace outside of the repository project such as the user's "Documents" folder. eg  C:/Users/MOTUS_USER/Documents. 
 
    - This keeps good separation and protection of your customized content from the files that came from the repository. 
-   - It has advantages if you want to use a code repository like github to maintain your content. 
+   - This separtion greatly simplifies updates and bug fixes to the core kiosk code without affecting your personal kiosk content.
+   - It has advantages if you want to use a code repository like github to maintain your personal kiosk content. 
 
-2. Or you may prefer to add it to the MOTUS_KIOSK/kiosks folder (along side where DEFAULT lives).
+2. You may prefer to add it to the MOTUS_KIOSK/kiosks folder (along side where DEFAULT lives).
 
-   - This is convient as you develop quickly using the IDE.
-   - It is somewhat messy to maintain if you intend to add your content to your own it to a github repository.
+   - This is convient if you are modifying the core kiosk R code using the IDE (something most users should not need to do).
+   - It is discouraged as it can make installing updates and bug fixes etc more difficult.
 
-   *I will assume in this documentation that you will use location 1* (C:/Users/MOTUS_USER/Documents)
+   *I will assume in this documentation that you will use option 1*  (C:/Users/MOTUS_USER/Documents/kiosks)
 
 **9.2** Open WindowsExplorer (or OSX Finder) and do a copy...
 
@@ -377,37 +382,37 @@ Do you have a name in mind?  Use whatever you like (*except no spaces or special
 
 - Navigate into that new kiosks folder (C:\Users\MOTUS_USER\Documents\kiosks)
 
-- Right-click the "DEFAULT" folder and rename it "customkiosk"
+- Right-click the "DEFAULT" folder and rename it to a name of your choosing .e.g.  "mykiosk".
 
-  If you have been following along with my conventions for names you should, you should now have a folder:  C:\Users\MOTUS_USER\Documents\kiosks\customkiosk
+  If you have been following along with my conventions for names you should, you should now have a folder:  C:\Users\MOTUS_USER\Documents\kiosks\mykiosk
   
   
 
 ### 10.0 - Configuration
 
-##### 10.1 - Re-Point the starup.cfg to run your new kiosk.
+##### 10.1 - Re-Point the startup.cfg to run your new kiosk.
 
-Now back in the RStudio IDE -  select the 'Files' tab again and navigate to the top-level project folder and find startup.cfg.  Open it in the editor.
+Now back in the RStudio IDE -  select the 'Files' tab again and navigate to the top-level project folder (MOTUS_KIOSK) and find the startup.cfg you created earlier.  Open it in the editor.
 
 - Change the KiosksPath to whatever folder path you used above. 
-- Change the StartKiosk value from DEFAULT to whatever name you used above. Again we can use relative paths here since we are working as a local user in the IDE.
+- Change the StartKiosk value from DEFAULT to whatever name you used above (step 9.1). Again we can use relative paths here since we are working as a local user in the IDE.
 
 ```
 KiosksPath="~/Documents/kiosks"
-StartKiosk="customkiosk"
+StartKiosk="mykiosk"
 KioskCfgFile="kiosk.cfg"
 ```
 
 - Save it and close the Startup.cfg file ( dont forget the 'Save' !)
 
-- Select the global.R file again and click 'Run app' button.  The app should run properly and if you scroll back in the console window and you should see a line like  "global KioskName:customkiosk" 
+- Select the global.R file again and click 'Run app' button.  The app should run properly and if you scroll back in the console window and you should see a line like  "global KioskName:mykiosk" 
 
 
 From now on, you will be running and working to customize your own copy of the kiosk.
 
 ##### 10.2 - Edit your kiosk.cfg file.
 
-In your own kiosk directory (customkiosk)  is a file called kiosk.cfg.  It contains the default set of key/value pairs that do things like set the target motus receiver deployment(s), your icons , banner logos, main title etc.
+In your own kiosk directory (mykiosk)  is a file called kiosk.cfg.  It contains the default set of key/value pairs that do things like set the target motus receiver deployment(s), your icons , banner logos, main title etc.
 
 Jump over to the document **2_CONFIGURATION_GUIDE_README.md** and set the parameters in your kiosk.cfg as described there. 
 
