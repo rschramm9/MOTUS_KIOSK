@@ -3,6 +3,12 @@
 Fixed known Issues #3 and #4 having to do with broken 'ignore detection by' processing 
 and whitespace appearing in the kiosk.cfg file key/value processing.
 
+Remove startup.cfg from the repository management. Replaced it with startup.cfg.template.  The startup.cfg file is always modified by the end user which complicates pulling core kiosk code changes and bug fixes from the repo.  
+
+All ignore tags files have been renamed and will need to be manually moved to the users kiosk/data/ignoredetections directory and hand edited by the user.
+
+Summary of changes to files:
+
 ReceiverDetections.R
 - rename receiverDeploymentID to GblReceiverDeploymentID anywhere the global
  variable is needed.  ie. it is the curently selectedd areciever
@@ -55,6 +61,7 @@ ReceiverDetections.R
     ignore_by_receiver.csv
     ignore_by_tag_receiver.csv
     ignore_by_tag_receiver_date.csv
+ - ignore startup.cfg which is no longer managed in the repository ( repo file is now startup.cfg.template)
 
 
 ##### 6.0.0 (2025-01-17)
