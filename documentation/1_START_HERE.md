@@ -287,7 +287,7 @@ A complete copy of the repository should now be in subdirectory at: C:\Users\MOT
 
 We need to create a file named startup.cfg in the MOTUS_KIOSK top level directory. We will make this using a template file in the MOTUS_KIOSK folder.
 
-**8.2.1** Notice the row of tabs on the IDE right-side panel approximately mid page.  Select the 'Files' tab and navigate to the top-level project folder (MOTUS_KIOSK),  find **startup.cfg.template** and open it. It should look similar to  below in the Editor Panel.
+**8.2.1** Open Windows Explorer and navigate to the top-level project folder (MOTUS_KIOSK),  find **startup.cfg.template** , right-click on it and select 'Copy'. Then right-click in the same folder and select "Paste".  Right-click again on the copied file, and select 'Rename' and name it startup.cfg.  The contents of the file should look similar to below.
 
 ```
 KiosksPath="~/Projects/MOTUS_KIOSK/kiosks"
@@ -296,8 +296,6 @@ KioskCfgFile="kiosk.cfg"
 ```
 
 NOTE: The '~' instructs R to open the kiosk *relative* to the logged in users home directory.
-
-**8.2.2** With the startup.cfg.template file selected in the 'Open files tab', do: File > SaveAs and save as startup.cfg (remove the 'template' from the name.  You are creating a file named startup.cfg in the MOTUS_KIOSK top level directory)
 
 ##### 8.3 Check for missing packages (Again!) 
 
