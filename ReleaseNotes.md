@@ -1,4 +1,8 @@
-- ##### 6.1.0 (2025-02-20)
+##### 6.1.1 (2025-04-22)
+Fixed tagDeploymentDetections.R due to changes in the new motus dashboard.  the URL like https://motus.org/data/tagDeploymentDetections?id=49315 now includes the REceiverDeploymentID as a data column. Prior versions I had to extract the ID from the anchor tag of the site name.
+This new ID data column also caused the array indexes for lat/lon to shift to the right.
+
+##### 6.1.0 (2025-02-20)
 
 Fixed known Issues #3 and #4 having to do with broken 'ignore detection by' processing 
 and whitespace appearing in the kiosk.cfg file key/value processing.
