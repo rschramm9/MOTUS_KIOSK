@@ -97,6 +97,9 @@ url <- paste( c('https://motus.org/data/tagDeploymentDetections?id=',tagDeployme
 ##url <- paste( c('https://motus.org/data/tagDeploymentDetections?id=',32025) ,collapse="")
 
 
+print("tagDeploymentDetections.R entered")
+print(url)
+
 cacheFilename = paste0(config.CachePath,"/tagDeploymentDetections_",tagDeploymentID,".Rda")
 
 summaryFlight_df <-readCache(cacheFilename, useReadCache, cacheAgeLimitMinutes)   #see utility_functions.R
@@ -183,7 +186,7 @@ tbls <- page %>% html_nodes("table")
 
 tbl1 <- html_table(tbls[[1]],fill=TRUE)
 #print("^^^^^^^^^^^^^^^^^^^ tbl1 ^^^^^^^^^^^^^^^")
-#print(tbl1)
+#print(n=1000, tbl1)
 
 num.cols<-dim(tbl1)[2]
 num.rows<-dim(tbl1)[1]
@@ -224,14 +227,24 @@ if(hasFooter == 1){
 #build four vectors from table data
 #for(i in 1:num.rows){
 n <- 0
+
+#########
+# 22 April.  It looks like the new motus dashboard, the receiver deploymentid is
+# now availble directly as a column, so no longer need to pull it from the
+# anchor element. But it also shifts lat/lon right so adjusted the index
+#########
 for(i in 1:nrecords){
   n<-n+1
   date <- c( date,  tbl1[[1]][i]  )
   site <- c( site,  tbl1[[2]][i] )
-  lat <-  c( lat,  tbl1[[3]][i]  )
-  lon <-  c( lon,  tbl1[[4]][i] )
+  receiverDeploymentID <- c( receiverDeploymentID,  tbl1[[3]][i] )
+  lat <-  c( lat,  tbl1[[4]][i]  )
+  lon <-  c( lon,  tbl1[[5]][i] )
+
   seq <- c(seq,n)
   use <- c(use,TRUE)
+  #22Apr25
+  
   #placehoders
   usecs <-c(usecs, 0)
   doy<-c(doy, 0)
@@ -251,10 +264,14 @@ lon <- as.numeric(lon)
 # process the page a second time for the receiverDeploymentID's that
 # are embedded in the anchor tag of the site name cells.
 # get all the table rows, with <a href=
-a_nodes <- page %>%
-  html_nodes("table") %>% html_nodes("tr") %>% html_nodes("a") %>%
-  html_attr("href") #as above
+##   a_nodes <- page %>%
+##   html_nodes("table") %>% html_nodes("tr") %>% html_nodes("a") %>%
+##   html_attr("href") #as above
 
+#########
+# 22 April.  It looks like the new motus dashboard, the receiver deploymentid is now availble directly
+# as a column, so no longer need to pull it from the anchor element.
+#########
 #print(a_nodes)
 #print("length of a_nodes is:")
 #print (length(a_nodes))
@@ -262,18 +279,18 @@ a_nodes <- page %>%
 # that looks like:  "receiverDeployment?id=9195"
 # parse it to extract the numeric receiverDeploymentID
 # and append it to the list...
-n <- 0
-for (node in a_nodes) {
-  #print(node)
-  #print(class(node))
-  ans <- str_detect( toString(node), "receiverDeployment" )
-  if(ans) {
-    n <- n+1
-    theID <- as.numeric( sub("\\D*(\\d+).*", "\\1", node) )
-    receiverDeploymentID<- c( receiverDeploymentID, theID  )
-    #cat("n:",n," length:", length(receiverDeploymentID), "theId:",theID, "\n")
-  }
-}
+## n <- 0
+## for (node in a_nodes) {
+##   #print(node)
+##   #print(class(node))
+##   ans <- str_detect( toString(node), "receiverDeployment" )
+##   if(ans) {
+##     n <- n+1
+##     theID <- as.numeric( sub("\\D*(\\d+).*", "\\1", node) )
+##     receiverDeploymentID<- c( receiverDeploymentID, theID  )
+##    #cat("n:",n," length:", length(receiverDeploymentID), "theId:",theID, "\n")
+##   }
+## }
 
 # this is summary level data
 # date                     site   lat     lon receiverDeploymentID seq  use usecs
