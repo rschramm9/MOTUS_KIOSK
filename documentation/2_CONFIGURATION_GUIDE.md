@@ -53,15 +53,12 @@ KioskCfgFile="kiosk.cfg"
 ##### 1.2 - Locate your site's motus receiver deployment ID.
 
 To locate all of your desired receiver's deployment IDs: Go to motus.org
-- Click "Explore Data" on the tab "Explore Data"
-- Find the link for "Project, Receiver and Tag Exploration".
-- That takes you to a list of all Motus projects.
-- Find your project on the list (hint use the "Filter" textbox to enter your projectID if you know it, or your project name)
-- Select your project (click on the link) that takes you to a description of your project.
-- Look for the item named "Receivers" and click the link next to it saying ""(Table)".
-- That should take you to the "Active Receiver Deployments" for your project.
-- Locate the ID# for your ***currently active*** receiver deployment for the station you want to monitor. This should be the ID# displayed in the table on this page.
-( *NOTE: in Motus terminology, a Project may have multiple Receivers. A Reciever may have multiple RecieverDeployments - we are looking for the currently active **ReceiverDeploymentID**)* 
+- Sign in to yur Motus.org account
+- Click "Explore Data"  on the Motus Dashboard.
+- Click on the "Stations" tab which will load a list of all stations
+- Type your Station Name into the "Search Stations" box to filter the list.
+- Look for the "**Last configured**" line, it should have a (Deployment #nnnnnn).  That is your deployment ID. 
+  ( *NOTE: in Motus terminology, a Project may have multiple Receivers. A Reciever may have multiple RecieverDeployments - we are looking for the currently active **ReceiverDeploymentID**)* 
 
 **TIP:** If you want your kiosk to display detections from multiple receivers, simply make a list of the all of the active ReceiverDeploymentIDs and names to use in the next step.
 
@@ -88,8 +85,9 @@ Below is the content of an entire sample configuration file for version Version 
 ```
 # See CONFIGURATION_GUIDE.md for details.
 
-ReceiverDeploymentID=9195,11454,10758
-ReceiverShortName="Ankeny Hill OR","Hoodsport", "Newport OR (HMSC)"
+AdminContact="schramm.r@gmail.com"
+ReceiverDeploymentID=9195,11721,10758
+ReceiverShortName="Ankeny Hill OR","Finley Wildlife Refuge", "Newport OR (HMSC)"
 MainLogoFile="images/logos/ankenyhill_logo_hires_cropped.jpg"
 MainLogoHeight=100
 NavbarBackgroundColor="#8FBC8F" 
@@ -133,7 +131,15 @@ MapIconFlightDurationSeconds=3
 
 ### 2.0 - Configurable Items
 
-##### 2.1 - Receivers 
+##### 2.1 - Administrator Contact
+
+The AdminContact parameter is now required so that Motus.org can know who to contact if the Kiosk app is causing any concerns. Please use the correct email, or name and phone number of whoever is responsible for the kiosk within your organization.  *Note that the surrounding quotes are important* 
+
+```
+AdminContact="youremail@somewhere.org"
+```
+
+**2.2 - Receivers** 
 
 You can configure your kiosk for browsing a single or multiple receivers. Below shows the configuration settings for a single receiver followed by a sample configuration for multiple receivers.
 
@@ -153,7 +159,7 @@ ReceiverDeploymentID=9195,7948,8691,7474,7950
 ReceiverShortName="Ankeny Hill OR", "Bullards Bridge OR", "Nisqually Delta WA", "Oysterville WA", "Tokeland WA"
 ```
 
-##### 2.2 - Titles and Navbar Settings
+##### 2.3 - Titles and Navbar Settings
 
 These setting control the apperance of the title bar and navigation banner. LogoHeight and LogoTopOffset are to be determined by trial&error given the particular customized logo provided for the application. 
 
@@ -180,7 +186,7 @@ JumpToButtonColor="#f9f46d"
 
 The JumpToButton parameter was added in version 6 to make it more obvious for the kiosk user on how to quickly get to the tag detection data .  The JumpToButtonColor sets the background color of that control.
 
-##### 2.3 - "Home" tab content
+##### 2.4 - "Home" tab content
 
 The descriptive content that appears in the in the main page body when ever the "Home" tab is open comes from a language dependent .html file in the project sub-directory www/homepages.
 
@@ -198,7 +204,7 @@ Edit these files carefully with an html editor or a text editor of your choice.
 
 ***IMPORTANT: *Someplace highly visible in your kiosk you must give proper credit to the Motus folks and Birds Canada and should include a statement regarding Acceptable Use***.* I have chosen to put that statement in the section "Credits" on the "Home" screen.
 
-##### 2.4 - Moving Marker
+##### 2.5 - Moving Marker
 
 These parameters set the icon and size of the marker the follows the flightpath of a bird on the leaflet map tab.
 
@@ -213,7 +219,7 @@ MovingMarkerIconHeight=22
 MapIconFlightDurationSeconds=3
 ```
 
-##### 2.5 - Inactivity Timeout
+##### 2.6 - Inactivity Timeout
 
 This parameter controls a timeout for inactivity of the user  interface.  If there is no touchscreen/mouse activity for the set period, the application will reset to the home screen and defaults.    (see also 2.14 AppOpensToMap)
 
@@ -221,7 +227,7 @@ This parameter controls a timeout for inactivity of the user  interface.  If the
 InactivityTimeoutSeconds=3600
 ```
 
-##### 2.6 - Cache Settings
+##### 2.7 - Cache Settings
 
 These parameters control use of a local data storage cache. Caching is a way to improve user interface responsiveness and to reduce unnecessary data request calls out to motus.org. 
 
@@ -245,7 +251,7 @@ Setting EnableWriteCache=1 causes any successful HTTP request for data from Motu
 
 *NOTE: If you are pushing your app to a web hosting service such as shinyapps.io, the local file system is not available for writing.  In this case files in the cache system when the app was last pushed to the service are available, but since the web users sessions are restarted frequently, new data would not persist.  In these cases it is advisable to set EnableWriteCache=0 and possibly set the InActiveCacheAgeLimit to a higher number*   
 
-##### 2.7 - Motus.org Response Timeout
+##### 2.8 - Motus.org Response Timeout
 
 This parameter controls the timeout waiting for a response to a motus.org data query.  Occasionally Motus.org may be down for maintenance etc or otherwise unreachable on the network. Rather than just hanging the user interface, this timeout will cancel the request and return control back to the user
 
@@ -253,7 +259,7 @@ This parameter controls the timeout waiting for a response to a motus.org data q
 HttpGetTimeoutSeconds=10
 ```
 
-##### 2.8 - Check Motus Interval
+##### 2.9 - Check Motus Interval
 
 This parameter controls the the period that the app will make a small data query to motus.org just to test connectivity. This is mostly a debugging tool, the status gets displayed on the homepage footer in the lower right corner.
 
@@ -261,7 +267,7 @@ This parameter controls the the period that the app will make a small data query
 CheckMotusIntervalMinutes=10
 ```
 
-##### 2.9 - LogLevel
+##### 2.10 - LogLevel
 
 ```
 LogLevel=LOG_LEVEL_INFO
@@ -280,7 +286,7 @@ LOG_LEVEL_FATAL
 LOG_LEVEL_NONE
 ```
 
-##### 2.10 - "LearnAboutMotus" tab content
+##### 2.11 - "LearnAboutMotus" tab content
 
 The content about what the motus system is that appears in the in the main page body when ever the "LearnAboutMotus" tab is open comes from a language dependent image file in the project sub-directory www/aboutmotuspages.
 
@@ -291,7 +297,7 @@ AboutMotusPageEnglish="aboutmotuspages/MOTUS_infographic_final_en.png"
 
 There should be one file for each language that the application supports - currently: English, Spanish and French.  Only the english language page is entered in the kiosk.cfg file. 
 
-##### 2.11 - "MotusNews" tab content
+##### 2.12 - "MotusNews" tab content
 
 Optional short special interest stories you write about any motus activity at your site can appear in the main page body when ever the "MotusNews!" tab is open. It comes from a language dependent html file you create in the project sub-directory www/aboutmotuspages.
 
@@ -302,7 +308,7 @@ NewsPageEnglish="newspages/current_news_en.html"
 
 There should be one file for each language that the application supports - currently: English, Spanish and French.  Only the english language page is entered in the kiosk.cfg file. 
 
-##### 2.12 - "Species" tab content
+##### 2.13 - "Species" tab content
 
 There is an optional "Species" tab on the ReceiverDetections panel.  You can create and link to species specific content that your users can view when selecting any detectected bird.  It comes from  language dependent html files that you create in the project sub-directory www/speciespages. A few species pages are already written for you to use as templates. If a species is detected that has no content written for it then the default is displayed. (see also:
 START_HERE.md  Section 12.0 - Configure your own "Species" tab content)
@@ -316,7 +322,7 @@ There should be one file for each language that the application supports - curre
 
 ***WARNING:  when creating species page content, it is your responsibility to be sure you have legal permission to use all images, maps and text you incorporate. Be sure to give proper credit for anything you use. Most content taken from the web is protected by copyright or other terms of use. If you cant find and document a clear statement that you have the permission to use - don't use it.***  
 
-##### 2.13 - Suspect Detections Filter
+##### 2.14 - Suspect Detections Filter
 
 Starting with MOTUS_KIOSK Version 5.1.0  I have introduced an experimental attempt at filtering wild point "suspect" detection data. This feature can be turned on by setting the kiosk.cfg parameter EnableSuspectDetectionFilter to 1.  Enabling this feature currently places a checkbox on the ReceiverDetections panel so the user can toggle it on and off to see the filter effect. Disabling this feature hides the checkbox and bypasses all filtering logic.  
 
@@ -331,7 +337,7 @@ Currently the algorithm is very unsophisticated and will hopefully be subject to
 
 
 
-##### 2.14 - Application Opens to Map
+##### 2.15 - Application Opens to Map
 
 Starting with MOTUS_KIOSK Version 6.0.0  I have added a feature that allows you to choose if the application opens to the homepage or to the recievers tag flight map.
 
