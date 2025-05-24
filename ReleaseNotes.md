@@ -1,4 +1,35 @@
+
+
+##### 6.2.0 (2025-05-24)
+
+configUtils.R
+   add new parameter AdminContact
+
+kiosks/DEFAULT/kiosk.cfg
+   add new parameter AdminContact
+
+server.R
+  calls new function pingMotus()instead of receiverDeploymentDetails() to get motus.org online status
+
+tagTrack.R
+  include a "UserAgent" in the get URL so folks at motus.org can see who is making the request to help with their web traffic monitoring
+
+utility_functions.R  function readUrlWithTimeout()
+  include a "UserAgent" in the get URL so folks at motus.org can see who is making the request to help with their web traffic monitoring
+
+global.R
+     source new module pingMotus.R
+     build the global userAgent string 
+
+pingMotus.R
+    added new module to handle the ping function
+
+documentation/2_CONFIGURATION_GUIDE.md
+  revised how to find deployment ID
+  added documentation for the new AdminContact parameter
+
 ##### 6.1.1 (2025-04-22)
+
 Fixed tagDeploymentDetections.R due to changes in the new motus dashboard.  the URL like https://motus.org/data/tagDeploymentDetections?id=49315 now includes the REceiverDeploymentID as a data column. Prior versions I had to extract the ID from the anchor tag of the site name.
 This new ID data column also caused the array indexes for lat/lon to shift to the right.
 
