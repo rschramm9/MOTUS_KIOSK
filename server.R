@@ -159,18 +159,20 @@ server <- function(input, output, session) {
     DebugPrint("Timer fired.")
     autoInvalidate()
     
-    # result<-receiverDeploymentDetails(defaultReceiverID, useReadCache=numEnableCache) 
-    # for the purpose of testing if Motus.org is up, we dont want to use cache to
-    # force the function to hit the remote server.
+    # for the purpose of testing if Motus.org is up, we want 
+    # to call a simple URL to hit the remote server. And we want it
+    # to bypass any caching
     # start_time <- Sys.time()
-    result<-receiverDeploymentDetails(defaultReceiverID, useReadCache=0) #dont care about cache age...
+    result<-pingMotus()
+    
     # end_time <- Sys.time()
     # elapsedtime=(end_time-start_time)
     # InfoPrint(paste0("Back from html call - Elapsed time:",elapsedtime," secs"))
     
     #Note to self: motusServer is a reactive variable that is bound to the UI htmlOutput("motusState") 
     
-    if(nrow(result) > 0){
+    #if(nrow(result) > 0){
+    if(result){
         if( motusServerStatusReactive1$status == FALSE){ 
            WarningPrint("Motus status changed to online.")
            motusServerStatusReactive1$status<<-TRUE 
