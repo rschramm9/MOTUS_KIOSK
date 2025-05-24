@@ -138,8 +138,17 @@ readUrlWithTimeout <- function(url, timeoutsecs=config.HttpGetTimeoutSeconds) {
 
   out <- tryCatch(
     { 
-      #read_html(url)
-      url %>% GET(., timeout(timeoutsecs)) %>% read_html
+
+      ###read_html(url)
+      ###url %>% GET(., timeout(timeoutsecs)) %>% read_html
+      ###### change to include a "UserAgent" so folks at motus.org can see
+      ###### who is making the request to help with thier monitoring
+      
+      # Make the request with timeout and user agent
+      custom_agent <- user_agent(gblUserAgentText)
+      url %>%
+        GET(., timeout(timeoutsecs), custom_agent) %>%
+        read_html()
     },
     error=function(cond) {
       WarningPrint(paste("URL caused ERROR  does not seem to exist:", url))
