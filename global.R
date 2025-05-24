@@ -1,6 +1,7 @@
 ######## I put github release version and other data here ############
 ######## so it can be displayed on the footer of the kiosk window ####
-gblFooterText <- "MOTUS_KIOSK  vsn 6.1.1  22-Apr-2025"
+gblFooterText <- "MOTUS_KIOSK vsn 6.2.0  22-Apr-2025"
+gblUserAgentText <- "MOTUS_KIOSK vsn 6.2.0"
 mytoggle<<-FALSE #useful global variable for debugging
 ###############################################################################
 # Copyright 2022-2023 Richard Schramm
@@ -121,7 +122,8 @@ message(paste0("codedir is:", codedir))
 source(paste0(codedir,"/modules/configUtils.R"))
 source(paste0(codedir,"/modules/utility_functions.R"))
 source(paste0(codedir,"/modules/ReceiverDetections.R"))
-source(paste0(codedir,"/modules/tagInfo.R"))      
+source(paste0(codedir,"/modules/tagInfo.R"))
+source(paste0(codedir,"/modules/pingMotus.R"))  
 source(paste0(codedir,"/modules/tagDeploymentDetails.R"))          #tagDeploymentDetails
 source(paste0(codedir,"/modules/tagDeploymentDetections.R"))       #the flightpath
 source(paste0(codedir,"/modules/receiverDeploymentDetections.R"))  #whats been at our receiver
@@ -146,8 +148,12 @@ source(paste0(codedir,"/modules/MotusNews.R"))
          FatalPrint("There is a fatal error in your kiosk.cfg file")
          stop("Stopping because there is a serious error in your cfg file")
      }
-     
+
      ####printConfig()
+     gblUserAgentText <- paste0(gblUserAgentText, ", KioskID:",config.StartKiosk, " Contact:", config.AdminContact) 
+     message(paste0("UserAgent:", gblUserAgentText))
+     
+     
      
      #print("-----------------Done processing config----------------------------------")
      #set your desired log level in your config file
