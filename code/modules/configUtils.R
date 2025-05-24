@@ -178,6 +178,16 @@ getKioskConfig <- function() {
     config.MainLogoFile<<- toString(list1[1])  
   }
   
+  #print("------------ AdminContact ----------------")
+  list1 <- keyValueToList(configtbl,'AdminContact')
+  if( is.null(list1) ){
+    badCfg<-TRUE
+    config.AdminContact<<-NULL
+  } else {
+    #I ultimately want a string
+    config.AdminContact<<- toString(list1[1])  
+  }
+  
   #print("------------ MainTitleFrench ----------------")
   list1 <- keyValueToList(configtbl,'MainTitleFrench')
   if( is.null(list1) ){
@@ -596,7 +606,7 @@ printConfig <- function() {
   
   TSprint(paste0("SiteSpecificContent:", config.SiteSpecificContent))
   TSprint(paste0("MainLogoFile:", config.MainLogoFile))
-  
+  TSprint(paste0("AdminContact",config.AdminContact))
   TSprint(paste0("MainTitleEnglish:",config.MainTitleEnglish))
   TSprint(paste0("MainTitleSpanish:",config.MainTitleSpanish))
   TSprint(paste0("MainTitleFrench:",config.MainTitleFrench))
