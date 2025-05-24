@@ -55,7 +55,19 @@ tagTrack <- function(tagDeploymentID, useReadCache=0, cacheAgeLimitMinutes=60)
   # so need to call the URL 
   InfoPrint(paste0("make call to motus.org using URL:",url))
   
-  json <- rjson::fromJSON(file=url)
+  ######json <- rjson::fromJSON(file=url)
+  ###### change to include a "UserAgent" so folks at motus.org can see
+  ###### who is making the request to help with thier monitoring
+
+  # Make the request with user agent
+  custom_agent <- user_agent(gblUserAgentText)
+  response <- GET(url, custom_agent)
+  
+  # Extract raw JSON content as text
+  json_text <- content(response, as = "text", encoding = "UTF-8")
+  
+  # Parse JSON
+  json <- fromJSON(json_text)
   
   if( !is.list(json)){
     ErrorPrint(paste("No json list object returned from url:",url))
