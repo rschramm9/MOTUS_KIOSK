@@ -1,3 +1,17 @@
+**6.2.1 (2025-05-24)**
+
+  Following files all modified. Needed to test for a different html page redirect due to change
+  in the motus.org homepage title.
+
+utility_functions
+   modify testPageTitlenodes,  was not detecting title nodes correctly
+
+tagInfo.R
+tagDeploymentDetections.R
+tagDeploymentDetails.R
+teceiverDeploymentDetections.R
+receiverDeploymentDetails,.R
+pingMotus.R
 
 
 ##### 6.2.0 (2025-05-24)
