@@ -143,9 +143,18 @@ receiverDeploymentDetections <- function(receiverDeploymentID, useReadCache=1, c
   # next test for a redirect to motus HomePage 
   # eg. if called with an ID that doesnt exist,
   # motus.org may just redirect us to the motus.org home page. Here I test for the homepage title
+  ans=testPageTitlenodes(page, "Motus |")
+  if (ans==TRUE) {
+    WarningPrint("Motus redirected to Motus | homepage. Likely no receiver deployment found with ID. Returning empty df (Redirected) ")
+    return(onError_df)
+  }
+  
+  # next test for a redirect to legacy (pre-Apr 2025) motus HomePage 
+  # eg. if called with an ID that doesnt exist,
+  # motus.org may just redirect us to the motus.org home page. Here I test for the homepage title
   ans=testPageTitlenodes(page, "Motus Wildlife Tracking System")
   if (ans==TRUE) {
-    WarningPrint("Motus redirected to homepage. Likely no receiver deployment found with ID. Returning empty df (Redirected) ")
+    WarningPrint("Motus redirected to legacy homepage. Likely no receiver deployment found with ID. Returning empty df (Redirected) ")
     return(onError_df)
   }
   

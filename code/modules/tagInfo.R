@@ -117,11 +117,22 @@ tagInfo  <- function(tagID, useReadCache=1, cacheAgeLimitMinutes=60)
   # next test for a redirect to motus HomePage 
   # eg. if called with an ID that doesnt exist,
   # motus.org may just redirect us to the motus.org home page. Here I test for the homepage title
-  ans=testPageTitlenodes(page, "Motus Wildlife Tracking System")
+  ans=testPageTitlenodes(page, "Motus | ")
   if (ans==TRUE) {
-    WarningPrint(paste0("Motus redirected to homepage. Likely no tag deployment found with ID: ", tagID," Returning empty df (Redirected) "))
+    message("tagInfo.R redirected")
+    WarningPrint(paste0("Motus redirected to Motus | homepage. Likely no tag info found with ID: ", tagID," Returning empty df (Redirected) "))
     return(onError_df)
   }
+  
+  # next test for a redirect to Legacey (pre-Apr 2025) motus HomePage 
+  # eg. if called with an ID that doesnt exist,
+  # motus.org may just redirect us to the motus.org home page. Here I test for the homepage title
+  ans=testPageTitlenodes(page, "Motus Wildlife Tracking System")
+  if (ans==TRUE) {
+    WarningPrint(paste0("Motus redirected to homepage. Likely no tag info found with ID: ", tagID," Returning empty df (Redirected) "))
+    return(onError_df)
+  }
+  
   
   
   # next check for any pnode containing:

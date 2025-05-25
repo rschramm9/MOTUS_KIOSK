@@ -97,8 +97,8 @@ url <- paste( c('https://motus.org/data/tagDeploymentDetections?id=',tagDeployme
 ##url <- paste( c('https://motus.org/data/tagDeploymentDetections?id=',32025) ,collapse="")
 
 
-print("tagDeploymentDetections.R entered")
-print(url)
+#print("tagDeploymentDetections.R entered")
+#print(url)
 
 cacheFilename = paste0(config.CachePath,"/tagDeploymentDetections_",tagDeploymentID,".Rda")
 
@@ -150,6 +150,15 @@ if(ans==TRUE){
 }
 
 # next test for a redirect to motus HomePage 
+# eg. if called with an ID that doesnt exist,
+# motus.org may just redirect us to the motus.org home page. Here I test for the homepage title
+ans=testPageTitlenodes(page, "Motus | ")
+if (ans==TRUE) {
+  WarningPrint("Motus redirected to homepage. Likely no tag deployment found with ID. Returning empty df (Redirected) ")
+  return(onError_df)
+}
+
+# next test for a redirect to legacy (pre-Apr 2025) motus HomePage 
 # eg. if called with an ID that doesnt exist,
 # motus.org may just redirect us to the motus.org home page. Here I test for the homepage title
 ans=testPageTitlenodes(page, "Motus Wildlife Tracking System")

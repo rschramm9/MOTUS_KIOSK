@@ -44,6 +44,8 @@ begin_usec  <- as.numeric(Sys.time())
 begin_datetime <- Sys.time()
 print(paste0("BuildCache STARTED AT:",begin_datetime))
 
+gblUserAgentText <- "MOTUS_KIOSK BuildCache"
+
 wd <- getwd()
 print(paste0("BuildCache.R getwd():", wd))
 
@@ -89,6 +91,9 @@ if( badCfg == TRUE){
   FatalPrint("There is a fatal error in your kiosk.cfg file")
   stop("Stopping because there is a serious error in your cfg file")
 }
+
+gblUserAgentText <- paste0(gblUserAgentText, ", KioskID:",config.StartKiosk, " Contact:", config.AdminContact) 
+message(paste0("UserAgent:", gblUserAgentText))
 
 #printConfig()
 

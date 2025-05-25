@@ -75,21 +75,39 @@ ReadCsvToDataframe <-function(fname,hasHeader){
 # will return TRUE if any html title node title string contains target
 # else return FALSE if not found or no match
 ################################################################################
-testPageTitlenodes <-function(page,target){
+testPageTitlenodesOld <-function(page,target){
   mynodes <- html_nodes(page, "title")
+  print(mynodes)
   # note.. turn off warnings that str_detects about
   # argument is not an atomic vector; coercing
   warn = getOption("warn")
   options(warn=-1)
   ans <- str_detect(toString( mynodes), target )
+  print(paste0("Answer:", ans))
   options(warn=warn)
   newans <- any(ans, na.rm = TRUE)  #collapse vector to one element
+  print(paste0("NewAnswer:", newans))
   if (newans > 0) {
     return(TRUE)
   } else {
     return(FALSE)
   }
 }
+################################################################################
+# given HTML page and a target string 'title'
+# will return TRUE if any html title node title string contains target
+# else return FALSE if not found or no match
+################################################################################
+testPageTitlenodes <-function(page,target){
+  # Extract all <title> node texts from the parsed HTML
+  titles <- html_nodes(page, "title") %>% html_text()
+  
+  # Return TRUE if any title contains the target substring
+  return(any(grepl(target, titles, fixed = TRUE)))
+}
+
+
+
 
 ################################################################################
 # given HTML page and a target string 
