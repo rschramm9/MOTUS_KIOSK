@@ -70,7 +70,7 @@ UI_ReceiverDetections <- function(id, i18n) {
            style=paste0("display:inline-block;
            vertical-align:top;
            text-align:right !important;
-           color:", config.NavbarBackgroundColor, ";
+           color:", config.NavbarTextColor, ";
            font-style: italic;
            font-size: 20px;
            background-color:white;"),
@@ -83,7 +83,7 @@ UI_ReceiverDetections <- function(id, i18n) {
            right:2em;
            vertical-align:top;
            text-align:right!important;
-           color:", config.NavbarBackgroundColor, ";
+           color:", config.NavbarTextColor, ";
            font-style: italic;
            font-size: 18px;"
            ), #end paste0
