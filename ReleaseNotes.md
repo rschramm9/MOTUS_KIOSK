@@ -17,7 +17,7 @@ utility_functions
 
 ReceiverDetections.R
   titlePanel background color is now set dynamically to
-  match config.NavbarBackgroundColor. (had been hard wired to
+  match config.NavbarTextColor. (had been hard wired to
   AnkenyGreen)
 
 Upgrade from R 4.3.3 to R 4.5.0 broke config file parsing.
