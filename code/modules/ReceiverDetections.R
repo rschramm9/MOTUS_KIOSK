@@ -62,30 +62,31 @@ UI_ReceiverDetections <- function(id, i18n) {
     
 
     # this is the header above detected tag list 
-    # it has to be styled here locally not in the .csss theme 
+    # it has to be styled here locally not in the .css theme 
     titlePanel(
        span(
           div(
            i18n$t("ui_RCVR_title"), 
-           style="display:inline-block;
+           style=paste0("display:inline-block;
            vertical-align:top;
            text-align:right !important;
-           color:#8FBC8F;
+           color:", config.NavbarBackgroundColor, ";
            font-style: italic;
            font-size: 20px;
-           background-color:white",
+           background-color:white;"),
          ), #end div
     
          div(
            shinyjs::hidden(checkboxInput(ns("enablefilter"), label=i18n$t("ui_filter_velocity_checkbox_label"), value = FALSE, width = NULL)),
-           style="display:inline-block;
+           style=paste0( "display:inline-block;
            position:absolute;
            right:2em;
            vertical-align:top;
            text-align:right!important;
-           color:#8FBC8F;
+           color:", config.NavbarBackgroundColor, ";
            font-style: italic;
-           font-size: 18px;",
+           font-size: 18px;"
+           ), #end paste0
          ), #end div
       ) # end span1
     ), #end titlepanel
