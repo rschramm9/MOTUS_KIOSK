@@ -1,17 +1,31 @@
-**6.2.1 (2025-05-24)**
+**6.2.1 (2025-05-26)**
 
-  Following files all modified. Needed to test for a different html page redirect due to change
-  in the motus.org homepage title.
+  Motus.org dashboard updates changed the page title of the homepage on
+a redirect.  Following modules needed to test for a different page
+redirect 
+  tagInfo.R
+  tagDeploymentDetections.R
+  tagDeploymentDetails.R
+  teceiverDeploymentDetections.R
+  receiverDeploymentDetails,.R
+  pingMotus.R
+
 
 utility_functions
    modify testPageTitlenodes,  was not detecting title nodes correctly
 
-tagInfo.R
-tagDeploymentDetections.R
-tagDeploymentDetails.R
-teceiverDeploymentDetections.R
-receiverDeploymentDetails,.R
-pingMotus.R
+
+ReceiverDetections.R
+  titlePanel background color is now set dynamically to
+  match config.NavbarBackgroundColor. (had been hard wired to
+  AnkenyGreen)
+
+Upgrade from R 4.3.3 to R 4.5.0 broke config file parsing.
+Needed to modify getStartConfig() and getKioskConfig() in configUtils.R to
+use readlines() and then call new function linesToList(). 
+Also modify function keyValueToList() in configUtils.R. It no longer calls 
+lv2list(), instead it handles the list conversions internally.
+Delete function lv2list() from utility_functions.R
 
 
 ##### 6.2.0 (2025-05-24)
