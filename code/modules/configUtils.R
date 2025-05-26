@@ -3,6 +3,45 @@
 ########################################################################################
 
 ########################################################################################
+# linesToList(lines)
+# Helper function, takes the output of readlines() from a .cfg file of key=value pairs.
+# (which is character vector where each one line of the file).
+# Returns a "named list" of key/values 
+# Called by getStartConfig() and getKioskConfig()
+########################################################################################
+linesToList <- function(lines){
+  # Remove comment lines and trim whitespace
+  lines <- trimws(lines[!grepl("^#", lines)])
+  
+  result <- list() # startwith an empty list
+  for (line in lines) {
+    # Match key = value (allow optional spaces around '=')
+    if (grepl("=", line)) {
+      parts <- strsplit(line, "=", fixed = TRUE)[[1]]
+      key <- trimws(parts[1])
+      value <- paste(parts[-1], collapse = "=")  # Handle = in value
+      value <- trimws(value)
+      
+      # Detect and parse value type
+      if (grepl("^\".*\"$", value)) {
+        # Single quoted string
+        result[[key]] <- gsub("^\"|\"$", "", value)
+      } else if (grepl("^\".*\",", value)) {
+        # Comma-separated quoted strings
+        result[[key]] <- gsub("\"", "", trimws(strsplit(value, ",")[[1]]))
+      } else if (grepl("^[0-9., ]+$", value)) {
+        # Numeric vector
+        result[[key]] <- as.numeric(trimws(strsplit(value, ",")[[1]]))
+      } else {
+        # Fallback to raw value
+        result[[key]] <- value
+      }
+    }
+  } #end for
+  return(result)
+}
+
+########################################################################################
 # Read the startup.cfg to get the name of the target kiosk etc
 # sets GLOBAL config parameters
 # return TRUE if made it all the way thru or FALSE if there were issues.
@@ -18,14 +57,9 @@ getStartConfig <- function() {
         message(paste0("ERROR: getStartConfig: startup.cfg file not found at:", thefile))
         stop("There is an error reading your cfg file")
       } #else file exists
-      
       #attempt to read file from current directory
-      configfrm <- read.table( file=thefile,
-                               header=FALSE, 
-                               sep='=',col.names=c('Key','Value'),
-                               strip.white = TRUE, 
-                               stringsAsFactors = FALSE) 
-      
+      lines <- readLines(thefile, warn = FALSE) 
+      configtbl <-linesToList(lines)
       InfoPrint("Loaded start configuration data from local file startup.cfg")
     },
     
@@ -41,13 +75,9 @@ getStartConfig <- function() {
       ErrorPrint("here is the err returned by the read:")
       ErrorPrint(err)
       ErrorPrint("Please check the location of your startup.cfg file.")
-      ErrorPrint("Also check the last line startup.cfg file ends with a new blank line.")
       stop("There is an error reading your startup.cfg file")
     }
   )
-  
-  # conver from dataframe to datatable 
-  configtbl <- data.table(configfrm, key='Key')
   
   badCfg<-FALSE  #assume a good config
   
@@ -98,13 +128,13 @@ getStartConfig <- function() {
   
 } #end getStartConfig()
 
-
 ########################################################################################
 # getKioskConfig sets GLOBAL config parameters
 # return TRUE if made it all the way thru or FALSE if there were issues.
 # WARNING:  You must call getStartConfig() before calling getKioskCfg()
 ########################################################################################
 getKioskConfig <- function() {
+  
   message(paste0("using global KiosksPath:", config.KiosksPath)) #/users/rich/Projects/kiosks
   message(paste0("using global StartKiosk:", config.StartKiosk))
   
@@ -129,13 +159,9 @@ getKioskConfig <- function() {
   tryCatch( 
     {
       #attempt to read file from current directory
-      configfrm <- read.table( file=thefile,
-                               header=FALSE, 
-                               sep='=',col.names=c('Key','Value'),
-                               strip.white = TRUE, 
-                               stringsAsFactors = FALSE) 
-      
-       InfoPrint(paste0("Loading kiosk configuration data from ", thefile))
+      InfoPrint(paste0("Loading kiosk configuration data from ", thefile))
+      lines <- readLines(thefile, warn = FALSE)
+      configtbl <-linesToList(lines)
     },
     warning = function( w )
     {
@@ -148,18 +174,14 @@ getKioskConfig <- function() {
       ErrorPrint("here is the err returned by the read:")
       ErrorPrint(err)
       ErrorPrint("Check location and contents of the kiosk configuration file named in startup.cfg.")
-      ErrorPrint("Also check the last line of your configuration file ends with a new blank line.")
+      
       stop("There is an error reading your kiosk's configuration file")
     }
   )
-  
-  # convert data.frame to data.table
-  configtbl <- data.table(configfrm, key='Key')
- 
+
   badCfg<-FALSE  #assume good config
   
   #config.SiteSpecificContent<<-paste0(projectdir,"/",config.KiosksPath,"/",config.StartKiosk)
-  
   config.SiteSpecificContent<<-paste0(config.KiosksPath,"/",config.StartKiosk)
   #message(paste0("in configUtils, config.siteSpecificContent is:", config.SiteSpecificContent))
   InfoPrint(paste0("Site specific root directory is:", config.SiteSpecificContent))
@@ -296,6 +318,7 @@ getKioskConfig <- function() {
   if( is.null(list1) ){
     list1 <- keyValueToList(configtbl,'NavbarColor')
     if( is.null(list1) ){
+      message("configutils set navbarbackgroundcolor to ankeny green")
       config.NavbarBackgroundColor<<-"#8FBC8F"  #ankeny green
     } else {
       config.NavbarBackgroundColor<<- toString(list1[1]) 
@@ -383,7 +406,7 @@ getKioskConfig <- function() {
     config.AppOpensToMap<<- as.numeric(list1[1]) #assume length=1
   }
   
-  print("------------ ReceiverDeploymentID --------------")
+  #print("------------ ReceiverDeploymentID --------------")
   # set global parms of both the list and the first item on the list
   #the default target receiver is the first list item (set in global.R after processing config)
   #note this is actually an atomic vector of type character.

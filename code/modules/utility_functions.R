@@ -241,32 +241,6 @@ readCache <- function(cacheFilename, useReadCache=1, cacheAgeLimitMinutes=60)
   return(NA)   #  <<<<<<<<
 }  ### end readCache()
 
-################################################################################
-# function called by keyValueToList()
-# to take a configTbl lstValue and return as list
-# I had a heck of a time getting it to parse a listValue like
-# 1234,5678 or "AnkenyHill", "Bullards Bridge" into tokens I
-# could use for populating a picklist etc. Im sure there must
-# be a cleaner way..
-################################################################################
-lv2list <- function(value) {
-  s<- value[1]
-  us<-unlist(c(s),",")
-  us2<-strsplit(us,",")
-  n<-length(us2[[1]])
-  for (p in us2) {
-    for (i in 1:n) {
-       if(i==1){
-        list1=list(p[i]) #new list
-       } else { 
-        list1= append(list1,p[i])
-       }
-     }
-  } #end for p in us
-  #print(list1)
-  #print(length(list1))
-  return(list1)
-} #end function lv2list()
 
 ################################################################################
 # function to take a Key and the config table
@@ -276,16 +250,46 @@ lv2list <- function(value) {
 # or only "Ankeny Hill" we get a list of length=1 and the item is at list[1]
 # returns NULL if key not found
 ################################################################################
-keyValueToList <- function(theTable,theKey) {
+keyValueToList <- function(cfg,key) {
+  ##keyValueToList <- function(theTable,theKey) {
   # get the value for the key, convert to numeric
-  # print(paste0("in keyValueToList() with key:",theKey))
-  lstValue <- theTable[theKey][1,2]
-  #print(paste0("found lstValue:",lstValue))
-  if( is.na(lstValue)) {
-    print(paste0("Missing config value for key:", theKey))
-    return(NULL)
+  # print(paste0("in keyValueToList() with key:",key))
+  
+  if (!key %in% names(cfg)) {
+    warning(sprintf("Key '%s' not found in configuration.", key))
+    return(list())  #return empty list
   }
-  return(lv2list(lstValue))
+  
+  val <- cfg[[key]]
+  
+  # Case 1: Character vector with a single comma-separated string
+  if (is.character(val) && length(val) == 1 && grepl(",", val)) {
+    split_vals <- strsplit(val, ",")[[1]]
+    split_vals <- trimws(split_vals)            # Remove leading/trailing spaces
+    #split_vals <- gsub('^"|"$', '', split_vals) # Remove leading/trailing quotes
+    cleaned <- trimws(gsub('^"|"$', '', split_vals))  # remove quotes
+    return(as.list(cleaned))
+  }
+  
+  # Case 2: Numeric vector → convert each number into a list element
+  if (is.numeric(val)) {
+    return(as.list(val))
+  }
+  
+  # Case 3: Regular character vector (e.g., already split quoted names)
+  if (is.character(val)) {
+    cleaned <- trimws(gsub('^"|"$', '', val))
+    return(as.list(cleaned))
+  }
+  
+  # Case 4: Already a list
+  if (is.list(val)) {
+    return(val)
+  }
+  
+  # Fallback: wrap in list
+  return(list(val))
+  
 } #end function keyValueToList()
 
 ################################################################################
