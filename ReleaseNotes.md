@@ -27,6 +27,9 @@ Also modify function keyValueToList() in configUtils.R. It no longer calls
 lv2list(), instead it handles the list conversions internally.
 Delete function lv2list() from utility_functions.R
 
+BuildCache.R
+   modifed to use the config.AdminContact to build the UserAgent string.  
+
 
 ##### 6.2.0 (2025-05-24)
 
