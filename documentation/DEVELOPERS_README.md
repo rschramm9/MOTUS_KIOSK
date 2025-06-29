@@ -11,22 +11,22 @@ This document is a collection of notes, ramblings, code snippets, problems encou
 
 ### General Requirements ###
 
-R-1) A dashboard application that runs in the public area of the Nature Center as a dedicated full-screen kiosk.
-R-2) Presents bird flight data in tabular and graphic (maps)
-R-3) Runs unattended by staff. Kiosk is simple enough to navigate that a child or parents can figure it out
-R-4) Touchscreen interface, no mouse or keyboard. Mouse and keyboard will be locked away from public use.
-R-5) System boots directly to kiosk on power-up
-R-6) Prohibit users from accessing any other desktop or operating system cmd windows or settings
-R-7) Prohibit users from 'browsing' to any other websites, pages, URLs etc
-R-8) System returns to kiosk homepage and known defaults after some timeout
-R-9) Support multi-language user interface
-R-10) Support for Windows OS so computer can be used for other special purposes (e.g. Powerpoint presentations by Nature Center staff).
-R-11) Support for development on Mac OSX as my personally preferred home system. 
-R-12) An 'escape' from kiosk mode that allows an administrator to attach kybd/mouse and access the OS as a privileged user.
-R-13) Optional access for Nature Center staff to do powerpoint presentations etc (with kbd/mouse)
-R-14) Kiosk should only access 'public facing' Motus data via http per the Motus collaborator policy.
-R-15) No Motus account authentication is highly desirable
-R-16) Low cost hardware and open-source tools. Preferably no recurring fees etc
+* R-1) A dashboard application that runs in the public area of the Nature Center as a dedicated full-screen kiosk.
+* R-2) Presents bird flight data in tabular and graphic (maps)
+* R-3) Runs unattended by staff. Kiosk is simple enough to navigate that a child or parents can figure it out
+* R-4) Touchscreen interface, no mouse or keyboard. Mouse and keyboard will be locked away from public use.
+* R-5) System boots directly to kiosk on power-up
+* R-6) Prohibit users from accessing any other desktop or operating system cmd windows or settings
+* R-7) Prohibit users from 'browsing' to any other websites, pages, URLs etc
+* R-8) System returns to kiosk homepage and known defaults after some timeout
+* R-9) Support multi-language user interface
+* R-10) Support for Windows OS so computer can be used for other special purposes (e.g. Powerpoint presentations by Nature Center staff).
+* R-11) Support for development on Mac OSX as my personally preferred home system. 
+* R-12) An 'escape' from kiosk mode that allows an administrator to attach kybd/mouse and access the OS as a privileged user.
+* R-13) Optional access for Nature Center staff to do powerpoint presentations etc (with kbd/mouse)
+* R-14) Kiosk should only access 'public facing' Motus data via http per the Motus collaborator policy.
+* R-15) No Motus account authentication is highly desirable
+* R-16) Low cost hardware and open-source tools. Preferably no recurring fees etc
 
 The design goal for Ankeny is to present a very friendly touchscreen UI with no keyboard,
  mouse or 'gestures' required.  We want something a precocious child and grandparent
