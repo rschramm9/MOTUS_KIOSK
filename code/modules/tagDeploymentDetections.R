@@ -33,7 +33,7 @@
 # 19-Jan-23  Added check for extra row caused by 'sort footer' in html results table
 #            Also added second pass to extract the receiverDeploymentID from the
 #            sitename "<a href" data
-#20-Jan-2023 Process flightpath to remove excluded point from .scv file
+#20-Jan-2023 Process flightpath to remove excluded point from .csv file
 #            that was read in global.R
 ################################################################################
 # Purpose: function for getting all tag detections for any tag deployment
