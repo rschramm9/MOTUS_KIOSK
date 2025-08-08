@@ -190,7 +190,7 @@ tagTrack <- function(tagDeploymentID, useReadCache=0, cacheAgeLimitMinutes=60)
       DebugPrint("writing new cache file.")
       saveRDS(df,file=cacheFilename)
     }
-    DebugPrint("tagDeploymentDetections done.")
+    DebugPrint("tagTrack() done.")
     
     return(df)
 }
