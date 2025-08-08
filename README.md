@@ -89,7 +89,7 @@ Also tested on a Viewsonic TD2760 which is a somewhat larger screen (27") at $48
 
 USB Keyboard and Mouse
 
-I *strongly* recommend Windows-10 PRO edition.  Home Edition works too but with some additional headaches getting set up.
+I *strongly* recommend Windows-11 PRO edition.  Home Edition works too but with some additional headaches getting set up.
 
 ### Where to Start?
 
