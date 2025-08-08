@@ -97,7 +97,7 @@ receiverDeploymentDetections <- function(receiverDeploymentID, useReadCache=1, c
   df <-readCache(cacheFilename, useReadCache, cacheAgeLimitMinutes)   #see utility_functions.R
   
   if( is.data.frame(df)){
-    DebugPrint("receiverDeploymentDetails returning cached file")
+    DebugPrint("receiverDeploymentDetections returning cached file")
     return(df)
   } #else was NA
   
