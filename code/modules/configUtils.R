@@ -83,7 +83,7 @@ getStartConfig <- function() {
   
   #print("------------ StartKiosk ----------------")
   list1 <- keyValueToList(configtbl,'StartKiosk')
-  if( is.null(list1) ){
+  if( (is.null(list1) || length(list1) == 0) ){
     badCfg<-TRUE
     config.StartKiosk<<-NULL
   } else {
@@ -94,7 +94,7 @@ getStartConfig <- function() {
   
   #print("------------ KiosksPath ----------------")
   list1 <- keyValueToList(configtbl,'KiosksPath')
-  if( is.null(list1) ){
+  if( (is.null(list1) || length(list1) == 0) ){
     badCfg<-TRUE
     config.KiosksPath<<-NULL
   } else {
@@ -115,7 +115,7 @@ getStartConfig <- function() {
   
   #print("------------ KioskCfgFile ----------------")
   list1 <- keyValueToList(configtbl,'KioskCfgFile')
-  if( is.null(list1) ){
+  if( (is.null(list1) || length(list1) == 0) ){
     badCfg<-TRUE
     config.KioskCfgFile<<-NULL
   } else {
@@ -192,7 +192,7 @@ getKioskConfig <- function() {
   
   #print("------------ MainLogoFile ----------------")
   list1 <- keyValueToList(configtbl,'MainLogoFile')
-  if( is.null(list1) ){
+  if( (is.null(list1) || length(list1) == 0) ){
     badCfg<-TRUE
     config.MainLogoFile<<-NULL
   } else {
@@ -202,7 +202,7 @@ getKioskConfig <- function() {
   
   #print("------------ AdminContact ----------------")
   list1 <- keyValueToList(configtbl,'AdminContact')
-  if( is.null(list1) ){
+  if( (is.null(list1) || length(list1) == 0) ){
     badCfg<-TRUE
     config.AdminContact<<-NULL
   } else {
@@ -212,7 +212,7 @@ getKioskConfig <- function() {
   
   #print("------------ MainTitleFrench ----------------")
   list1 <- keyValueToList(configtbl,'MainTitleFrench')
-  if( is.null(list1) ){
+  if( (is.null(list1) || length(list1) == 0) ){
     badCfg<-TRUE 
     config.MainTitleFrench<<-NULL
   } else {
@@ -222,7 +222,7 @@ getKioskConfig <- function() {
   
   #print("------------ MainTitleEnglish ----------------")
   list1 <- keyValueToList(configtbl,'MainTitleEnglish')
-  if( is.null(list1) ){
+  if( (is.null(list1) || length(list1) == 0) ){
     badCfg<-TRUE 
     config.MainTitleEnglish<<-NULL
   } else {
@@ -232,7 +232,7 @@ getKioskConfig <- function() {
   
   #print("------------ MainTitleSpanish ----------------")
   list1 <- keyValueToList(configtbl,'MainTitleSpanish')
-  if( is.null(list1) ){
+  if( (is.null(list1) || length(list1) == 0) ){
     badCfg<-TRUE 
     config.MainTitleSpanish<<-NULL
   } else {
@@ -242,7 +242,7 @@ getKioskConfig <- function() {
   
   #print("------------ MainLogoHeight --------------")
   list1 <- keyValueToList(configtbl,'MainLogoHeight')
-  if( is.null(list1) ){
+  if( (is.null(list1) || length(list1) == 0) ){
     badCfg<-TRUE 
     config.MainLogoHeight <<- NULL
   } else {
@@ -253,7 +253,7 @@ getKioskConfig <- function() {
   #must be the _en.html page....
   #HomepageEnglish="homepages/ankeny_homepage_en.html"
   list1 <- keyValueToList(configtbl,'HomepageEnglish')
-  if( is.null(list1) ){
+  if( (is.null(list1) || length(list1) == 0) ){
     badCfg<-TRUE
     WarningPrint("Config file is missing entry for HomepageEnglish.")
   } else {
@@ -265,7 +265,7 @@ getKioskConfig <- function() {
   #print("------------ Species----------------")
   #must be the _en.html page....
   list1 <- keyValueToList(configtbl,'SpeciesPageEnglish')
-  if( is.null(list1) ){
+  if( (is.null(list1) || length(list1) == 0) ){
     badCfg<-TRUE
     WarningPrint("Config file is missing entry for SpeciesPageEnglish")
   } else {
@@ -278,7 +278,7 @@ getKioskConfig <- function() {
   #print("------------ Motus News----------------")
   #must be the _en.html page....
   list1 <- keyValueToList(configtbl,'NewsPageEnglish')
-  if( is.null(list1) ){
+  if( (is.null(list1) || length(list1) == 0) ){
     badCfg<-TRUE
     WarningPrint("Config file is missing entry for NewsPageEnglish")
     #config.NewsPageEnglish <<-paste0("kiosks/DEFAULT/www/newpages/news_unknown_en.html")
@@ -292,7 +292,7 @@ getKioskConfig <- function() {
   #print("------------ About Motus ----------------")
   #must be the _en.html page....
   list1 <- keyValueToList(configtbl,'AboutMotusPageEnglish')
-  if( is.null(list1) ){
+  if( (is.null(list1) || length(list1) == 0) ){
     badCfg<-TRUE
     WarningPrint("Config file is missing entry for AboutMotusPageEnglish")
     #config.AboutMotusPageEnglish <<-"kiosks/DEFAULT/www/aboutmotuspages/MOTUS_infographic_final_en.png"
@@ -306,7 +306,7 @@ getKioskConfig <- function() {
   #print("------------ NavbarTextColor ----------------")
   # new for version 6.x 
   list1 <- keyValueToList(configtbl,'NavbarTextColor')
-  if( is.null(list1) ){
+  if( (is.null(list1) || length(list1) == 0) ){
     config.NavbarTextColor<<-"darkslategray"
   } else {
     config.NavbarTextColor<<- toString(list1[1]) 
@@ -315,9 +315,9 @@ getKioskConfig <- function() {
   #print("------------ NavbarBackgroundColor ----------------")
   # version 6.x name changed from NavbarColor to NavbarBackgroundColor
   list1 <- keyValueToList(configtbl,'NavbarBackgroundColor')
-  if( is.null(list1) ){
+  if( (is.null(list1) || length(list1) == 0) ){
     list1 <- keyValueToList(configtbl,'NavbarColor')
-    if( is.null(list1) ){
+    if( (is.null(list1) || length(list1) == 0) ){
       message("configutils set navbarbackgroundcolor to ankeny green")
       config.NavbarBackgroundColor<<-"#8FBC8F"  #ankeny green
     } else {
@@ -332,7 +332,7 @@ getKioskConfig <- function() {
   # In version 6.x TitlebarColor has been replaced by TitlebarTextColor
   #print("------------ TitlebarTextColor ----------------")
   list1 <- keyValueToList(configtbl,'TitlebarTextColor')
-  if( is.null(list1) ){
+  if( (is.null(list1) || length(list1) == 0) ){
     config.TitlebarTextColor<<-"#8FBC8F"  #ankeny green
   } else {
     config.TitlebarTextColor<<- toString(list1[1]) 
@@ -341,7 +341,7 @@ getKioskConfig <- function() {
   # In version 6.x or later
   #print("------------ TitlebarBackgroundColor ----------------")
   list1 <- keyValueToList(configtbl,'TitlebarBackgroundColor')
-  if( is.null(list1) ){
+  if( (is.null(list1) || length(list1) == 0) ){
     config.TitlebarBackgroundColor<<-"#8FBC8F"  #ankeny green
   } else {
     #I ultimately want a string
@@ -351,7 +351,7 @@ getKioskConfig <- function() {
   # In version 6.x or later
   #print("------------ BodyPageTextColor ----------------")
   list1 <- keyValueToList(configtbl,'BodyPageTextColor')
-  if( is.null(list1) ){
+  if( (is.null(list1) || length(list1) == 0) ){
     config.BodyPageTextColor<<-"darkslategray"
   } else {
     #I ultimately want a string
@@ -361,7 +361,7 @@ getKioskConfig <- function() {
   # In version 6.x or later
   #print("------------ BodyPageBackgroundColor ----------------")
   list1 <- keyValueToList(configtbl,'BodyPageBackgroundColor')
-  if( is.null(list1) ){
+  if( (is.null(list1) || length(list1) == 0) ){
     config.BodyPageBackgroundColor<<-"white"
   } else {
     #I ultimately want a string
@@ -371,7 +371,7 @@ getKioskConfig <- function() {
   # In version 6.x or later
   #print("------------ SelectedTabTextColor ----------------")
   list1 <- keyValueToList(configtbl,'SelectedTabTextColor')
-  if( is.null(list1) ){
+  if( (is.null(list1) || length(list1) == 0) ){
     config.SelectedTabTextColor<<-"darkslategray"
   } else {
     #I ultimately want a string
@@ -381,7 +381,7 @@ getKioskConfig <- function() {
   # In version 6.x or later
   #print("------------ SelectedTabBackgroundColor ----------------")
   list1 <- keyValueToList(configtbl,'SelectedTabBackgroundColor')
-  if( is.null(list1) ){
+  if( (is.null(list1) || length(list1) == 0) ){
     config.SelectedTabBackgroundColor<<-"white"
   } else {
     #I ultimately want a string
@@ -391,7 +391,7 @@ getKioskConfig <- function() {
   # In version 6.x or later
   #print("------------ JumpToButtonColor ----------------")
   list1 <- keyValueToList(configtbl,'JumpToButtonColor')
-  if( is.null(list1) ){
+  if( (is.null(list1) || length(list1) == 0) ){
     config.JumpToButtonColor<<-"#FAFA33" # not quite full-on yellow
   } else {
     #I ultimately want a string
@@ -400,7 +400,7 @@ getKioskConfig <- function() {
   
   #print("------------ AppOpensToMap --------------")
   list1 <- keyValueToList(configtbl,'AppOpensToMap')
-  if( is.null(list1) ){
+  if( (is.null(list1) || length(list1) == 0) ){
     config.AppOpensToMap<<- 0
   } else {
     config.AppOpensToMap<<- as.numeric(list1[1]) #assume length=1
@@ -443,7 +443,7 @@ getKioskConfig <- function() {
   
   #print("------------ MovingMarkerIcon ----------------")
   list1 <- keyValueToList(configtbl,'MovingMarkerIcon')
-  if( is.null(list1) ){
+  if( (is.null(list1) || length(list1) == 0) ){
     badCfg<-TRUE 
     config.MovingMarkerIcon<<-NULL
   } else {
@@ -454,7 +454,7 @@ getKioskConfig <- function() {
   
   #print("------------ MovingMarkerIconWidth --------------")
   list1 <- keyValueToList(configtbl,'MovingMarkerIconWidth')
-  if( is.null(list1) ){
+  if( (is.null(list1) || length(list1) == 0) ){
     badCfg<-TRUE 
     config.MovingMarkerIconWidth<<-NULL
   } else {
@@ -462,7 +462,7 @@ getKioskConfig <- function() {
   }
   
   list1 <- keyValueToList(configtbl,'MovingMarkerIconHeight')
-  if( is.null(list1) ){
+  if( (is.null(list1) || length(list1) == 0) ){
     badCfg<-TRUE 
     config.MovingMarkerIconHeight<<-NULL
   } else {
@@ -471,7 +471,7 @@ getKioskConfig <- function() {
   
   #print("------------ InactivityTimeoutSeconds --------------")
   list1 <- keyValueToList(configtbl,'InactivityTimeoutSeconds')
-  if( is.null(list1) ){
+  if( (is.null(list1) || length(list1) == 0) ){
     config.InactivityTimeoutSeconds<<-1800 #30 minutes
   } else {
     config.InactivityTimeoutSeconds<<- as.numeric(list1[1]) #assume length=1
@@ -479,7 +479,7 @@ getKioskConfig <- function() {
   
   #print("------------ CheckMotusIntervalMinutes --------------")
   list1 <- keyValueToList(configtbl,'CheckMotusIntervalMinutes')
-  if( is.null(list1) ){
+  if( (is.null(list1) || length(list1) == 0) ){
     config.CheckMotusIntervalMinutes<<-10 
   } else {
     config.CheckMotusIntervalMinutes<<- as.numeric(list1[1]) #assume length=1
@@ -487,7 +487,7 @@ getKioskConfig <- function() {
   
   #print("------------ EnableReadCache --------------")
   list1 <- keyValueToList(configtbl,'EnableReadCache')
-  if( is.null(list1) ){
+  if( (is.null(list1) || length(list1) == 0) ){
     config.EnableReadCache<<-1 #1=True, 0=False
   } else {
     config.EnableReadCache<<- as.numeric(list1[1]) #assume length=1
@@ -495,7 +495,7 @@ getKioskConfig <- function() {
   
   #print("------------ EnableWriteCache --------------")
   list1 <- keyValueToList(configtbl,'EnableWriteCache')
-  if( is.null(list1) ){
+  if( (is.null(list1) || length(list1) == 0) ){
     config.EnableWriteCache<<-1 #1=True, 0=False
   } else {
     config.EnableWriteCache<<- as.numeric(list1[1]) #assume length=1
@@ -504,7 +504,7 @@ getKioskConfig <- function() {
   
   #print("------------ ActiveCacheAgeLimitMinutes --------------")
   list1 <- keyValueToList(configtbl,'ActiveCacheAgeLimitMinutes')
-  if( is.null(list1) ){
+  if( (is.null(list1) || length(list1) == 0) ){
     config.ActiveCacheAgeLimitMinutes<<-300 #5 minutes
   } else {
     config.ActiveCacheAgeLimitMinutes<<- as.numeric(list1[1]) #assume length=1
@@ -513,7 +513,7 @@ getKioskConfig <- function() {
   
   #print("------------ InactiveCacheAgeLimitMinutes --------------")
   list1 <- keyValueToList(configtbl,'InactiveCacheAgeLimitMinutes')
-  if( is.null(list1) ){
+  if( (is.null(list1) || length(list1) == 0) ){
     config.InactiveCacheAgeLimitMinutes<<-20160
   } else {
     config.InactiveCacheAgeLimitMinutes<<- as.numeric(list1[1]) #assume length=1
@@ -521,7 +521,7 @@ getKioskConfig <- function() {
   
   #print("------------ HttpGetTimeoutSeconds --------------")
   list1 <- keyValueToList(configtbl,'HttpGetTimeoutSeconds')
-  if( is.null(list1) ){
+  if( (is.null(list1) || length(list1) == 0) ){
     config.HttpGetTimeoutSeconds<<-10 
   } else {
     config.HttpGetTimeoutSeconds<<- as.numeric(list1[1]) #assume length=1
@@ -529,7 +529,7 @@ getKioskConfig <- function() {
   
   #print("------------ CachePath ----------------")
   list1 <- keyValueToList(configtbl,'CachePath')
-  if( is.null(list1) ){
+  if( (is.null(list1) || length(list1) == 0) ){
     badCfg<-TRUE 
     config.CachePath<<-NULL
   } else {
@@ -541,7 +541,7 @@ getKioskConfig <- function() {
   
   #print("------------ EnableSpeciesInfoTab --------------")
   list1 <- keyValueToList(configtbl,'EnableSpeciesInfoTab')
-  if( is.null(list1) ){
+  if( (is.null(list1) || length(list1) == 0) ){
     config.EnableSpeciesInfoTab<<-1 #1=True, 0=False
   } else {
     config.EnableSpeciesInfoTab<<- as.numeric(list1[1]) #assume length=1
@@ -549,7 +549,7 @@ getKioskConfig <- function() {
   
   #print("------------ EnableMotusNewsTab --------------")
   list1 <- keyValueToList(configtbl,'EnableMotusNewsTab')
-  if( is.null(list1) ){
+  if( (is.null(list1) || length(list1) == 0) ){
     config.EnableMotusNewsTab<<-1 #1=True, 0=False
   } else {
     config.EnableMotusNewsTab<<- as.numeric(list1[1]) #assume length=1
@@ -557,7 +557,7 @@ getKioskConfig <- function() {
   
   #print("------------ EnableLearnAboutMotusTab --------------")
   list1 <- keyValueToList(configtbl,'EnableLearnAboutMotusTab')
-  if( is.null(list1) ){
+  if( (is.null(list1) || length(list1) == 0) ){
     config.EnableLearnAboutMotusTab<<-1 #1=True, 0=False
   } else {
     config.EnableLearnAboutMotusTab<<- as.numeric(list1[1]) #assume length=1
@@ -565,7 +565,7 @@ getKioskConfig <- function() {
   
   #print("------------ EnableSuspectDetectionFilter  --------------")
   list1 <- keyValueToList(configtbl,'EnableSuspectDetectionFilter')
-  if( is.null(list1) ){
+  if( (is.null(list1) || length(list1) == 0) ){
     config.EnableSuspectDetectionFilter<<-0  # 0=FALSE or 1=TRUE
   } else {
     config.EnableSuspectDetectionFilter<<- as.numeric(list1[1]) #assume length=1
@@ -573,7 +573,7 @@ getKioskConfig <- function() {
   
   #print("------------ VelocitySuspectMetersPerSecond  --------------")
   list1 <- keyValueToList(configtbl,'VelocitySuspectMetersPerSecond')
-  if( is.null(list1) ){
+  if( (is.null(list1) || length(list1) == 0) ){
     config.VelocitySuspectMetersPerSecond<<-20 
   } else {
     config.VelocitySuspectMetersPerSecond<<- as.numeric(list1[1]) #assume length=1
@@ -581,7 +581,7 @@ getKioskConfig <- function() {
   
   #print("------------ MapIconFlightDurationSeconds  --------------")
   list1 <- keyValueToList(configtbl,'MapIconFlightDurationSeconds')
-  if( is.null(list1) ){
+  if( (is.null(list1) || length(list1) == 0) ){
     config.MapIconFlightDurationSeconds<<-7 
   } else {
     config.MapIconFlightDurationSeconds<<- as.numeric(list1[1]) #assume length=1
@@ -589,12 +589,48 @@ getKioskConfig <- function() {
   
   #print("------------ LogLevel ----------------")
   list1 <- keyValueToList(configtbl,'LogLevel')
-  if( is.null(list1) ){
+  if( (is.null(list1) || length(list1) == 0) ){
     badCfg<-TRUE 
     config.LogLevel<<-LOG_LEVEL_WARNING
   } else {
     #I ultimately want a string
     config.LogLevel<<- toString(list1[1])  
+  }
+  
+  #print("------------ ApiKey_1----------------")
+  list1 <- keyValueToList(configtbl,'ApiKey_1')
+  if( (is.null(list1) || length(list1) == 0) ){
+    badCfg<-TRUE 
+    config.ApiKey_1<<-NULL
+  } else {
+    #I ultimately want a string
+    config.ApiKey_1<<- toString(list1[1])  
+  }
+  
+  #print("------------ ApiKey_2----------------")
+  list1 <- keyValueToList(configtbl,'ApiKey_2')
+  if( (is.null(list1) || length(list1) == 0) ){
+    badCfg<-TRUE 
+    config.ApiKey_2<<-NULL
+  } else {
+    #I ultimately want a string
+    config.ApiKey_2<<- toString(list1[1])  
+  }
+  
+  #print("------------ RebuildCacheDelaySeconds  --------------")
+  list1 <- keyValueToList(configtbl,'RebuildCacheDelaySeconds')
+  if( (is.null(list1) || length(list1) == 0) ){
+    config.RebuildCacheDelaySeconds <<- 10
+  } else {
+    config.RebuildCacheDelaySeconds <<- as.numeric(list1[1]) #assume length=1
+  }
+  
+  #print("------------ RebuildCacheDepth  --------------")
+  list1 <- keyValueToList(configtbl,'RebuildCacheDepth')
+  if( (is.null(list1) || length(list1) == 0) ){
+    config.RebuildCacheDepth <<- 5 
+  } else {
+    config.RebuildCacheDepth <<- as.numeric(list1[1]) #assume length=1
   }
   
   result=switch(
@@ -684,6 +720,9 @@ printConfig <- function() {
   
   TSprint(paste0("InactiveCacheAgeLimitMinutes:",config.InactiveCacheAgeLimitMinutes))
   
+  TSprint(paste0("RebuildCacheDelaySeconds:",config.RebuildCacheDelaySeconds))
+  TSprint(paste0("RebuildCacheDepth:",config.RebuildCacheDepth))
+  
   TSprint(paste0("CachePath:", config.CachePath))
   
   TSprint(paste0("LogLevel:", config.LogLevel))
@@ -699,6 +738,10 @@ printConfig <- function() {
   TSprint(paste0("VelocitySuspectMetersPerSecond:",config.VelocitySuspectMetersPerSecond))
   
   TSprint(paste0("MapIconFlightDurationSeconds:",config.MapIconFlightDurationSeconds))
+  
+  TSprint(paste0("ApiKey_1:", config.ApiKey_1))
+  TSprint(paste0("ApiKey_2:", config.ApiKey_2))
+  
 
   return()
   
