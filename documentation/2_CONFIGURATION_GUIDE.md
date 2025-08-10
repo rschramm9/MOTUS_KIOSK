@@ -113,7 +113,9 @@ EnableWriteCache=1
 CachePath="data/cache"
 ActiveCacheAgeLimitMinutes=120
 InactiveCacheAgeLimitMinutes=10080
-CheckMotusIntervalMinutes=0.2
+RebuildCacheDelaySeconds=10
+RebuildCacheDepth=5
+CheckMotusIntervalMinutes=1
 HttpGetTimeoutSeconds=10
 LogLevel=LOG_LEVEL_WARNING
 EnableLearnAboutMotusTab=1
@@ -125,19 +127,25 @@ SpeciesPageEnglish="speciespages/species_unknown_en.html"
 EnableSuspectDetectionFilter=0
 VelocitySuspectMetersPerSecond=55
 MapIconFlightDurationSeconds=3
+ApiKey_1="none"
+ApiKey_2="none"
 ```
 
 
 
 ### 2.0 - Configurable Items
 
-##### 2.1 - Administrator Contact
+##### 2.1 - Administrator Contact and ApiKeys
 
 The AdminContact parameter is now required so that Motus.org can know who to contact if the Kiosk app is causing any concerns. Please use the correct email, or name and phone number of whoever is responsible for the kiosk within your organization.  *Note that the surrounding quotes are important* 
 
 ```
 AdminContact="youremail@somewhere.org"
+ApiKey_1="none"
+ApiKey_2="none"
 ```
+
+ApiKey_1 and ApiKey_2 are new for version 6.2.2.  They currently do nothing. They are there in preparation of Motus.org requiring some kind of authentication.
 
 **2.2 - Receivers** 
 
@@ -243,6 +251,8 @@ EnableWriteCache=1
 CachePath="data/cache"
 ActiveCacheAgeLimitMinutes=60
 InactiveCacheAgeLimitMinutes=10080
+RebuildCacheDelaySeconds=10
+RebuildCacheDepth=5
 ```
 
 CachePath is relative to your kiosk directory:  e.g  *top-level-project-dir/kiosks/yourkioskname/*
@@ -250,6 +260,8 @@ CachePath is relative to your kiosk directory:  e.g  *top-level-project-dir/kios
 Setting EnableWriteCache=1 causes any successful HTTP request for data from Motus.org to be written to the data cache on the local file system.  
 
 *NOTE: If you are pushing your app to a web hosting service such as shinyapps.io, the local file system is not available for writing.  In this case files in the cache system when the app was last pushed to the service are available, but since the web users sessions are restarted frequently, new data would not persist.  In these cases it is advisable to set EnableWriteCache=0 and possibly set the InActiveCacheAgeLimit to a higher number*   
+
+If your kiosk was set up to run the BuildCache script nightly then the RebuildCacheDelaySeconds=10 and RebuildCacheDepth=5 configure that script.  This script can negatively impact the servers at Motus.org so limiting these parameters to small numbers keeps that impact negligable.  The delay is the number of seconds between each http request to the server.  The depth parameter is how many unique, most recent tag detections should be pre-fetched for each receiver.
 
 ##### 2.8 - Motus.org Response Timeout
 
@@ -264,7 +276,7 @@ HttpGetTimeoutSeconds=10
 This parameter controls the the period that the app will make a small data query to motus.org just to test connectivity. This is mostly a debugging tool, the status gets displayed on the homepage footer in the lower right corner.
 
 ```
-CheckMotusIntervalMinutes=10
+CheckMotusIntervalMinutes=1
 ```
 
 ##### 2.10 - LogLevel
