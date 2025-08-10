@@ -854,7 +854,7 @@ SERVER_ReceiverDetections <- function(id, i18n_r, lang, rcvr) {
       DebugPrint("recvr picker observerEvent back from tags to table")
       
       
-      message(paste("set rcvr title to:",strReceiverShortName ))
+      message(paste("set rcvr title to:",strReceiverShortName," receiverDeploymentID is now:",gblReceiverDeploymentID ))
       #output$table_title<-renderText({strReceiverShortName})
       
       tmp <- paste0("Tags detected at ", strReceiverShortName)
