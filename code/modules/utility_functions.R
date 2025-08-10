@@ -248,7 +248,7 @@ readCache <- function(cacheFilename, useReadCache=1, cacheAgeLimitMinutes=60)
 # eg. a ReceiverShortName lstValue could be "Ankeny Hill","Bullards Bridge"
 # would return a list of length=2 with items list[1] and list[2]
 # or only "Ankeny Hill" we get a list of length=1 and the item is at list[1]
-# returns NULL if key not found
+# returns either a zero length list or NULL if key not found - so check for both
 ################################################################################
 keyValueToList <- function(cfg,key) {
   ##keyValueToList <- function(theTable,theKey) {
