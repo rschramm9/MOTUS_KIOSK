@@ -67,19 +67,23 @@ Useful for debugging but may need a yearly cleanup to recover space
 
 ### 7.0 - How to Cleanup Data Cache
 
-If a kiosk has its EnableWriteCache set to 1 (default) ,  recently retrieved detection data are stored in a local cache to reduce calls out to motus.org.  These can grow old and you may want to purge them after some period to recover space.   Each kiosk instance has its own data cache.  Cached files are in the MOTUS_KIOSK/kiosks/*kioskname*/data/cache folder. They all end in name .Rda  It is always completely safe to delete any or all of them.
+If a kiosk has its EnableWriteCache set to 1 (default) ,  recently retrieved detection data are stored in a local cache to reduce calls out to motus.org.  These can grow old and you may want to purge them after some period to recover space.   Each kiosk instance has its own data cache.  Cached files are in the data/cache subdirectory of wherever your kiosk folder is stored (eg.  /Users/MOTUS_USER/Documents/kiosks/*kioskname*/data/cache ).  They all end in name .Rda  It is always completely safe to delete any or all of them.
 
 
 
-### 8.0 - Build a complete data cache nightly
+### 8.0 - BuildCache.R
 
-The kiosk app utilizes a data cache to improve performance by storing recent data requests in al local file. If  data cached on disk is older than the age threshold set in the kiosk.cfg file, fresh data is requested from motus.org.  Some sites are frequented by birds with high burst rates or significant residence times, that make the motus.org request take 30-45 seconds to load.  This can make the user interface frustrating to use. 
+The kiosk app utilizes a data cache to improve performance by storing recent data requests in al local file. If  data cached on disk is older than the age threshold set in the kiosk.cfg file, fresh data is requested from motus.org.  Some sites are frequented by birds with high burst rates or significant residence times, that make the motus.org request take 30-45 seconds to load or more.  This can make the user interface frustrating to use. 
 
-One approach to consider to improve performance is to build a complete cache for all detected tags for all of the available receivers in your kiosk.cfg. If you build the cache late at night and set the cache maximum age to 24 hrs then cached data will always be available and up-to-date within last 24 hrs.  New tags detected and visible at Motus.org at your recievers 'today' will not be shown on your kiosk  until the cached data expires or the cache is rebuilt - eg 'tomorrow'.
+One approach to consider to improve responsiveness is to build a subset of the most recently detected tags for each receiver in your kiosk.cfg.  If you build the cache late at night and set the cache maximum age to 24 hrs then cached data will always be available and up-to-date within last 24 hrs.  New tags detected and visible at Motus.org at your recievers 'today' will not be shown on your kiosk  until the cached data expires or the cache is rebuilt - eg 'tomorrow'. Keep in mind if you do this that any changes to your kiosks 'ignore.csv' file also will not take effect until the cached data expires or the cache is rebuilt.
 
-Keep in mind if you do this that any changes to your kiosks 'ignore.csv' file also will not take effect until the cached data expires or the cache is rebuilt.
+A downside to this is that this technique is it results in a burst of data requests to motus.org servers for a short period of time.  Motus .org has valid concerns that a large number of requests may impact thier servers which have been recently under attack by automated bots.
 
-The script BuildCache.R in the main project directory will do this.  It can be made to run from a Windows batch file that is started nightly via the **Windows Task Scheduler**.  (Similar to how the kiosk server is started at boot.)
+ The BuildCache.R script can be run nightly to repopulate the cache with a small subset of only the longest loading recently detected tags.  Parameters in the kiosk.cfg file limit both the frequency and the number of http requests going out to motus.org.  Care is required for setting of these parameters to balance the desire for responsiveness with concerns for impacting motus.org.  When scheduling this to run late at night further limits interaction with motus.org to off-hours.
+
+WARNING: Over-use of BuildCache may result in restrictions or a block placed on your kiosk's access to data.  
+
+The script BuildCache.R in the main MOTUS_KIOSK project.  It can be made to run from a Windows batch file that is started nightly via the **Windows Task Scheduler**.  (Similar to how the kiosk server is started at boot.)
 
 **8.1** - Login as administrator Admin
 
@@ -87,7 +91,7 @@ The script BuildCache.R in the main project directory will do this.  It can be m
 
 ​	**8.2.1**  Using the File Explorer, find the folder where you installed R.  If you followed recommendations then is should be in C:\R.  If its not there then most likely its in C:\Program Files\R  
 
-​	**8.2.1** Open the folder and then make note of the version of R.  (e.g R-4.2.2)  folder C:\Program Files\R. 
+​	**8.2.1** Open the folder and then make note of the version of R.  (e.g R-4.5.1)  folder C:\R or C:\Program Files\R 
 
 Make a note of the **BOTH** the path and the version for use below.
 
@@ -171,9 +175,9 @@ In C:\Users\MOTUS_USER\ Documents\kiosk\your-kiosk-name\logs directory you shoul
 
 In C:\Users\MOTUS_USER\ Documents\kiosk\your-kiosk-name\data\cache  directory you should see new .Rda datafile.
 
-Depending one how nmany receivers are in your kiosk.cfg file, and how many detections at those receivers, the task may take anywhere from a a few minutes to a half hour or more.
+Depending one how many receivers are in your kiosk.cfg file, and how many detections at those receivers, the task may take anywhere from a few minutes to a half hour or more.
 
-the the Task Scheduler, periodically right-click on the 'Task Schedular Library' in the left panel, and chose 'Refresh'.   In the list of tasks, the he Status column MOTUS_MSWINDOWS_BUILDCACHE_TASK task will change from 'Running' to 'Ready' when the task finishes.
+In the Task Scheduler, periodically right-click on the 'Task Schedular Library' in the left panel, and chose 'Refresh'.   In the list of tasks, the he Status column MOTUS_MSWINDOWS_BUILDCACHE_TASK task will change from 'Running' to 'Ready' when the task finishes.
 
 **8.14** - *Dont forget to modify your kiosk.cfg file to set the ActiveCacheAgeLimitMinutes=1440* 
 
