@@ -1,3 +1,33 @@
+**6.2.2 (2025-08-10)**
+
+global.R  bumped version 
+
+configUtils.R
+   - prior rework on keyValueToList() caused that function to return
+      a zero length list instead of NULL.  Modified calls to check for both
+      NULL and length(list)==0.
+   - add new parameters ApiKey_1 and ApiKey_2
+   - add new parameters RebuildCacheDelaySeconds and RebuildCacheDepth
+
+kiosks/DEFAULT/kiosk.cfg
+   - add new parameters ApiKey_1 and ApiKey_2 for future use.
+   - add new parameters RebuildCacheDelaySeconds and RebuildCacheDepth
+
+BuildCache.R
+   - moved to code/modules
+   - implement parameters RebuildCacheDelaySeconds and RebuildCacheDepth
+   - comment out calls to motus .org that never take long.  Left only the
+     call to get tagDeploymentDetections as it is the one that typically
+     takes the longest to complete.
+   - above all done to minimize the number of hits on the motus.org data
+     servers from the kiosk app.
+
+Add utility script checkGitPushPull.bat for windows machines
+
+Add utility script checkGitPushPull.sh for linux/OSX machines
+
+
+
 **6.2.1 (2025-05-26)**
 
   Motus.org dashboard updates changed the page title of the homepage on
