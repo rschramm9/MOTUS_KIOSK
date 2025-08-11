@@ -174,14 +174,14 @@ server <- function(input, output, session) {
     #if(nrow(result) > 0){
     if(result){
         if( motusServerStatusReactive1$status == FALSE){ 
-           WarningPrint("Motus status changed to online.")
+           InfoPrint("Motus status changed to online.")
            motusServerStatusReactive1$status<<-TRUE 
            motusServerStatusReactive1$msg<<-paste("MotusStatus:Online")
            manageTitlebarMotusStatusMessage(TRUE)
         }
      } else { #is the empty_df
         if( motusServerStatusReactive1$status == TRUE){
-           WarningPrint("Motus status changed to offline due (no response timeout).")
+           InfoPrint("Motus status changed to offline due (no response timeout).")
            motusServerStatusReactive1$status<<-FALSE
            motusServerStatusReactive1$msg<<-paste("MotusStatus:Offline")
            manageTitlebarMotusStatusMessage(FALSE)
