@@ -81,7 +81,7 @@ Please read BOTH the included LICENSE file and LICENSE_ADDITIONAL_PERMISSIONS.  
 
 ### Hardware & Software Requirements
 
-I have quite successfully built and run the application in full kiosk mode on low-end Intel NUC PC computers with Window 10 Pro or Windows 11 Pro pre-installed. These are easily purchased used on eBay for as little as $100.   Avoid any Windows 'Home Edition' versions. 
+I have quite successfully built and run the application in full kiosk mode on low-end Intel NUC PC computers with Window 10 Pro or Windows 11 Pro pre-installed. These are easily purchased used on eBay for as little as $100.  Avoid any Windows 'Home Edition' versions. 
 
 I have also built and run the application on Apple Mac OSX (but not as a locked down kiosk).
 
@@ -90,9 +90,9 @@ These are the machines I have used:
 - NUC6CAY Celeron J3455 Processor 1.5Ghz 8GB Ram 120GB SSD w/wifi and Windows10 Pro (eBay $100) 
 - NUC7i5BNH MiniPC QUadCore i5-78260U 8Gb w/128Gb SSD w/wifi and  Windows 11 Pro. (eBay $185)
 - Apple Macbook Pro (circa 2018) 2.9 Ghz Intel core i9  32Gb w/macOS  12.6  (my development system)
-
-The touchscreen I use is : Dell 24 Touchscreen Model P2424HT (Dell.com ~$300).
-Also tested on a Viewsonic TD2760 which is a somewhat larger screen (27") at $480 new (found for much less on the used/ebay market)
+- As of Fall 2025 it looks several PC options are available new online in the $400-$500 dollar range however prices appear fluctuate wildly due to tarifs.
+The touchscreen I use is : Dell 24 Touchscreen Model P2424HT (Dell.com ~$450).
+Also the Viewsonic TD2760 which is a somewhat larger screen (27") at $530 new (found for much less on the used/ebay market)
 
 USB Keyboard and Mouse
 
