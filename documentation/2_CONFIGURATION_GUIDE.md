@@ -90,10 +90,12 @@ ReceiverDeploymentID=9195,11721,10758
 ReceiverShortName="Ankeny Hill OR","Finley Wildlife Refuge", "Newport OR (HMSC)"
 MainLogoFile="images/logos/ankenyhill_logo_hires_cropped.jpg"
 MainLogoHeight=100
+CssFile="css/motus_kiosk_default.css"
 NavbarBackgroundColor="#8FBC8F" 
 NavbarTextColor="darkslategray"
 TitlebarTextColor="#8FBC8F"
 TitlebarBackgroundColor="#fefefe"
+TitlebarBackgroundGradientColor="#fefefe"
 BodyPageTextColor="darkslategray"
 BodyPageBackgroundColor="#fefefe"
 SelectedTabTextColor="darkslategray"
@@ -169,11 +171,13 @@ ReceiverShortName="Ankeny Hill OR", "Bullards Bridge OR", "Nisqually Delta WA", 
 
 ##### 2.3 - Titles and Navbar Settings
 
-These setting control the apperance of the title bar and navigation banner. LogoHeight and LogoTopOffset are to be determined by trial&error given the particular customized logo provided for the application. 
+These setting control the apperance of the title bar and navigation banner. LogoHeight is to be determined by trial&error given the particular customized logo provided for the application. 
 
-*Note the the color is entered in 'hex format'*  The color shown is Ankeney Hill Nature Center's green.
+*Note the the color is entered in 'hex format'*  or one of the standard HTML/CSS color names. The color shown is Ankeney Hill Nature Center's green.
 
 The MainLogoFile is relative to the "www" directory:  *top-level-project-dir/kiosks/yourkioskname/www*/
+
+
 
 ```
 MainLogoFile="images/logos/ankenyhill_logo.png"
@@ -181,7 +185,9 @@ NavbarBackgroundColor="#8FBC8F"
 NavbarTextColor="#8FBC8F"
 TitlebarTextColor="#8FBC8F"
 TitlebarBackgroundColor="white"
+TitlebarBackgroundGradientColor="white"
 MainLogoHeight=140
+CssFile = "css/motus_kiosk_default.css"
 MainTitleEnglish="Motus Receiver at:"
 MainTitleSpanish="Receptor Motus en:"
 MainTitleFrench="Récepteur Motus à:"
@@ -193,6 +199,8 @@ JumpToButtonColor="#f9f46d"
 ```
 
 The JumpToButton parameter was added in version 6 to make it more obvious for the kiosk user on how to quickly get to the tag detection data .  The JumpToButtonColor sets the background color of that control.
+
+TitlebarBackgroundGradientColor was added in version 6.2.3 and allows a smooth gradient of color from TitlebarBackgroundColor to TitlebarBackgroundGradientColor.  If ommited or the set to the same value as TitlebarBackgroundColor then the backround color has a solid apperance as in prior versions.
 
 ##### 2.4 - "Home" tab content
 
