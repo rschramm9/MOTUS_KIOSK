@@ -211,8 +211,10 @@ ui <- fluidPage(
   # link it to the CSS style sheet in the www/css directory
   # uses a css resource path set in global.R
   
+  #tags$link(rel = "stylesheet", type = "text/css", href = "css/motus_kiosk_default.css"),
+  
   tags$head( 
-    tags$link(rel = "stylesheet", type = "text/css", href = "css/motus_kiosk_default.css"),
+    tags$link(rel = "stylesheet", type = "text/css", href = config.CssFile),
     tags$title("Motus Kiosk"),
     tags$script(src="scripts/var_change.js"),
     tags$script(inactivity)
