@@ -1,3 +1,37 @@
+
+
+
+
+**6.2.3 (2025-10-19)**
+
+Implement titlebar with a color gradient specified via
+a config file variable. If the gradient color is not specified it
+is set to the TitlebarBackgroundColor resulting in a solid
+background for the entire Titlebar as in prior versions.
+Make a config file variable to specify the www content's css
+file (which had been hard coded in ui.R)
+If config variable CssFile is missing in the kiosk.cfg file it
+it will use the default name for backwards compatability.
+
+configUtils.R
+ - add new config variable CssFile
+ - add new config variable TitlebarBackgroundGradientColor
+
+DEFAULT/kiosk.cfg
+ - add new config variable CssFile
+ - add new config variable TitlebarBackgroundGradientColor
+
+ui.R
+ - set the css file name from variable config.CssFile
+
+server.R
+ - add variable for dynamic css - titlebar-background-gradient-color
+
+/kiosks/DEFAULT/www/css/motus_kiosk_default.css
+- implement titlebar gradient
+
+
+
 **6.2.2 (2025-08-10)**
 
 global.R  bumped version 
