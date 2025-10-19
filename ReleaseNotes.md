@@ -34,6 +34,9 @@ server.R
 
 **6.2.2 (2025-08-10)**
 
+v6.2.2 was never checkpointed and bundled as a github release.  So its changes are
+first incorportated in the official release bundle for 6.2.3.
+
 global.R  bumped version 
 
 configUtils.R
