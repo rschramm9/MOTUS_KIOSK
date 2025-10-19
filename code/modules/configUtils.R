@@ -190,6 +190,12 @@ getKioskConfig <- function() {
   #message(paste0("in configUtils, config.siteSpecificContentWWW is:", config.SiteSpecificContentWWW))
   InfoPrint(paste0("Site specific web content is:", config.SiteSpecificContentWWW))
   
+  
+
+  
+  #message(paste0("in configUtils, config.siteSpecificContentWWW is:", config.SiteSpecificContentWWW))
+  InfoPrint(paste0("Site specific web content is:", config.SiteSpecificContentWWW))
+  
   #print("------------ MainLogoFile ----------------")
   list1 <- keyValueToList(configtbl,'MainLogoFile')
   if( (is.null(list1) || length(list1) == 0) ){
@@ -247,6 +253,18 @@ getKioskConfig <- function() {
     config.MainLogoHeight <<- NULL
   } else {
     config.MainLogoHeight <<- as.numeric(list1[1]) #assume length=1
+  }
+  
+  #print("------------ CssFile (new in vsn 6.2.3) ----------------")
+  list1 <- keyValueToList(configtbl,'CssFile')
+  if( (is.null(list1) || length(list1) == 0) ){
+    #badCfg<-TRUE
+    WarningPrint("CSS file not specified, using default.")
+    config.CssFile<<-paste0("css/motus_kiosk_default.css")
+  } else {
+    #I ultimately want a string
+    tmpstr<<- toString(list1[1])  
+    config.CssFile<<-tmpstr
   }
   
   #print("------------ Homepage----------------")
@@ -347,6 +365,17 @@ getKioskConfig <- function() {
     #I ultimately want a string
     config.TitlebarBackgroundColor<<- toString(list1[1]) 
   }
+  
+  # In version 6.2.3 or later
+  #print("------------ TitlebarBackgroundGradientColor ----------------")
+  list1 <- keyValueToList(configtbl,'TitlebarBackgroundGradientColor')
+  if( (is.null(list1) || length(list1) == 0) ){
+    config.TitlebarBackgroundGradientColor<<-config.TitlebarBackgroundColor
+  } else {
+    #I ultimately want a string
+    config.TitlebarBackgroundGradientColor<<- toString(list1[1]) 
+  }
+  
   
   # In version 6.x or later
   #print("------------ BodyPageTextColor ----------------")
@@ -680,6 +709,7 @@ printConfig <- function() {
   
   TSprint(paste0("TitlebarTextColor:",config.TitlebarTextColor))
   TSprint(paste0("TitlebarBackgroundColor:",config.TitlebarBackgroundColor))
+  TSprint(paste0("TitlebarBackgroundGradientColor:",config.TitlebarBackgroundGradientColor))
   
   TSprint(paste0("NavbarTextColor:",config.NavbarTextColor))
   TSprint(paste0("NavbarBackgroundColor:",config.NavbarBackgroundColor))
