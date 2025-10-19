@@ -1,23 +1,26 @@
 /* CSS style for the version6 motus_kiosk */
 /* should live in your projects www/css folder */
+/* 15Sep2025 implemented titlebar-background-gradient-color */
 
         /* create variables for the users Titlebar, Navbar and Mainbody colors  */
         :root {
          --titlebar-logo-height: 100px; /* Default titlebar height */
-         --titlebar-text-color: darkslategray; /* Default titlebar text color */
-         --titlebar-background-color: white; /* Default titlebar text color */
-         --navbar-text-color: darkslategray; /* Default navbar color */
+         --titlebar-text-color: white; /* Default titlebar text color */
+         --titlebar-background-color: darkslategray; /* Default titlebar background color at top */
+         --titlebar-background-gradient-color: lightslategray; /* Default titlebar background color fades to gradient*/
+         --navbar-text-color: white; /* Default navbar color */
          --navbar-background-color: white; /* Default navbar background color */
-         --selected-tab-text-color: darkslategray; 
-         --selected-tab-background-color: pink /* backgroundcolor of the selected navbar tab*/
+         --selected-tab-background-color: white /* backgroundcolor of the selected navbar tab*/
          --base-page-background-color: white; /* Default backgroundcolor of the body */
          --jump-to-button-color: yellow; /* Default jump to backgroundcolor */
          --offline-text-color: orange; /*the color of the text displayed in headerbar when offline*/
         }
         
-        
-        
-      
+        #readmediv {
+        border: 2px solid orange; /* Add orange border around readmediv */
+        padding: 10px; /* Optional: Add padding inside the border */
+        border-radius: 5px; /* Optional: Add rounded corners */
+      }
       
        /**************************************/
        /** CSS section for the base page that all contents sits in **/
@@ -37,23 +40,6 @@
         margin: 0 !important;
         padding: 0 !important;
       }
-      
-      /* Add border around homepage to give some padding to the homepage. But
-        can be made invisible by setting its color to the same as the page background */
-        #homepagediv {
-        border: 2px solid var(--base-page-background-color); 
-        padding: 15px; /* Optional: Add padding inside the border */
-        border-radius: 5px; /* Optional: Add rounded corners */
-        }
-      
-              
-       /* Add border around news page to give some padding to the news page. But
-        can be made invisible by setting its color to the same as the page background */
-        #newspagediv {
-        border: 2px solid var(--base-page-background-color); 
-        padding: 15px; /* Optional: Add padding inside the border */
-        border-radius: 5px; /* Optional: Add rounded corners */
-        }
       
       /**************************************/
       /*** CSS for the top headerbar    ****/
@@ -109,7 +95,7 @@
         margin-top: 0;
         color: black; /*text color*/
         background-color: var(--jump-to-button-color);*/
-        border: 4px solid gray; /* Initial border color */
+        border: 3px solid gray; /* Initial border color */
         animation: blink-border 1s infinite; /* Apply animation */
       }
       
@@ -119,9 +105,12 @@
     
       /* The color and styling of the titlebar */
       /* note 'color' sets the text color */
+      /* Sept 2025 - changed from solid to a linear gradient
+      /* was: background-color: var(--titlebar-background-color) !important;*/  /* Use the CSS variable */
+
       .title-bar {
-        background-color: var(--titlebar-background-color) !important; /* Use the CSS variable */
-         color: black;   /* the text color */
+         background: linear-gradient(to bottom, var(--titlebar-background-color), var(--titlebar-background-gradient-color)) !important; */
+         color:orange;   /* the text color */
          padding: 0 !important;
          margin: 0 !important;
          font-family: Verdana, sans-serif !important;
@@ -173,13 +162,7 @@
       /**************************************/
       /****  CSS for the navbar  ****/ 
       /**************************************/
-      .readmehere {
-        backgroud_color:pink;
-        border: 2px solid black !important;
-      }
-      
-      
-      
+
       /* the background color of the navbar behind the tabs */
       .navbar1 .navbar { 
           background-color: var(--navbar-background-color); /* Use the CSS variable */
