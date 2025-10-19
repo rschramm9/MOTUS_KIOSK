@@ -318,6 +318,7 @@ server <- function(input, output, session) {
 
   shinyjs::runjs(sprintf("document.documentElement.style.setProperty('--titlebar-text-color', '%s');", config.TitlebarTextColor ))
   shinyjs::runjs(sprintf("document.documentElement.style.setProperty('--titlebar-background-color', '%s');", config.TitlebarBackgroundColor ))
+  shinyjs::runjs(sprintf("document.documentElement.style.setProperty('--titlebar-background-gradient-color', '%s');", config.TitlebarBackgroundGradientColor ))
   shinyjs::runjs(sprintf("document.documentElement.style.setProperty('--navbar-text-color', '%s');", config.NavbarTextColor ))
   shinyjs::runjs(sprintf("document.documentElement.style.setProperty('--navbar-background-color', '%s');", config.NavbarBackgroundColor ))
   shinyjs::runjs(sprintf("document.documentElement.style.setProperty('--base-page-background-color', '%s');", config.BodyPageBackgroundColor ))
