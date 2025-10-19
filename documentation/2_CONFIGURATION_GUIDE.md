@@ -1,8 +1,8 @@
 # Configuration Guide
 
-### For the MOTUS Nature Center Kiosk App v6.0.0
+### For the MOTUS Nature Center Kiosk App v6.2.3
 
-**This** document is a guide on how to configure get the 'Motus Kiosk' Shiny web app. for Version 5.x
+**This** document is a guide on how to configure get the 'Motus Kiosk' Shiny web app. for Version 5.x and later.
 
 ### Who do I talk to?
 
