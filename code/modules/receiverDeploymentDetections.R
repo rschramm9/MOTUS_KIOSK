@@ -330,8 +330,14 @@ receiverDeploymentDetections <- function(receiverDeploymentID, useReadCache=1, c
   }
 
   #delete records with nulls
-  df <- df %>% drop_na()
+  #### df <- df %>% drop_na()
   #print(df)
+  
+  #allow nulls only in lat/lon or deploymentDate
+  df <- df %>%
+    filter(!if_any(c("tagDetectionDate", "tagID", "tagDeploymentID", "tagDeploymentName", "species"), is.na))
+  
+
   
   if(config.EnableWriteCache == 1){
     DebugPrint("receiverDeploymentDetections writing new cache file.")
