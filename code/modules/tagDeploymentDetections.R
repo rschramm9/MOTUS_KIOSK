@@ -62,8 +62,6 @@ library(xml2)
 #see:https://stackoverflow.com/questions/1699046/for-each-row-in-an-r-dataframe
 rows = function(x) lapply(seq_len(nrow(x)), function(i) lapply(x,"[",i))
 
-
-
 ################################################################################
 ## create empty tagDeploymentDetections data frame
 ## called within tagDeploymentDetections() to return an
@@ -77,7 +75,6 @@ empty_tagDeploymentDetection_df <- function()
 {
   df <- data.frame( matrix( ncol = 12, nrow = 1) )
   df <- df %>% drop_na()
-  #colnames(df) <- c('date', 'site', 'lat', 'lon', 'receiverDeploymentID', 'seq', 'use', 'usecs')
   
   colnames(df) <- c('date', 'site', 'lat', 'lon', 'receiverDeploymentID', 'seq', 'use', 'usecs','doy','runstart', 'runend', 'runcount')
   return (df)
@@ -103,7 +100,7 @@ url <- paste( c('https://motus.org/data/tagDeploymentDetections?id=',tagDeployme
 cacheFilename = paste0(config.CachePath,"/tagDeploymentDetections_",tagDeploymentID,".Rda")
 
 summaryFlight_df <-readCache(cacheFilename, useReadCache, cacheAgeLimitMinutes)   #see utility_functions.R
-# returnd NA if no cache
+# returned NA if no cache
 if( is.data.frame(summaryFlight_df)){
   DebugPrint("tagDeploymentDetections returning cached file")
   return(summaryFlight_df)
@@ -233,8 +230,8 @@ if(hasFooter == 1){
   nrecords <- num.rows
 }
 
-#build four vectors from table data
-#for(i in 1:num.rows){
+#build vectors from table data
+
 n <- 0
 
 #########
@@ -249,11 +246,10 @@ for(i in 1:nrecords){
   receiverDeploymentID <- c( receiverDeploymentID,  tbl1[[3]][i] )
   lat <-  c( lat,  tbl1[[4]][i]  )
   lon <-  c( lon,  tbl1[[5]][i] )
-
-  seq <- c(seq,n)
+ 
+   seq <- c(seq,n)
   use <- c(use,TRUE)
-  #22Apr25
-  
+
   #placehoders
   usecs <-c(usecs, 0)
   doy<-c(doy, 0)
@@ -269,45 +265,20 @@ lat <- as.numeric(lat)
 lon <-  gsub("[^0-9.-]", "", lon)
 lon <- as.numeric(lon)
 
-# ----------------------------------------------------------
-# process the page a second time for the receiverDeploymentID's that
-# are embedded in the anchor tag of the site name cells.
-# get all the table rows, with <a href=
-##   a_nodes <- page %>%
-##   html_nodes("table") %>% html_nodes("tr") %>% html_nodes("a") %>%
-##   html_attr("href") #as above
-
-#########
-# 22 April.  It looks like the new motus dashboard, the receiver deploymentid is now availble directly
-# as a column, so no longer need to pull it from the anchor element.
-#########
-#print(a_nodes)
-#print("length of a_nodes is:")
-#print (length(a_nodes))
-# loop through the table rows and extract the tagDeployment URL
-# that looks like:  "receiverDeployment?id=9195"
-# parse it to extract the numeric receiverDeploymentID
-# and append it to the list...
-## n <- 0
-## for (node in a_nodes) {
-##   #print(node)
-##   #print(class(node))
-##   ans <- str_detect( toString(node), "receiverDeployment" )
-##   if(ans) {
-##     n <- n+1
-##     theID <- as.numeric( sub("\\D*(\\d+).*", "\\1", node) )
-##     receiverDeploymentID<- c( receiverDeploymentID, theID  )
-##    #cat("n:",n," length:", length(receiverDeploymentID), "theId:",theID, "\n")
-##   }
-## }
 
 # this is summary level data
-# date                     site   lat     lon receiverDeploymentID seq  use usecs
-# 2022-08-21                    FDSHQ 27.62  -82.71                 5938   1 TRUE     0
+# date            site   lat   lon.   receiverDeploymentID   seq  use   usecs
+# 2022-08-21      FDSHQ 27.62  -82.71                 5938     1  TRUE     0
 
 summaryFlight_df <-data.frame(date,site,lat,lon,receiverDeploymentID,seq,use,usecs,doy,runstart,runend,runcount)
-#print("---------------------tagDeploymentDetections summaryFlight_df line 288 ----------------")
-#print(summaryFlight_df)
+##print("---------------------tagDeploymentDetections summaryFlight_df line 310----------------")
+##print(summaryFlight_df)
+
+
+# at this point summaryFlight_df contains all detections of the targeted tag
+# EXCEPT for the tagging site.  We dont know the correct order as this is daily summary data
+# and doesnt includ hh:mm:ss - so we need to get that from tagTrack json
+# Note usecs doy runstart runend runcount are zeroed at this point
 
 # obtain the track data with so we can correctly order the daily summary data
 # tagTrack_df <- tagTrack(tagDeploymentID, config.EnableReadCache, config.ActiveCacheAgeLimitMinutes)
@@ -316,6 +287,9 @@ summaryFlight_df <-data.frame(date,site,lat,lon,receiverDeploymentID,seq,use,use
 #the summary flight df so if that cached product would be the same age
 #if we wrote this to cache... ie its redundant to cache this
 tagTrack_df <- tagTrack(tagDeploymentID, 0, 0)
+
+#DebugPrint("this is raw tagTrack_df at 327 as str()")
+#str(tagTrack_df)
 
 ### NOTE: it appears that motus will only report if at least two detections per day...
 # we need to add the correct receiverDeploymentID to tagTrack_df to support the
@@ -329,30 +303,25 @@ tagTrack_df <- tagTrack(tagDeploymentID, 0, 0)
 #collapse duplicates
 distinctSites_df<-tagTrack_df[!duplicated(tagTrack_df[ , c("site") ]),]
 # for each distinct....
-#print("distinctSites df at line 313")
-#print(distinctSites_df)
-            
+#print("This is distinctSites df at line 345")
+#str(distinctSites_df)
+    
+
 # handle very rare occurance where we have a detection reported in daily summary
 # data but the json call returns [] (data not processed yet or only
-# one detection but jason filters to two?) 
+# one detection but json filters to two?)  or data is not public
+
 if( nrow(distinctSites_df) == 1 ){
   #only got the tagging site?
-  message("Missing initial detection - fringe case")
-  a_df<-summaryFlight_df[c("site","lat" ,"lon","seq", "usecs", "receiverDeploymentID","date", "doy", "use", "runstart","runend","runcount")]
-
-  the_date <- a_df[["date"]]
-  yr <- as.numeric(strftime(the_date, format = "%Y", tz = "UTC"))
-  jday <- as.numeric(strftime(the_date, format = "%j", tz = "UTC"))
-  doy <- (yr*1000)+jday
-  usecs<-as.numeric(as.POSIXct(the_date))
-  a_df[1,"doy"]<-doy
-  a_df[1,"usecs"]<-usecs
-  a_df[1,"runstart"]<-usecs
-  a_df[1,"runend"]<-usecs
-  a_df[1,"runcount"]<-2
-  distinctSites_df[nrow(distinctSites_df) + 1,] <- a_df
-  tagTrack_df [nrow(tagTrack_df) + 1,] <- a_df
+  WarningPrint("TagDeploymentDetections->tagTrack_df is missing initial detection - fringe case")
+  # cant do anything about missing times, just return what we have 
+  return(summaryFlight_df)
 }
+
+# raw tagTrack_df json only has text site name, it doesnt have the receiverDeploymentID
+# so tagTrack_df dataframe at this point hae receiverDeploymentID = 0
+# we will proceed to use the siteName from tagTrack_df to look up the receiverDeploymentID
+# from summaryFlight_df and overwrite the zero in tagTrack_df  
 
 if( nrow(distinctSites_df > 0 )){
   for(i in 1:nrow(distinctSites_df)) {
@@ -377,6 +346,7 @@ if( nrow(distinctSites_df > 0 )){
     } #else site was not found on summaryFlight_df - ignore
   } # end for each row
 } #endif length distinct sites
+
 # we now have corrected receiverDeploymentID in tagTrack_df
 
 
@@ -393,7 +363,7 @@ if( nrow(distinctSites_df > 0 )){
 # NOTE: havent determined receiverDeploymentID yet
 
 # we are done with the original summary df
-# we build a new summaryFlight_df from time ordered df sequence number
+# we build a complete new summaryFlight_df from time ordered df sequence number
 # from tagFlight_df
 
 n<-0  #a counter for record sequence numbe
