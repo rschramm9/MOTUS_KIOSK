@@ -1,6 +1,18 @@
 
 
+**6.2.4 (2025-11-13)**
 
+- --- MAJOR BUG FIX ----
+  
+  In tagDetections. If a detected tag doesnt allow permisions to access the timestamped
+  json tagTrack **the app crashed** or the server didnt provide time results then the app
+  would crash. Modified to just return the summaryFlight dataframe with dates only
+  (no time). This case the flight order would be ambiguious if the animal is detected
+  at multiple sites on a given day.  We therefore must rely build the flight order
+  solely from the order the server provided the records not on timestamp.
+  
+- In receiverDetections. Allow detections with no tag deployment lat/lon or deploymentDate.
+  This was causing otherwise valid detections to be rejected and not shown in the Detections picklist.
 
 **6.2.3 (2025-10-19)**
 
