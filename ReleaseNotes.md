@@ -1,4 +1,6 @@
+**6.2.5 (2025-11-18)**
 
+The bug fix in 6.2.4 version to allow detections with no lat/lon/date was not correctly filtering detections with no species.
 
 **6.2.4 (2025-11-13)**
 
