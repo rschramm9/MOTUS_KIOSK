@@ -331,13 +331,31 @@ receiverDeploymentDetections <- function(receiverDeploymentID, useReadCache=1, c
 
   #delete records with nulls
   #### df <- df %>% drop_na()
-  #print(df)
+
+  required_cols <- c(
+    "tagDetectionDate",
+    "tagID",
+    "tagDeploymentID",
+    "tagDeploymentName",
+    "species"
+  )
   
   #allow nulls only in lat/lon or deploymentDate
   df <- df %>%
-    filter(!if_any(c("tagDetectionDate", "tagID", "tagDeploymentID", "tagDeploymentName", "species"), is.na))
-  
-
+    # 1. Turn blank/whitespace-only character values into NA
+    mutate(
+      across(
+        where(is.character),
+        ~ na_if(trimws(.), "")
+      )
+    ) %>%
+    # 2. Keep only rows where all required columns are non-NA
+    filter(
+      if_all(
+        all_of(required_cols),
+        ~ !is.na(.)
+      )
+    )
   
   if(config.EnableWriteCache == 1){
     DebugPrint("receiverDeploymentDetections writing new cache file.")
