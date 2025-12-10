@@ -123,7 +123,9 @@ LogLevel=LOG_LEVEL_WARNING
 EnableLearnAboutMotusTab=1
 AboutMotusPageEnglish="aboutmotuspages/MOTUS_infographic_final_en.png"
 EnableMotusNewsTab=1
-NewsPageEnglish="newspages/current_news_en.html"
+## Pre Version 6.2.6 
+## NewsPageEnglish="newspages/current_news_en.html"
+MotusNewsStoryCatalog="newspages/news_story_catalog.yaml"
 EnableSpeciesInfoTab=1
 SpeciesPageEnglish="speciespages/species_unknown_en.html"
 EnableSuspectDetectionFilter=0
@@ -250,7 +252,7 @@ These parameters control use of a local data storage cache. Caching is a way to 
 - Setting EnableReadCache=1 will cause application data requests to first return use any cached data it finds that meets the aging criteria. 
 -  If cache is enabled for read it is used in two modes.
 
-1) ActiveCache can be set to expire after a breif period. i.e. if you dont expect motus.org data to update more than once a day, you might set the active cache to expire after several hours. 
+1) ActiveCache can be set to expire after a brief period. i.e. if you dont expect motus.org data to update more than once a day, you might set the active cache to expire after several hours. 
 1) InactiveCache uses the same cached data files, but allows for a much longer timeout. The idea here is if  networking is lost, or if motus.org is unavailable due to maintenance etc. you may still want the application to show cached data even if it is much older (days or weeks?)
 
 ```
@@ -319,7 +321,84 @@ There should be one file for each language that the application supports - curre
 
 ##### 2.12 - "MotusNews" tab content
 
-Optional short special interest stories you write about any motus activity at your site can appear in the main page body when ever the "MotusNews!" tab is open. It comes from a language dependent html file you create in the project sub-directory www/aboutmotuspages.
+Optional short special interest stories you write about any motus activity at your site can appear in the main page body when ever the "MotusNews!" tab is open. It comes from language dependent html files you create in the project sub-directory www/newspages.  
+
+###### For kiosk Version 6.2.6 19-Nov-2025 and NEWER
+
+Newer  version kiosks  supported multiple news stories.  The stories catalog is loaded on startup from a 'yaml' catalog file in the kiosk's  www/newpages  subdirectory.  By default the  catalog is configured as: 
+
+```
+EnableMotusNewsTab=1
+NewsPageEnglish="newspages/news_story_catalog.yaml"
+```
+
+There should be one file for each language that the application supports - currently: English, Spanish and French.  ***The  _en.html , _es.html,  _fr.html  extention on the filenames is critically important.***  News stories are organized into subfolders within  www/newspages folder with a structure like this:
+
+```
+www/
+└── newspages/
+    │
+    ├── news_story_catalog.yaml
+    │
+    ├── RedKnotMigration/
+    │     ├── RedKnotMigration_en.html
+    │     ├── RedKnotMigration_es.html
+    │     ├── RedKnotMigration_fr.html
+    │     ├── news_css/
+    │     │     └── news_style.css
+    │     └── images/
+    │           ├── map1.png
+    │           └── photo_redknot.jpg
+    │
+    ├── SwainsonsMigration/
+    │     ├── SwainsonsMigration_en.html
+    │     ├── SwainsonsMigration_es.html
+    │     ├── SwainsonsMigration_fr.html
+    │     ├── news_css/
+    │     │     └── news_style.css
+    │     └── images/
+    │           ├── photo_swainson.jpg
+    │           └── diagram1.svg
+    │
+    └── Unknown/
+          ├── news_unknown_en.html
+          ├── news_unknown_es.html
+          ├── news_unknown_fr.html
+          ├── news_css/
+          │     └── news_style.css
+          └── images/
+                └── placeholder.png
+```
+
+The news_story_catalog.yaml file describes the subset of only the desired stories to be loaded like this:
+
+```
+- sequence: 1
+  directory: "RedKnotMigration"
+  filename: "RedKnotMigration_en.html"
+  title_en: "Tracking Red Knot Migration"
+  title_es: "Seguimiento de la migración del playero rojizo"
+  title_fr: "Suivi de la migration du Bécasseau maubèche"
+  subtitle_en: "23-Jul-2024"
+  subtitle_es: "23-jul-2024"
+  subtitle_fr: "23-juil-2024"
+
+- sequence: 2
+  directory: "SwainsonsMigration"
+  filename: "SwainsonsMigration_en.html"
+  title_en: "Migratory Movement and Motus"
+  title_es: "Movimiento migratorio y Motus"
+  title_fr: "Déplacements migratoires et Motus"
+  subtitle_en: "10-Dec-2023"
+  subtitle_es: "10-dic-2023"
+  subtitle_fr: "10-déc-2023"
+```
+
+
+
+###### For LEGACY  kiosks  Version 6.2.5 18-Nov-2025 and OLDER
+
+ Older version kiosks upported only one news story.   The three language specific html files reside in the www/newspages subdirectory along with images and css file subdirectories
 
 ```
 EnableMotusNewsTab=1
@@ -327,6 +406,8 @@ NewsPageEnglish="newspages/current_news_en.html"
 ```
 
 There should be one file for each language that the application supports - currently: English, Spanish and French.  Only the english language page is entered in the kiosk.cfg file. 
+
+
 
 ##### 2.13 - "Species" tab content
 
