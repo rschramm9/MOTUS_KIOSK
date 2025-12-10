@@ -36,13 +36,36 @@ UI_MotusNews <- function(id, i18n) {
     #this needs to be here or else some parts of ui
     #dont get translated (eg. the navbar)
     shiny.i18n::usei18n(i18n),
-  
-    tags$div(id = 'newspagehere',
-             div(id="newspagediv",
-                 htmlOutput(ns("news"))
-             )
-    )
-   
+
+    sidebarLayout(
+      # show sidebar ONLY if there's more than one news story
+      if (nrow(gblNews_df) > 1) {
+        sidebarPanel(
+          width = 2,
+          radioButtons(
+            inputId = ns("file_choice"),
+            label   = "Stories:",
+            choiceNames  = build_choice_names(gblNews_df, "en"),
+            choiceValues = gblNews_df$url,
+            selected     = gblNews_df$url[1]
+          )
+        )
+      } else {
+        NULL    # ✨ hides the sidebar entirely
+      },
+      
+
+
+
+   mainPanel( 
+        width = if (nrow(gblNews_df) > 1) 10 else 12,   # expand to full width
+        tags$div(id = 'newspagehere',
+          div(id="newspagediv",
+               htmlOutput(ns("news"))
+           )
+         )
+       ) #end mainPanel
+    ) #end sidebarlayout
   ) #end fluidPage
   
 }  # end function def for UI_MotusNews
@@ -58,74 +81,112 @@ SERVER_MotusNews <- function(id, i18n_r, lang, rcvr) {
     # !!! session$ns is needed to properly address reactive UI elements from the Server function
     ns <- session$ns
     
+    gblNews_rv <- reactiveVal(gblNews_df)
+    
+    
+   
+    
+    #---------------------------------------------------------------------------------------------------- 
+    # ---- update radio buttons for a given language ----
+    #----------------------------------------------------------------------------------------------------
+  
+    update_story_choices <- function(current_lang) {
+      df <- gblNews_rv()
+      if (is.null(df) || nrow(df) == 0) return(invisible(NULL))
+      
+      choiceNames  <- build_choice_names(df, current_lang)
+      choiceValues <- df$url
+      
+      if (length(choiceValues) == 0 || length(choiceNames) == 0)
+        return(invisible(NULL))
+      
+      selected <- input$file_choice
+      if (is.null(selected) || !selected %in% choiceValues) {
+        selected <- choiceValues[1]
+      }
+      
+      updateRadioButtons(
+        session,
+        "file_choice",
+        choiceNames  = choiceNames,
+        choiceValues = choiceValues,
+        selected     = selected
+      )
+    }
+    
     #---------------------------------------------------------------------------------------------------- 
     # A non-reactive function that will be available to each user session
     # populate the motus news section with either a default page or what was specifed in the config
     #---------------------------------------------------------------------------------------------------- 
-    myRenderFunction <- function(x) {
-        x=lang()
-        #message(paste0("config.NewsPageEnglish is:",config.NewsPageEnglish))
+    # ---- render the iframe based on current language + selected story ----
+    myRenderFunction <- function() {
+      df <- gblNews_rv()
+      req(nrow(df) > 0)
+      
+      selected <- input$file_choice
+      if (is.null(selected) || !selected %in% df$url) {
+        selected <- df$url[1]
+      }
+      
+      url_to_show <- selected
+      current_lang <- lang()
+      
+      if (current_lang == "es") {
+        url_to_show <- stringr::str_replace(url_to_show, "_en.html", "_es.html")
+      } else if (current_lang == "fr") {
+        url_to_show <- stringr::str_replace(url_to_show, "_en.html", "_fr.html")
+      }
+      message(getwd())
+      message(config.SiteSpecificContentWWW)
+      message("MotusNews url_to_show: ", url_to_show)
+      
+      output$news <- renderUI({
+        tags$iframe(
+          src   = url_to_show,
+          style = "width: 100%; height: 800px; border: none;"
+        )
+      })
+    }
     
-        #DebugPrint(paste0("&&&&&&&&&&& config.NewsPageEnglish is:", config.NewsPageEnglish))
-        xxx = config.NewsPageEnglish
-    
-        if(x=='en'){
-           thefile<-xxx 
-        } else if (x=='es'){ 
-           thefile<-str_replace(xxx,"_en.html","_es.html")
-        } else if (x=='fr'){ 
-           thefile<-str_replace(xxx,"_en.html","_fr.html")
-        } 
-
-    
-       #thepage <- includeHTML(thefile)
-       #output$news <- renderUI(thepage)
-        
-        # after updating to R version 4.3.1 (2023-06-16)\
-        # the above two lines started to generate following:
-        # Warning: `includeHTML()` was provided a `path` that appears to be a complete HTML document.
-        # Path: kiosks/AHNC/www/newspages/current_news_en.html
-        # Use `tags$iframe()` to include an HTML document. You can either ensure `path` is
-        # accessible in your app or document (see e.g. `shiny::addResourcePath()`)
-        # and pass the relative path to the `src` argument. Or you can read the contents of `path` 
-        # and pass the contents to `srcdoc`.
-        # below three lines were the fix (plus the addResourcePath for newspages in global.R)
-        
-        #message(paste0("MotusNews thefile:",thefile) )
-        
-        
-        output$news <- renderUI({
-          ## works:   tags$iframe(seamless="seamless", src= "newspages/current_news_en.html", width=800, height=800)
-          ## works:   tags$iframe(seamless="seamless", src= thefile, width=800, height=800)
-          #tags$iframe(seamless="seamless", src= thefile, style='width:100vw;height:100vh;')
-          tags$iframe(seamless="seamless", src= thefile,style='width:100%;height:100vh;')
-        })
-        
-    } # end function myRenderFunction
-    #---------------------------------------------------------------------------------------------------- 
     
     # Some UI elements should be updated on the Server side
     # -- when session starts
     # -- when language changes
+    
+    # ---- on session start: render once with whatever default lang() is ----
+    observeEvent(TRUE, {
+      myRenderFunction()
+    }, once = TRUE)
+    
+    #---------------------------------------------------------------------------------------------------- 
 
     #-------------------------------------------------------------------------------------------------------------
     #   session start
     #-------------------------------------------------------------------------------------------------------------  
-    observeEvent( session$clientData, {
-      #  message("**session started ***")
-      myRenderFunction()
-    }) #end observeEvent for session start
+    #observeEvent( session$clientData, {
+    #  #  message("**session started ***")
+    #  myRenderFunction()
+    #}) #end observeEvent for session start
   
     #-------------------------------------------------------------------------------------------------------------
-    #   
+    #   language change
     #------------------------------------------------------------------------------------------------------------- 
     # Update text values when language is changed
     # note lang() is handle to the language input picklist passed in from server.R
     observeEvent(lang(), {
       i18n_r()$set_translation_language(lang())
+      # When language changes, update radiobutton labels
+      update_story_choices(lang())
       myRenderFunction()
     }) #end observeEvent(lang()
 
+    #-------------------------------------------------------------------------------------------------------------
+    #   user selects a story
+    #-------------------------------------------------------------------------------------------------------------  
+     observeEvent(input$file_choice, {
+      message("MotusNews User selected:", input$file_choice)
+       myRenderFunction()
+      })
     
   }) #end moduleServer
 
