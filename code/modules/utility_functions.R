@@ -415,3 +415,237 @@ curfnfinder<-function(skipframes=0, skipnames="(FUN)|(.+apply)|(replicate)",
 #  tolower(os)
 #}
 
+################################################################################
+#function to safely load motus news pages yaml catalog
+# returns a list of lists
+# on error return NULL
+################################################################################
+read_motus_news_yaml <- function(path) {
+  if (!file.exists(path)) {
+    warning(sprintf("YAML file not found: %s", path))
+    return(NULL)
+  }
+  
+  yaml_obj <- tryCatch(
+    yaml::read_yaml(path),
+    error = function(e) {
+      warning(sprintf(
+        "Error reading motus news YAML file '%s': %s",
+        path, e$message
+      ))
+      return(NULL)
+    }
+  )
+  
+  # If parse failed, yaml_obj will already be NULL
+  if (is.null(yaml_obj)) return(NULL)
+  
+  if (!is.list(yaml_obj) || length(yaml_obj) == 0) {
+    warning(sprintf("Motus news YAML file '%s' does not contain a valid list structure.", path))
+    return(NULL)
+  }
+  ## str(yaml_obj)
+  yaml_obj
+}
+
+
+################################################################################
+# a function to 
+# on error return NULL
+################################################################################
+validate_news_files <- function(df, yaml_path) {
+  
+  base_dir <- dirname(yaml_path)
+  
+  if (!dir.exists(base_dir)) {
+    warning(sprintf("Base newspages directory does not exist: %s", base_dir))
+    return(NULL)
+  }
+  
+  if (nrow(df) == 0) return(NULL)
+  
+  bad <- logical(nrow(df))
+  
+  for (i in seq_len(nrow(df))) {
+    
+    story_dir <- file.path(base_dir, df$directory[i])
+    
+    # Extract English filename and derive es/fr variants
+    file_en <- df$filename[i]
+    
+    # Must match pattern *_en.html
+    if (!grepl("_en\\.html$", file_en)) {
+      warning(sprintf(
+        "YAML entry %d: English filename does not end in '_en.html': %s",
+        i, file_en
+      ))
+      bad[i] <- TRUE
+      next
+    }
+    
+    # Build expected language filenames
+    file_es <- sub("_en\\.html$", "_es.html", file_en)
+    file_fr <- sub("_en\\.html$", "_fr.html", file_en)
+    
+    # Full paths
+    path_en <- file.path(story_dir, file_en)
+    path_es <- file.path(story_dir, file_es)
+    path_fr <- file.path(story_dir, file_fr)
+    
+    # Check story folder exists
+    if (!dir.exists(story_dir)) {
+      warning(sprintf("YAML entry %d: directory not found: %s", i, story_dir))
+      bad[i] <- TRUE
+      next
+    }
+    
+    # Check required HTML files exist
+    missing <- c(
+      if (!file.exists(path_en)) "EN",
+      if (!file.exists(path_es)) "ES",
+      if (!file.exists(path_fr)) "FR"
+    )
+    
+    if (length(missing) > 0) {
+      message(path_en)
+      warning(sprintf(
+        "YAML entry %d (%s): Missing HTML files: %s",
+        i, df$directory[i], paste(missing, collapse=", ")
+      ))
+      bad[i] <- TRUE
+    }
+  }
+  
+  # Remove bad rows
+  if (any(bad)) {
+    df <- df[!bad, , drop = FALSE]
+    if (nrow(df) == 0) {
+      warning("All YAML entries failed file existence checks.")
+      return(NULL)
+    }
+  }
+  
+  df
+}
+
+
+
+
+
+
+
+################################################################################
+# a function to convert the motus news yaml object to a dataframe
+# on error return NULL
+################################################################################
+motus_news_yaml_to_df <- function(yaml_list) {
+  
+  if (is.null(yaml_list)) return(NULL)
+  
+  required_fields <- c(
+    "sequence", "directory", "filename",
+    "title_en", "title_es", "title_fr",
+    "subtitle_en", "subtitle_es", "subtitle_fr"
+  )
+  
+  # Check required fields on each entry
+  for (i in seq_along(yaml_list)) {
+    entry <- yaml_list[[i]]
+    for (field in required_fields) {
+      if (is.null(entry[[field]])) {
+        warning(sprintf(
+          "Motus news YAML entry %d is missing required field '%s'.",
+          i, field
+        ))
+        return(NULL)
+      }
+    }
+  }
+  
+  df <- tryCatch(
+    {
+      data.frame(
+        sequence     = as.numeric(sapply(yaml_list, `[[`, "sequence")),
+        directory    = as.character(sapply(yaml_list, `[[`, "directory")),
+        filename     = as.character(sapply(yaml_list, `[[`, "filename")),
+        title_en     = as.character(sapply(yaml_list, `[[`, "title_en")),
+        title_es     = as.character(sapply(yaml_list, `[[`, "title_es")),
+        title_fr     = as.character(sapply(yaml_list, `[[`, "title_fr")),
+        subtitle_en  = as.character(sapply(yaml_list, `[[`, "subtitle_en")),
+        subtitle_es  = as.character(sapply(yaml_list, `[[`, "subtitle_es")),
+        subtitle_fr  = as.character(sapply(yaml_list, `[[`, "subtitle_fr")),
+        stringsAsFactors = FALSE
+      )
+    },
+    error = function(e) {
+      warning(sprintf("Error building Motus News dataframe from YAML: %s", e$message))
+      return(NULL)
+    }
+  )
+  
+  if (is.null(df)) return(NULL)
+  
+  if (any(is.na(df$index))) {
+    warning("Motus News error - one or more YAML entries contain invalid or missing 'sequence' values.")
+    return(NULL)
+  }
+  
+  df
+}
+
+
+################################################################################
+# load the motus news catalog using the two function above.
+# on error return NULL
+################################################################################
+load_motus_news_catalog <- function(path) {
+  yaml_list <- read_motus_news_yaml(path)
+  df <- motus_news_yaml_to_df(yaml_list)
+  
+  ###if (is.null(df)) return(NULL)
+  
+  df <- validate_news_files(df, path)
+  if (is.null(df)) return(NULL)
+  
+  # Build iframe URL using your existing newspages resource path
+  df$url <- sprintf("newspages/%s/%s", df$directory, df$filename)
+  
+  # Sort by sequence
+  df <- df[order(df$sequence), ]
+  
+  df
+}
+
+################################################################################
+# build the multilingual news stories choice names for MotusNews.R
+################################################################################
+build_choice_names <- function(df, lang_code) {
+  
+  # Pick the correct title column based on language
+  title_col <- dplyr::case_when(
+    lang_code == "es" ~ "title_es",
+    lang_code == "fr" ~ "title_fr",
+    TRUE              ~ "title_en"   # default English
+  )
+  
+  # Pick the correct subtitle column similarly
+  subtitle_col <- dplyr::case_when(
+    lang_code == "es" ~ "subtitle_es",
+    lang_code == "fr" ~ "subtitle_fr",
+    TRUE              ~ "subtitle_en"
+  )
+  
+  # Build the HTML label for each row
+  lapply(seq_len(nrow(df)), function(i) {
+    tagList(
+      tags$strong(df[[title_col]][i]),
+      tags$br(),
+      tags$span(
+        style = "font-size: 80%; color: #666;",
+        df[[subtitle_col]][i]
+      )
+    )
+  })
+}
+
+
