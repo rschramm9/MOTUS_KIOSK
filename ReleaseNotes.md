@@ -1,6 +1,7 @@
 **6.2.6 (2025-12-10)**
 
 Modification to the MotusNew!  Tab to allow more than one news story.  Required restructuring the  www/newspages directory and adding a sidebar panel to the tab.  Modifications to MotusNews.R to contain the sidebar with radio button selectors for each news story,  storyies are configured in a .yaml file.  Configuration utilites have added functions to handle the yaml file. 
+(See details in documentation folder CONFIGURATION_GUIDE)
 
 - global.R numerous changes to support reading MotusNews yaml catalog.
 
