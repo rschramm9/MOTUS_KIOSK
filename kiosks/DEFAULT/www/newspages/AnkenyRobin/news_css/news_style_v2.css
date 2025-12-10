@@ -160,6 +160,7 @@ div.figure-right {
   font-size: smaller;
   text-indent: 0;
 }
+
 img.scaled {
   width: 100%;
 }
@@ -179,6 +180,69 @@ div.figure-left {
 .clear-float-left {
     clear: left;
 }
+
+ /* Added for Malheur. 'image-row' for two images, side-by-side */
+ /* Outer container with window padding */
+  .image-wrapper {
+    max-width: 1200px;      /* optional max width */
+    margin: 0 auto;         /* center the whole block */
+    padding: 20px 40px;     /* left/right padding that grows with the window */
+  }
+
+  /* Side-by-side layout */
+  .image-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 30px;              /* space between the two images */
+  }
+
+  /* Each image + caption block */
+  .image-row figure {
+    flex: 1;                /* let both scale equally */
+    text-align: center;
+    margin: 0;
+  }
+
+  .image-row img {
+    width: 100%;            /* responsive image */
+    height: auto;
+    display: block;
+  }
+
+  /* Optional: make them stack vertically on small screens */
+  @media (max-width: 800px) {
+    .image-row {
+      flex-direction: column;
+    }
+  }
+ /* End Malheur image-row*/
+ 
+   /* Outer container: centered with padding */
+  .single-image-wrapper {
+    max-width: 800px;     /* or any size you prefer */
+    margin: 20px auto;    /* top/bottom margin + centered */
+    padding: 20px 40px;   /* inner padding around the image/caption */
+    box-sizing: border-box;
+  }
+
+  /* Image + caption block */
+  .single-image {
+    text-align: center;
+    margin: 0;            /* remove default figure margins */
+  }
+
+  .single-image img {
+    width: 100%;          /* responsive auto-scaling */
+    height: auto;
+    display: block;
+    margin-bottom: 10px;  /* space between image & caption */
+  }
+
+  .single-image figcaption {
+    font-size: 12pt;      /* adjust as needed */
+    color: #333;
+  }
+  
 
 
 

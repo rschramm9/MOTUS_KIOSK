@@ -1,0 +1,31 @@
+- sequence: 1
+  directory: "RedKnotMigration"
+  filename: "RedKnotMigration_en.html"
+  title_en: "Tracking Red Knot Migration"
+  title_es: "Seguimiento de la migración del playero rojizo"
+  title_fr: "Suivi de la migration du Bécasseau maubèche"
+  subtitle_en: "23-Jul-2024"
+  subtitle_es: "23-jul-2024"
+  subtitle_fr: "23-juil-2024"
+
+- sequence: 2
+  directory: "SwainsonsMigration"
+  filename: "SwainsonsMigration_en.html"
+  title_en: "Migratory Movement and Motus"
+  title_es: "Movimiento migratorio y Motus"
+  title_fr: "Déplacements migratoires et Motus"
+  subtitle_en: "10-Dec-2023"
+  subtitle_es: "10-dic-2023"
+  subtitle_fr: "10-déc-2023"
+
+- sequence: 3
+  directory: "AnkenyRobin"
+  filename: "AnkenyRobin_en.html"
+  title_en: "AHNC Motus Already Making Important Contributions to Migratory Bird Research"
+  title_es: "AHNC Motus ya está realizando importantes contribuciones a la investigación de aves migratorias"
+  title_fr: "AHNC Motus apporte déjà d'importantes contributions à la recherche sur les oiseaux migrateurs"
+  subtitle_en: "15-Feb-2023"
+  subtitle_es: "15 de febrero de 2023"
+  subtitle_fr: "15 février 2023"
+
+
