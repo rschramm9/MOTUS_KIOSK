@@ -1,3 +1,22 @@
+**6.2.6 (2025-12-10)**
+
+Modification to the MotusNew!  Tab to allow more than one news story.  Required restructuring the  www/newspages directory and adding a sidebar panel to the tab.  Modifications to MotusNews.R to contain the sidebar with radio button selectors for each news story,  storyies are configured in a .yaml file.  Configuration utilites have added functions to handle the yaml file. 
+
+- global.R numerous changes to support reading MotusNews yaml catalog.
+
+- utility_functions.R add for helper functions for reading motus news yaml and configuring the MotusNews multi-language story select radio buttons
+
+- config_utils.R. Add item MotusNewsStoryCatalog and modified item NewsPageEnglish. Set global 
+ flags to tell which style news to load
+
+- added a second default kiosk: DEFAULT_OLDNEWS so I can still test against a pre-version 2.6.5 kiosk. Modified the DEFAULT kiosk to use the new MotusNews directory structure and the yaml story catalog
+
+- MotusNews.R. many changes to support multiple news stories. News page now has 
+sidebar panel with list of news stories built from the news catalog yaml file. 
+ Story selection radio button labels are multilingual. 
+
+
+
 **6.2.5 (2025-11-18)**
 
 The bug fix in 6.2.4 version to allow detections with no lat/lon/date was not correctly filtering detections with no species.
