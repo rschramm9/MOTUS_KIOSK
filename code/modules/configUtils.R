@@ -297,8 +297,9 @@ getKioskConfig <- function() {
   #must be the _en.html page....
   list1 <- keyValueToList(configtbl,'NewsPageEnglish')
   if( (is.null(list1) || length(list1) == 0) ){
-    badCfg<-TRUE
-    WarningPrint("Config file is missing entry for NewsPageEnglish")
+    #badCfg<-TRUE
+    config.NewsPageEnglish<<- NULL
+    WarningPrint("Config file is missing entry for legacy item NewsPageEnglish")
     #config.NewsPageEnglish <<-paste0("kiosks/DEFAULT/www/newpages/news_unknown_en.html")
   } else {
     #I ultimately want a string
@@ -306,6 +307,33 @@ getKioskConfig <- function() {
     config.NewsPageEnglish<<-tmpstr
     #config.NewsPageEnglish<<-paste0(config.SiteSpecificContentWWW,"/",tmpstr)
   }
+  
+  #print("------------ Motus News Story Catalog----------------")
+  list1 <- keyValueToList(configtbl,'MotusNewsStoryCatalog')
+  if( (is.null(list1) || length(list1) == 0) ){
+    #badCfg<-TRUE
+    config.MotusNewsStoryCatalog<<- NULL
+    WarningPrint("Config file is missing entry for MotusNewsStoryCatalog")
+  } else {
+    #I ultimately want a string
+    tmpstr<<- toString(list1[1])  
+    config.MotusNewsStoryCatalog<<-tmpstr
+  }
+  
+
+  if( !is.null(config.MotusNewsStoryCatalog)) {
+    gblDoVersion3News<<-TRUE
+    gblDoVersion2News<<-FALSE
+    message("Will use kiosk Version 3 News")
+  } else if ( !is.null(config.NewsPageEnglish)) {
+    gblDoVersion3News<<-FALSE
+    gblDoVersion2News<<-TRUE
+    message("Will use kiosk Version 2 (Legacy) News")
+  } else {
+    badCfg<-TRUE
+    WarningPrint("Config file is missing entries for either MotusNewsStoryCatalog or legacy item NewsPageEnglish")
+  }
+  
   
   #print("------------ About Motus ----------------")
   #must be the _en.html page....
@@ -762,6 +790,8 @@ printConfig <- function() {
   TSprint(paste0("EnableSpeciesInfoTab:", config.EnableSpeciesInfoTab))
   
   TSprint(paste0("EnableMotusNewsTab:", config.EnableMotusNewsTab))
+  TSprint(paste0("MotusNewsStoryCatalog:", config.MotusNewsStoryCatalog))
+  
   TSprint(paste0("EnableLearnAboutMotusTab:", config.EnableLearnAboutMotusTab))
   
   TSprint(paste0("EnableSuspectDetectionFilter:",config.EnableSuspectDetectionFilter))
