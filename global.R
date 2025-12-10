@@ -1,7 +1,7 @@
 ######## I put github release version and other data here ############
 ######## so it can be displayed on the footer of the kiosk window ####
-gblFooterText <- "MOTUS_KIOSK vsn 6.2.5  18-Nov-2025"
-gblUserAgentText <- "MOTUS_KIOSK vsn 6.2.5"
+gblFooterText <- "MOTUS_KIOSK vsn 6.2.6  10-Dec-2025"
+gblUserAgentText <- "MOTUS_KIOSK vsn 6.2.6"
 mytoggle<<-FALSE #useful global variable for debugging
 ###############################################################################
 # Copyright 2022-2023 Richard Schramm
@@ -64,6 +64,8 @@ library(httr)
 
 library(units)
 
+library(yaml)
+
 #### for leaflet map
 library(leaflet)
 library(leaflet.extras2) #for movingmarker
@@ -101,7 +103,7 @@ library(data.table)
 ## So this is a hack to test the working directory - if its the code subdir, then
 ## change fix it to the project top level dir, and assign it to a global
 ## variable 'projectdir'. Also set variable codedir a a subdir so we can
-## source the necessary modules etc.
+## source the necessary modules etc.  
 
 wd <- getwd()
 message(paste0("getwd():", wd))
@@ -152,7 +154,6 @@ source(paste0(codedir,"/modules/MotusNews.R"))
      ####printConfig()
      gblUserAgentText <- paste0(gblUserAgentText, ", KioskID:",config.StartKiosk, " Contact:", config.AdminContact) 
      message(paste0("UserAgent:", gblUserAgentText))
-     
      
      
      #print("-----------------Done processing config----------------------------------")
@@ -271,22 +272,79 @@ source(paste0(codedir,"/modules/MotusNews.R"))
      s = paste0(config.SiteSpecificContentWWW,"/speciespages")
      addResourcePath("speciespages", s )
  
-     # these appear to be not needed if resource path for speciespages is above
-     # as of vsn 5.0.0
-     #s = paste0(config.SiteSpecificContentWWW,"/speciespages/species_images")
-     #addResourcePath("species_images", s)
-     #s = paste0(config.SiteSpecificContentWWW,"/speciespages/species_css")
-     #addResourcePath("species_css", s)
-     
 
+     # MotusNews for version 6.2.4 with its directory structure and catalog
+     # or MotusNews for 6.2.3 and earlier with its structure which
+     # has only one story named in config.NewsPageEnglish. This hack
+     # gives backwards compatibility to people who havent migrated to using
+     # the multiple-story new features of version 6.2.4. The older version
+     # newspages directory contained the story html files etc.  The newer
+     # version newpages directory has the yaml file catalog and the stories
+     # organized in subfolders below.
+     
+     if(gblDoVersion3News) {
+        thefile<-paste0(config.SiteSpecificContent,"/www/",config.MotusNewsStoryCatalog) 
+        InfoPrint(paste0("Attempting to load news catalog yaml file:",thefile)) 
+ 
+        # --- use it ---
+        df <- load_motus_news_catalog(thefile)
+     
+        if (is.null(df)) {
+           WarningPrint(paste0("Load news yaml file failed:",thefile)) 
+           # Handle error here: fallback, or a single default entry
+           df <- NULL
+           df <- data.frame(
+             sequence  = 1,
+             directory = "Unknown",
+             filename  = "news_unknown_en.html",
+             title_en     = "Default",
+             title_es     = "Por defecto",
+             title_fr     = "Défaut",
+             subtitle_en  = "(News story catalog load failed)",
+             subtitle_es  = "(Error al cargar el catálogo de noticias)",
+             subtitle_fr  = "(Échec du chargement du catalogue d'articles d'actualité)",
+             stringsAsFactors = FALSE
+           )
+         # Build iframe URL using your existing newspages resource path
+         df$url <- sprintf("newspages/%s/%s", df$directory, df$filename)
+       }
+     
+    } else {
+       InfoPrint(paste0("Using pre-Vesion 6.2.4 NewsPageEnglish :",thefile))
+       df <- NULL
+       dir  <- dirname(config.NewsPageEnglish)
+       file <- basename(config.NewsPageEnglish)
+       df <- data.frame(
+         sequence  = 1,
+         directory = dir,
+         filename  = file,
+         title_en     = "Current News",
+         title_es     = "Noticias actuales",
+         title_fr     = "Actualités actuelles",
+         subtitle_en  = "",
+         subtitle_es  = "",
+         subtitle_fr  = "",
+         stringsAsFactors = FALSE
+       )
+       # Build iframe URL using your existing newspages resource path
+       s <- sprintf("newspages/%s/%s", df$directory, df$filename)
+       # add check for duplicated directory path like:
+       # newspages/newspages/current_news_en.html"
+       
+       parts <- strsplit(s, "/")[[1]]
+       # remove any repeated adjacent directory names
+       clean_parts <- parts[ !duplicated(parts) ]
+       clean_path <- paste(clean_parts, collapse = "/")
+       df$url <- clean_path
+       
+     } #endif gblDoVersion2News
+     
+     # now make which ever succeeded above a global
+     gblNews_df <<- df
+     ## str(gblNews_df)
+     
      s = paste0(config.SiteSpecificContentWWW,"/newspages")
      addResourcePath("newspages", s )
-     # these appear to be not needed if resource path for newspages is above
-     # as of vsn 5.0.0
-     #s = paste0(config.SiteSpecificContentWWW,"/newspages/news_images")
-     #addResourcePath("news_images", s)
-     #s = paste0(config.SiteSpecificContentWWW,"/newspages/news_css")
-     #addResourcePath("news_css", s)
      
      # www relative for images. logos and scripts
      s = paste0(config.SiteSpecificContentWWW,"/images/logos")
