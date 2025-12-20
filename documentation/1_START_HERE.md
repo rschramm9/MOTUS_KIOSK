@@ -480,19 +480,67 @@ A motus species name of "Eastern Whip-poor-will" compacted and formatted become 
 
 **Species HTML files are found in your kiosk's  www/speciespages.**
 
+###### For LEGACY  kiosks  Version 6.2.6 10-Dec-2025  and OLDER
+
+ Older version kiosks v6.2.6 and older have all of the species html files in the www/speciespages. ***Including the required species_unknown_en.html file.***
+
+###### For Version 6.2.7 10-Dec-2025  and newer Kiosks
+
+Beginning with version 6.2.7 each species now has its own subfolder of the species name within the  www/speciespages folder with a structure like this:
+
+### The folder 'unknown' as shown above is REQUIRED
+
+```
+www/
+└── speciespages/
+    │
+    ├── americanrobin/
+    │     ├── americanrobin_en.html
+    │     ├── americanrobin_es.html
+    │     ├── americanrobin_fr.html
+    │     ├── species_css/
+    │     │     └── species_style.css
+    │     └── species_images/
+    │           ├── americanrobin1.png
+    │           └── americanrobinrangemap.png
+    │
+    ├── redknot/
+    │     ├── redknot_en.html
+    │     ├── redknot_es.html
+    │     ├── redknot_fr.html
+    │     ├── species_css/
+    │     │     └── species_style.css
+    │     └── species_images/
+    │           ├── image_1.png
+    │           └── image_2.jpg
+    │
+    └── unknown/
+          ├── species_unknown_en.html
+          ├── species_unknown_en_es.html
+          ├── species_unknown_en_fr.html
+          ├── species_css/
+          │     └── news_style.css
+          └── species_images/
+                └── placeholder.png
+```
+
+
+
 To add your own species files:
 
-- Copy ***one*** of the existing species pages to be used as a template for the new species. For example to make a new page for a Swainson's Thrush, copy *species_americanrobin_en.html* to *species_swainsonsthrush_en.html* (if you prefer to work in French or Spanish, use the _fr or _es file)
-- Place any images you intend to use into the www/speciespages/species_images folder
+- Copy ***one*** of the existing species directories to be used as a template for the new species. For example to make a new page for a "hoarybaf"
+  -  copy entire americanrobin folder and rename it to 'hoarybat'
+  - enter the new folder and rename the *species_americanrobin_en.html* file to *species_hoarybat_en.html* (if you prefer to work in French or Spanish, use the _fr or _es file)
+
+- Place any images you intend to use into the new folder www/speciespages/hoarybat/images folder
 - Open the html file with either an html editor or a plain text text editor.  () An html editor can be useful if you are new to editing html).   Or any standard text editor (eg Notepad) can be used as the text within these pages is relatively simple to identify. However an editor with color "syntax highlighting" can help identify the content needing modification (see Figure 2.) 
   ![Figure2](./md_images/SH_EditHtml.png)
 - Carefully work through the document replace any content within standard html 'tags'. (eg <div> </div>div or <p></p> tags.
 - Link to your own images in the speciespages/species_images directory by modifying the image links <img> in the html file to point to the correct images.
 - Save your edited file following the filename pattern described above.
 - You can easily check your work as you go by opening the file in any web browser. 
-- Once you are satified with your new page (using a browser to check)  you need to make files for the other languages your support (ge. _es.html, _es,html files) as described in **Appendix 1**  of this document.
-
--  Finally test all new files by opening in a web browser, then retest using the kiosk application.
+- Once you are satified with your new page (using a browser to check)  you need to make files for the other languages you support (ge. _es.html, _es,html files) as described in **Appendix 1**  of this document.
+- Finally test all new files by opening in a web browser, then retest using the kiosk application.
 
 
 ​    
