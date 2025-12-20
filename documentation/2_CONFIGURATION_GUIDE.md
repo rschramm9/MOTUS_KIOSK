@@ -127,7 +127,8 @@ EnableMotusNewsTab=1
 ## NewsPageEnglish="newspages/current_news_en.html"
 MotusNewsStoryCatalog="newspages/news_story_catalog.yaml"
 EnableSpeciesInfoTab=1
-SpeciesPageEnglish="speciespages/species_unknown_en.html"
+## Pre Version 6.2.7 
+## SpeciesPageEnglish="speciespages/species_unknown_en.html"
 EnableSuspectDetectionFilter=0
 VelocitySuspectMetersPerSecond=55
 MapIconFlightDurationSeconds=3
@@ -411,9 +412,15 @@ There should be one file for each language that the application supports - curre
 
 ##### 2.13 - "Species" tab content
 
-There is an optional "Species" tab on the ReceiverDetections panel.  You can create and link to species specific content that your users can view when selecting any detectected bird.  It comes from  language dependent html files that you create in the project sub-directory www/speciespages. A few species pages are already written for you to use as templates. If a species is detected that has no content written for it then the default is displayed. (see also:
-START_HERE.md  Section 12.0 - Configure your own "Species" tab content)
+There is an optional "Species" tab on the ReceiverDetections panel.  You can create and link to species specific content that your users can view when selecting any detectected bird.  It comes from  language dependent html files that you create in the project sub-directory www/speciespages. A few species pages are already written for you to use as templates. If a species is detected that has no content written for it then the default is displayed. (see also: START_HERE.md  Section 12.0 - Configure your own "Species" tab content)
 
+For kiosks  Version 6.2.7 and NEWER
+
+```
+EnableSpeciesInfoTab=1
+```
+
+For LEGACY  kiosks  Version 6.2.6 and OLDER
 ```
 EnableSpeciesInfoTab=1
 SpeciesPageEnglish="speciespages/species_unknown_en.html"
