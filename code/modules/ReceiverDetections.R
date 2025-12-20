@@ -47,9 +47,7 @@ UI_ReceiverDetections <- function(id, i18n) {
   ns <- NS(id)
   
   #fluidPage(
-    
-    
-    
+
     # Receiver Detections Tab
     tabPanel(
     
@@ -220,62 +218,83 @@ SERVER_ReceiverDetections <- function(id, i18n_r, lang, rcvr) {
     #####################################################################
     
     # Some code for UI observers, 
+
     #-------------------------------------------------------------------------------------------------------------
     #   
     #------------------------------------------------------------------------------------------------------------- 
-    # function to take the species key and the current language setting and try
-    # to load a species info html file containiong a photo and some interesting facts
+    # function to take the global species key and the current language setting and try
+    # to load a species info html file containing a photo and some interesting facts
     # about the currently selected bird 
     
     updateSpeciesInfo <- function() {    
-      DebugPrint("entered update species")
+      
+      DebugPrint("Entered updateSpeciesInfo")
       #file like "/Users/rich/Projects/MOTUS_KIOSK/www/speciespages/species_unknown_en.html") 
       #message("in updateSpeciesInfo get language for species as x")  
-      x=lang()
-      xxx = config.SpeciesPageEnglish
       
-      #substitute the word 'unknown' in the filename with the species key
-      DebugPrint(paste0("updatespecies lang is ",x))
+      DebugPrint(paste0("updatespecies the species key is:", species_key))
       
-      xxx <- str_replace(xxx,"unknown",species_key)
-      if(x=='en'){
-        thefile<-xxx 
-      } else if (x=='es'){ 
-        thefile<-str_replace(xxx,"_en.html","_es.html")
-      } else if (x=='fr'){ 
-        thefile<-str_replace(xxx,"_en.html","_fr.html")
+      mylang = lang()
+      DebugPrint(paste0("updatespecies lang is:", mylang))
+      
+      #tmp_filename = config.SpeciesPageEnglish
+      # ignore any config.SpeciesPageEnglish as of v6.2.7
+
+      # start with the v6.2.7 form of the unknown species page
+      # and test if it exists, if not assume the old pre v6.2.7 form
+      template = "speciespages/unknown/species_unknown_en.html"
+      filetotest<<-paste0(config.SiteSpecificContentWWW,"/", template)
+      if (!file.exists(filetotest)) {
+        #message("Substitute pre-v6.2.7 species file template")
+        DebugPrint("Substitute pre-v6.2.7 species file template")
+        template = "speciespages/species_unknown_en.html"
+      }
+      
+      DebugPrint(paste0("updatespecies template is now set to:", template))
+      
+      
+      # substitute the correct language pnemonic if needed
+      if(mylang=='en'){
+        theunknownfile <- template
+      } else if (mylang=='es'){ 
+        theunknownfile <-str_replace(template,"_en.html","_es.html")
+      } else if (mylang=='fr'){ 
+        theunknownfile <-str_replace(template,"_en.html","_fr.html")
       } 
-      DebugPrint(paste0("updatespecies test a file"))
-      # 'thefile' path is determined by addResourcePath defined in global.R
-      # but we test for the existence of the actual file using 'project relative' path 
-      testfile<<-paste0(config.SiteSpecificContentWWW,"/",thefile)
-      if (!file.exists(testfile)) {
-           message("species page is missing, substitute a default unknown file")
-           if(x=='en'){
-             thefile <- paste0("speciespages/species_unknown_en.html")
-           } else if (x=='es'){ 
-             thefile <- paste0("speciespages/species_unknown_es.html")
-           } else if (x=='fr'){ 
-             thefile <- paste0("speciespages/species_unknown_fr.html")
-           } 
-        } 
+      DebugPrint(paste0("updatespecies the unknownfile is: ", theunknownfile))
       
-      DebugPrint(paste0("updatespecies render the file"))
+      # substitute the word 'unknown' in the filename with the species key
+      # thespeciesfile <- str_replace(theunknownfile,"unknown",species_key)
+     
+      thespeciesfile <- gsub("unknown", species_key, theunknownfile)
+      DebugPrint(paste0("updatespecies the speciesfile is set: ", thespeciesfile))
       
-      # before upgrade to R v 4.3.1 these workd,  after 
-      # got: # Warning: `includeHTML()` was provided a `path` that appears to be a complete HTML document
-      # so change below I to do it to an iframe.
-      #thepage=includeHTML(thefile)
-      #output$species <- renderUI(thepage)
-      # note the prior need a project relative path, now its a www relative path set in addResourcePath
-      # of global.R
+      DebugPrint(paste0("updatespecies testing for the thespeciesfile"))
+      
+      # 'speciesfile' path is determined by addResourcePath defined in global.R
+      # but we need to test for the existence of the actual file using 'project relative'
+      # path 
+      filetotest<<-paste0(config.SiteSpecificContentWWW,"/", thespeciesfile)
+      DebugPrint(paste0("updatespecies the filetotest is: ", filetotest))
+      
+      # if the species specific file is missing, use the unknown file
+      if (!file.exists(filetotest)) {
+        message("species page is missing, substitute the default unknown file")
+        thefile<-theunknownfile
+      }  else {
+        thefile<- thespeciesfile
+      }
+      
+      DebugPrint(paste0("updatespecies the thefile to render is: ", thefile))
+      DebugPrint(paste0("updatespecies rendering the file"))
+ 
+      # its a www relative path set in addResourcePath of global.R
       output$species <- renderUI({
         tags$iframe(seamless="seamless", src=thefile, style='width:100%;height:100vh;')
       })
       
-      DebugPrint(paste0("exit updateSpecies"))
+      DebugPrint(paste0("exiting updateSpecies"))
     } #end updateSpeciesInfo()
-    
     #-------------------------------------------------------------------------------------------------------------
     #   
     #-------------------------------------------------------------------------------------------------------------  
@@ -368,11 +387,7 @@ SERVER_ReceiverDetections <- function(id, i18n_r, lang, rcvr) {
       #message("-----observeevent(lang()------")
       #print(lang())
       #message("----------")
-      
-      
-      
-      
-      
+ 
       
       # this is a hack, we want the spinner in tagDeploymnmentDetections.R to be mulitlingual
       # but the translator item is not passed in to that function...so we pass in this text
