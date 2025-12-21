@@ -488,7 +488,7 @@ A motus species name of "Eastern Whip-poor-will" compacted and formatted become 
 
 Beginning with version 6.2.7 each species now has its own subfolder of the species name within the  www/speciespages folder with a structure like this:
 
-### The folder 'unknown' as shown above is REQUIRED
+### The folder 'unknown' as shown below is REQUIRED
 
 ```
 www/
@@ -519,7 +519,7 @@ www/
           ├── species_unknown_en_es.html
           ├── species_unknown_en_fr.html
           ├── species_css/
-          │     └── news_style.css
+          │     └── species_style.css
           └── species_images/
                 └── placeholder.png
 ```
