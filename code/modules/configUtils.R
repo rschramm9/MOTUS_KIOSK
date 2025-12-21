@@ -190,9 +190,6 @@ getKioskConfig <- function() {
   #message(paste0("in configUtils, config.siteSpecificContentWWW is:", config.SiteSpecificContentWWW))
   InfoPrint(paste0("Site specific web content is:", config.SiteSpecificContentWWW))
   
-  
-
-  
   #message(paste0("in configUtils, config.siteSpecificContentWWW is:", config.SiteSpecificContentWWW))
   InfoPrint(paste0("Site specific web content is:", config.SiteSpecificContentWWW))
   
@@ -284,7 +281,9 @@ getKioskConfig <- function() {
   #must be the _en.html page....
   list1 <- keyValueToList(configtbl,'SpeciesPageEnglish')
   if( (is.null(list1) || length(list1) == 0) ){
-    badCfg<-TRUE
+    ## this parameter is optional and ignored starting
+    ## with version 6.2.7, so if it is missing dont set the error flag.
+    ## badCfg<-TRUE.
     WarningPrint("Config file is missing entry for SpeciesPageEnglish")
   } else {
     #I ultimately want a string
