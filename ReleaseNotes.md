@@ -1,3 +1,25 @@
+
+
+**6.2.7 (2025-12-21)**
+
+Reorganized the speciespages directory which was becoming unmanagable as more species were added. Rather than all species pages in all languages in a single folder, each species name has its own folder with its css and images.  Also a small change to BuildCache.R (see below) and some additional READMEs in the DEFAULT kiosk to protect against changes.
+
+- code/modules/ReceiverDetections.R:  modified updateSpeciesInfo() to test species_unknown file
+  to determine the correct direcory structure to use. (see CONFIGURATION GUIDE, Sec 2.13 - "Species" tab content)
+
+- code/modules/configUtils.R: SpeciesPageEnglish parameter is obsolete and ignored in as of version 6.2.7. So 
+  modified getKioskConfig() to not set the badCfg flag if its missing.
+
+- DEFAULT kiosk: move species page content into a subfolder for each species
+
+- BuildCache.R: added a note to the UserAgentText string to indicate the URL request is from BuildCache.
+
+- added newspages/unknown/images folder and NEWSPAGES_UNKNOWN_README.md to the DEFAULT kiosk
+
+- added species/unknown/SPECIES_UNKNOWN_README.md and SPECIES_UNKNOWN_IMAGES_README.md to the DEFAULT kiosk
+
+- global.R: change version number
+
 **6.2.6 (2025-12-10)**
 
 Modification to the MotusNew!  Tab to allow more than one news story.  Required restructuring the  www/newspages directory and adding a sidebar panel to the tab.  Modifications to MotusNews.R to contain the sidebar with radio button selectors for each news story,  storyies are configured in a .yaml file.  Configuration utilites have added functions to handle the yaml file. 
