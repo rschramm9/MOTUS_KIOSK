@@ -4,7 +4,7 @@
 ###  MOTUS Kiosk Setup for Windows 11 Pro OS ###
 This document is a guide on how to get the Windows 11 Pro computer set-up to host the the 'Motus Kiosk'   It is one of the four documents that I use to describe the full setup of the kiosk.
 
-***If you are working on a Windows 11 Pro please jump over to the SETUP_FOR_WINDOWS_10.md document***
+***If you are working on a Windows 10 Pro - please jump over to the SETUP_FOR_WINDOWS_10.md document***
 
 We begin by describing how to setup a brand new machine with MS Windows11 Pro preinstalled. Then go on to detail the required changes to 'out-of-the-box' windows that are needed to make the kiosk app behave the way we would expect.
 
@@ -407,13 +407,23 @@ As suggested by:  https://answers.microsoft.com/en-us/windows/forum/all/how-to-r
 
 Open a cmd.exe window with Run as administrator
 
-Enter the command:
+Enter the command (all on one line):
 
+```
 reg delete HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Desktop\NameSpace_41040327\{e88865ea-0e1c-4e20-9aa6-edcd0212c87c}
+```
 
 Ask for passord and runs,  Exit cmd.exe
 
-Reboot.
+If it fails:
+
+Microsoft may have moved where thhe registry entry is,  in December 2025 this appears to work: Correct command nowadays is (for Win11 23H2 at least)
+
+```
+reg delete HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Desktop\NameSpace{e88865ea-0e1c-4e20-9aa6-edcd0212c87c}
+```
+
+Then reboot.
 
 The Gallery entry in Windows Explorer should be gone.
 
