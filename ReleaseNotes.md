@@ -1,5 +1,18 @@
 
 
+**6.2.8 (2025-12-24)**
+
+Complete rework of the MOTUS_MSWINDOWS_BUILDCACHE.bat and MOTUS_MSWINDOWS_BUILDCACHE.bat
+Scripts
+- They no longer require much configuration - see Documentation: FINAL_DEPLOYMENT_FOR_WINDOWS.md
+- They no longer need hand editing when the installed version of R is updated. 
+- They moved from each kiosk's 'extra' folders and into the main project's 'code' directory
+  so they can be maintained in git now that they no longer require kiosk specific edits 
+- see Documentation: FINAL_DEPLOYMENT_FOR_WINDOWS.md
+    
+- documentation/SETUP_FOR_WINDOWS_11.md updated the regedit command that removes "Gallery" from explorer window as Microsoft changed the location of the key. 
+
+
 **6.2.7 (2025-12-21)**
 
 Reorganized the speciespages directory which was becoming unmanagable as more species were added. Rather than all species pages in all languages in a single folder, each species name has its own folder with its css and images.  Also a small change to BuildCache.R (see below) and some additional READMEs in the DEFAULT kiosk to protect against changes.
