@@ -26,7 +26,7 @@ REM -----------------------------------------------------------------------
 REM --- set this is to where you installed the MOTUS_KIOSK project
 set "SCRIPTS_PATH=C:\Users\MOTUS_USER\Projects\MOTUS_KIOSK"
 
-REM --- set the script to run relative to the SCRIPTS_PATH setingt above
+REM --- set the script to run relative to the SCRIPTS_PATH setting above
 set "RSCRIPT_FILE=code\modules\BuildCache.R"
 
 REM --- set this if you want to see debug output to console
