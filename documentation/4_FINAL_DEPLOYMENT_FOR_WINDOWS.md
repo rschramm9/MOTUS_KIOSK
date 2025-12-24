@@ -109,6 +109,7 @@ Before you quit - double check that:
 - Enable Back/Forward navigation keys is TRUE 
 - Enable Settings keys TRUE
   
+
 Otherwise you risk completely locking yourself out of your computer with absolutely no way to recover except by reinstalling the operating system.
 
 
@@ -122,32 +123,36 @@ Shiny kiosk App.R is the background server application needed by the kiosk web p
 
 **2.1** - Login as administrator Admin
 
-**2.2** - First we need to make a couple of edits a startup command .bat file to set the path to the installed version of the R language, the user account to run as, and a path to a directory for log files etc
+**2.2** - If you followed the standard installation instructions using user=MOTUS_USER and the path to the installed MOTUS_KIOSK project directory,  then skip to step 2.3 below.
 
-​	**2.2.1**  Using the File Explorer, find the folder where you installed R.  If you followed recommendations then is should be in C:\R.  If its not there then most likely its in C:\Program Files\R  
+If you chose a non-standard username or installation path you may need to edit the SCRIPTS_PATH variable the top of the MOTUS_MSWINDOWS_STARTSERVER.bat script located in the MOTUS_KIOSK\code sub-directory where you installed the project.   Locate the file and edit with notepad. Then proceed to step 2.3 below.
 
-​	**2.2.1** Open the folder and then make note of the version of R.  (e.g R-4.2.2)  folder C:\Program Files\R. 
+~~**2.2** - ****THIS BLOCK APPLIES TO LEGACY VERSIONS V6.2.7 and older** First we need to make a couple of edits a startup command .bat file to set the path to the installed version of the R language, the user account to run as, and a path to a directory for log files etc~~
 
-Make a note of the **BOTH** the path and the version for use below.
+​	~~**2.2.1**  Using the File Explorer, find the folder where you installed R.  If you followed recommendations then is should be in C:\R.  If its not there then most likely its in C:\Program Files\R~~  
 
-​	**2.2.2** Using the File Explorer navigate to your 'extras' directory that contains the .bat file we need to edit.  Likely C:\MOTUS_USER\Documents\kiosks\yourkioskname\extras 
+​	~~**2.2.1** Open the folder and then make note of the version of R.  (e.g R-4.2.2)  folder C:\Program Files\R.~~ 
 
-​	**2.2.3** Open this file for editing in notepad.  MOTUS_MSWINDOWS_STARTSERVER.bat  
+~~Make a note of the **BOTH** the path and the version for use below.~~
 
-** WARNING:** make sure your editing the .bat file in your own kiosk (not in the DEFAULT kiosk). 
+​	~~**2.2.2** Using the File Explorer navigate to your 'extras' directory that contains the .bat file we need to edit.  Likely C:\MOTUS_USER\Documents\kiosks\yourkioskname\extras~~ 
 
-** IMPORTANT Pay close attention to the user of forward-slash and back-slash characters in the paths in the .bat file.  DOS requires paths using forward-slash,  R likes to see 'linux' type paths using bask-slash. Notice where the DOS portion of the cmd line uses forward-slash and the parts that get passed to R use the back-slash form.
+​	~~**2.2.3** Open this file for editing in notepad.  MOTUS_MSWINDOWS_STARTSERVER.bat~~  
+
+~~** WARNING:** make sure your editing the .bat file in your own kiosk (not in the DEFAULT kiosk).~~ 
+
+~~** IMPORTANT Pay close attention to the user of forward-slash and back-slash characters in the paths in the .bat file.  DOS requires paths using forward-slash,  R likes to see 'linux' type paths using bask-slash. Notice where the DOS portion of the cmd line uses forward-slash and the parts that get passed to R use the back-slash form.~~
 
 	 - Set the path to R in the cmd shown in the .bat file to the location discovered above.
 	 - Set the R version field in the path to match your installed version discovered above.
-  - Check the username. If you chose to run as a different user than MOTUS_USER
-    then substitute that username below in two places.
-  - check the path to the logs directory. You will want to have logs written
-    in with your kiosk specific directory. If you have followed recommendations then that
-    logs directory will be in the same place as your kiosk.cfg file - (likely in
-    the path: C:\Users\MOTUS_USER\Documents\kiosks\yourkioskname )
+  - ~~Check the username. If you chose to run as a different user than MOTUS_USER~~
+    ~~then substitute that username below in two places.~~
+  - ~~check the path to the logs directory. You will want to have logs written~~
+    ~~in with your kiosk specific directory. If you have followed recommendations then that~~
+    ~~logs directory will be in the same place as your kiosk.cfg file - (likely in~~
+    ~~the path: C:\Users\MOTUS_USER\Documents\kiosks\yourkioskname )~~
 
-​	**2.2.4**   "Save" the file and exit.
+​	~~**2.2.4**   "Save" the file and exit.~~
 
 **2.3** Edit the startup.cfg to eliminate any relative paths (expand ~/ path into absolute path)
 
@@ -160,7 +165,7 @@ StartKiosk="mycustomkiosk"
 KioskCfgFile="kiosk.cfg"
 ```
 
-*Note: these values are case sensitive and must match exactly the directory structure containing your customized kios's content.*
+*Note: these values are case sensitive and must match exactly the directory structure containing your customized kiosk's content.*
 
 **TIP:** relative (~) paths are convenient when developing your site using the RStudio IDE.  When your kiosk 'goes-live' it will likely be run in the background by another account such as Admin, at ~/ will expand to the Admin account, not MOTUS_USER)
 
@@ -175,7 +180,7 @@ KioskCfgFile="kiosk.cfg"
 - The task will be named MOTUS_MSWINDOWS_STARTSERVER_TASK
 - Location field is just a default backslash character
 
-   - Type a short Description. e.g. 
+   - Type a short Description. e.g.  'Start the MOTUS_KIOSK server at boot.'
    -  Check run under the Admin account. (ComputerName\Admin)·   
 
 - Check the option  ‘Run whether user is logged on or not”
@@ -223,7 +228,7 @@ If not...
 
 **2.16** **TROUBLE SHOOTING: ** If the browser doesnt display the dashboard correctly.
 
-First look in the main project's Logs directory for any messages in the most recent log. If the program was able to get far enough to start logging and crashed, then there should be a timestamped log file in the C:\MOTUS_USER\Projects\MOTUS_KIOSK\logs directory
+First look in the main project's Logs directory for any messages in the most recent log. If the program was able to get far enough to start logging and crashed, then there should be a timestamped log file in your kiosks logs directory.  Typically:  C:\MOTUS_USER\Documents\kiosk\yourkioskname\logs
 
 Else try opening a Cmd.exe window and R-Studio side-by-side. In the command window type the full command below all as a single line:
 
