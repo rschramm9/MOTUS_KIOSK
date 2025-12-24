@@ -34,6 +34,31 @@ REM --- DEBUG_MODE=1 for ON or 0 for OFF for
 set "DEBUG_MODE=1"
 
 
+REM --- Specify the log file name for stderr and stdout output
+REM --- Choose from the three forms presented by commenting in or out using REM.
+REM --- The first form will never be deleted, allowing the directory to become full
+REM --- over time. The later two will prevent the log directory from becoming full.
+
+REM Form 1. Use a unique timestamp for the the logfile name so it never gets overwritten
+
+REM set "LOG_NAME=BuildCacheLog_%date:~10,4%%date:~4,2%%date:~7,2%_%time:~0,2%%time:~3,2%%time:~6,2%.txt"
+
+REM Form 2. will create a logfile name with the hour appended. Then if it
+REM already exists from a prior run, it will delete the previous file
+REM Extract the hour from %time% (the first two characters)
+
+REM for /f "tokens=1 delims=:" %%A in ("%time%") do set "hour_number=%%A"
+REM set "LOG_NAME=BuildCacheLog_%hour_number%.txt"
+
+
+REM Form 3. will create logfile name using the day of month
+REM well suited to nightly runs where you only want to keep a month worth of logs
+REM for system dates in of form:Wed 01/15/2025 the day of month is token 3
+
+for /f "tokens=3 delims=/- " %%A in ("%date%") do set "DAY_OF_MONTH=%%A"
+set "LOG_NAME=BuildCacheLog_dom%DAY_OF_MONTH%.txt"
+
+
 REM -----------------------------------------------------------------------
 REM ----  You shouldnt need to modify anything below this line
 REM -----------------------------------------------------------------------
@@ -175,8 +200,7 @@ REM -----------------------------------------------------------------------
 REM ---  LOG SETUP AND TESTS ------
 REM -----------------------------------------------------------------------
 
-REM -- Specify the log file name for stderr and stdout output
-set "LOG_NAME=CacheBuilderLog_%date:~10,4%%date:~4,2%%date:~7,2%_%time:~0,2%%time:~3,2%%time:~6,2%.txt"
+REM -- Specify the log file for stderr and stdout output
 set "LOG_FILE=%LOGS_PATH%\%LOG_NAME%
 
 REM -- Resolve LOG_FILE to a full absolute path and print it
