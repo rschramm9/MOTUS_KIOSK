@@ -34,6 +34,27 @@ REM --- set this if you want to see debug output to console
 REM --- DEBUG_MODE=1 for ON or 0 for OFF for
 set "DEBUG_MODE=1"
 
+REM Specify the log file name for stderr and stdout output
+
+REM this would create a uniquew timestamp the logfile so it never gets overwitten
+REM set "LOG_NAME=MotusKioskLog_%date:~10,4%%date:~4,2%%date:~7,2%_%time:~0,2%%time:~3,2%%time:~6,2%.txt"
+
+REM This form will create a logfile name  with the hour appended.  Then if it
+REM already exists from a prior run, it will delete the previous file
+REM Extract the hour from %time% (the first two characters)
+
+REM for /f "tokens=1 delims=:" %%A in ("%time%") do set "hour_number=%%A"
+REM set "LOG_NAME=MotusKioskLog_%hour_number%.txt"
+
+
+REM this form will create logfile name using the day of month
+REM well suited to nightly runs where you only want to keep a month worth of logs
+REM  for system dates in of form:Wed 01/15/2025 the day of month is token 3
+
+for /f "tokens=3 delims=/- " %%A in ("%date%") do set "DAY_OF_MONTH=%%A"
+set "LOG_NAME=MotusKioskLog_dom%DAY_OF_MONTH%.txt"
+
+
 REM -----------------------------------------------------------------------
 REM --- You should not need to modify below this line
 REM -----------------------------------------------------------------------
@@ -139,7 +160,6 @@ if errorlevel 1 (
 %DEBUG_ECHO% [%SCRIPTS_PATH%]
 
 REM -- Specify the log file name for stderr and stdout output
-set "LOG_NAME=MotusKioskLog_%date:~10,4%%date:~4,2%%date:~7,2%_%time:~0,2%%time:~3,2%%time:~6,2%.txt"
 set "LOG_FILE=%LOGS_PATH%\%LOG_NAME%
 
 REM R.exe wants linux style - this converts DOS to LINUX
