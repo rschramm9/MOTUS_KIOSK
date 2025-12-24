@@ -2,7 +2,7 @@
 
 **6.2.8 (2025-12-24)**
 
-Complete rework of the MOTUS_MSWINDOWS_BUILDCACHE.bat and MOTUS_MSWINDOWS_BUILDCACHE.bat
+Complete rework of the MOTUS_MSWINDOWS_STARTSERVER.bat and MOTUS_MSWINDOWS_BUILDCACHE.bat
 Scripts
 - They no longer require much configuration - see Documentation: FINAL_DEPLOYMENT_FOR_WINDOWS.md
 - They no longer need hand editing when the installed version of R is updated. 
