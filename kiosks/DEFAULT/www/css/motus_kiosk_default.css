@@ -1,6 +1,7 @@
 /* CSS style for the version6 motus_kiosk */
 /* should live in your projects www/css folder */
 /* 15Sep2025 implemented titlebar-background-gradient-color */
+/* 01Feb2026 added styling for receiver picker styled as rows of buttons */
 
         /* create variables for the users Titlebar, Navbar and Mainbody colors  */
         :root {
@@ -14,6 +15,14 @@
          --base-page-background-color: white; /* Default backgroundcolor of the body */
          --jump-to-button-color: yellow; /* Default jump to backgroundcolor */
          --offline-text-color: orange; /*the color of the text displayed in headerbar when offline*/
+         
+          /* default color variables for receiver picker when styled as buttons */
+         --receiver-picker-radiobtn-unselected-background-color: ghostwhite;
+         --receiver-picker-radiobtn-unselected-text-color: slategray;        
+         --receiver-picker-radiobtn-selected-background-color: #347ab7;   /* slate blue */
+         --receiver-picker-radiobtn-selected-text-color: white;
+         --receiver-picker-radiobtn-hover-background-color: white;
+         --receiver-picker-radiobtn-hover-text-color: black;
         }
         
         #readmediv {
@@ -152,7 +161,118 @@
         margin-left: 20px; /* Add spacing from the title */
         color:var(--titlebar-text-color); 
       }
-      
+          /*****   }   **** redundant? ****/
+
+
+      /* ===================================================================
+         Receiver selector (radioGroupButtons) styling
+         =================================================================== */
+
+      /* Container width + scroll behavior */
+      #receiver_pick .btn-group-vertical {
+        width: 200px;
+        max-height: 120px;        /* keeps title bar from growing */
+        overflow-y: auto;
+      }
+         
+          
+      /* Base (unselected) buttons */
+      #receiver_pick button.btn.radiobtn {
+        background-color: var(--receiver-picker-radiobtn-unselected-background-color);
+        color: var(--receiver-picker-radiobtn-unselected-text-color);
+        border: 1px solid #cbd5e1;
+        text-align: left;
+        padding: 6px 12px;
+        box-shadow: none;
+        background-image: none;
+      }
+
+      /* Hover (unselected) — yellow highlight */
+      #receiver_pick button.btn.radiobtn:hover {
+        background-color: var(--receiver-picker-radiobtn-hover-background-color);
+        color: var(--receiver-picker-radiobtn-hover-text-color);
+        border-color: #facc15; /* yellow */
+        box-shadow: 0 0 0 2px rgba(250, 204, 21, 0.35);
+      }
+
+      /* Selected (active) */
+      #receiver_pick button.btn.radiobtn.active,
+      #receiver_pick button.btn.radiobtn.btn-default.active,
+      #receiver_pick button.btn.radiobtn:active {
+        background-color: var(--receiver-picker-radiobtn-selected-background-color);
+        color: var(--receiver-picker-radiobtn-selected-text-color);
+        border-color: #2563eb; /* blue */
+        box-shadow: none;
+        background-image: none;
+      }
+
+      /* Keep selected blue on hover (override hover highlight) */
+      #receiver_pick button.btn.radiobtn.active:hover,
+      #receiver_pick button.btn.radiobtn.btn-default.active:hover {
+        background-color: var(--receiver-picker-radiobtn-selected-background-color);
+        color: var(--receiver-picker-radiobtn-selected-text-color);
+        border-color: #2563eb; /* stay blue */
+        box-shadow: none;
+      }
+
+      /* Focus cleanup */
+      #receiver_pick button.btn.radiobtn:focus,
+      #receiver_pick button.btn.radiobtn:focus:active {
+        outline: none;
+        box-shadow: none;
+      }
+
+      /* Hide the native radio control inside the button */
+      #receiver_pick button.btn.radiobtn > input[type='radio'] {
+        position: absolute;
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      /* ========================================================= */
+      /*   Receiver selector: auto 1 / 2 / 3 / 4 columns           */
+      /* ========================================================= */
+
+      /* Base: 1 column (1–3 receivers) */
+      #receiver_pick .btn-group-vertical.btn-group-container-sw {
+        display: grid !important;
+        grid-template-columns: 1fr !important;
+        gap: 6px !important;
+        width: 200px !important;
+        padding-top: 4px;   /* ← prevents top-row clipping */
+        max-height: 220px;
+        overflow-y: auto;
+      }
+
+      /* Make each option fill its grid cell */
+      #receiver_pick .btn-group-vertical.btn-group-container-sw > .btn-group {
+        width: 100% !important;
+      }
+      #receiver_pick .btn-group-vertical.btn-group-container-sw
+        > .btn-group > button.btn.radiobtn {
+        width: 100% !important;
+      }
+
+      /* 2 columns when 4–6 receivers */
+      #receiver_pick .btn-group-vertical.btn-group-container-sw:has(> .btn-group:nth-child(4)) {
+        grid-template-columns: 1fr 1fr !important;
+        width: 320px !important;   /* 2 × ~160px */
+      }
+
+      /* 3 columns when 7–9 receivers */
+      #receiver_pick .btn-group-vertical.btn-group-container-sw:has(> .btn-group:nth-child(7)) {
+        grid-template-columns: 1fr 1fr 1fr !important;
+        width: 480px !important;   /* 3 × ~160px */
+      }
+
+      /* 4 columns when 10+ receivers */
+      #receiver_pick .btn-group-vertical.btn-group-container-sw:has(> .btn-group:nth-child(10)) {
+        grid-template-columns: 1fr 1fr 1fr 1fr !important;
+        width: 640px !important;   /* 4 × ~160px */
+      }
+
+
+      /* when the receiver picker is a dropdown list */
       /* Ensures dropdown list when active is displayed above */
       /* other elements like the navbar */
       .dropdown-menu {
