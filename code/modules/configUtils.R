@@ -673,6 +673,15 @@ getKioskConfig <- function() {
     config.ApiKey_2<<- toString(list1[1])  
   }
   
+  #print("------------ ButtonStyleReceiverSelectors----------------")
+  list1 <- keyValueToList(configtbl,'ButtonStyleReceiverSelectors')
+  # if missing key default to False
+  if( (is.null(list1) || length(list1) == 0) ){
+    config.ButtonStyleReceiverSelectors<<-0 #1=True, 0=False
+  } else {
+    config.ButtonStyleReceiverSelectors<<- as.numeric(list1[1]) #assume length=1
+  }
+  
   #print("------------ RebuildCacheDelaySeconds  --------------")
   list1 <- keyValueToList(configtbl,'RebuildCacheDelaySeconds')
   if( (is.null(list1) || length(list1) == 0) ){
@@ -801,6 +810,8 @@ printConfig <- function() {
   TSprint(paste0("ApiKey_1:", config.ApiKey_1))
   TSprint(paste0("ApiKey_2:", config.ApiKey_2))
   
+  TSprint(paste0("ButtonStyleReceiverSelectors:", config.ButtonStyleReceiverSelectors))
+
 
   return()
   
