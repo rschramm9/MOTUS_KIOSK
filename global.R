@@ -1,8 +1,9 @@
 ######## I put github release version and other data here ############
 ######## so it can be displayed on the footer of the kiosk window ####
-gblFooterText <- "MOTUS_KIOSK vsn 6.2.8  24-Dec-2025"
-gblUserAgentText <- "MOTUS_KIOSK vsn 6.2.8"
+gblFooterText <- "MOTUS_KIOSK vsn 6.2.9  24-Dec-2025"
+gblUserAgentText <- "MOTUS_KIOSK vsn 6.2.9"
 mytoggle<<-FALSE #useful global variable for debugging
+
 ###############################################################################
 # Copyright 2022-2023 Richard Schramm
 # 
