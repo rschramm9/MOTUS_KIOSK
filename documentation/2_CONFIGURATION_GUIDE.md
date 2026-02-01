@@ -1,6 +1,6 @@
 # Configuration Guide
 
-### For the MOTUS Nature Center Kiosk App v6.2.7
+### For the MOTUS Nature Center Kiosk App v6.29
 
 **This** document is a guide on how to configure get the 'Motus Kiosk' Shiny web app. for Version 5.x and later.
 
@@ -88,6 +88,7 @@ Below is the content of an entire sample configuration file for version Version 
 AdminContact="schramm.r@gmail.com"
 ReceiverDeploymentID=9195,11721,10758
 ReceiverShortName="Ankeny Hill OR","Finley Wildlife Refuge", "Newport OR (HMSC)"
+ButtonStyleReceiverSelectors=0
 MainLogoFile="images/logos/ankenyhill_logo_hires_cropped.jpg"
 MainLogoHeight=100
 CssFile="css/motus_kiosk_default.css"
@@ -134,6 +135,7 @@ VelocitySuspectMetersPerSecond=55
 MapIconFlightDurationSeconds=3
 ApiKey_1="none"
 ApiKey_2="none"
+
 ```
 
 
@@ -171,6 +173,18 @@ or for multiple receivers:
 ReceiverDeploymentID=9195,7948,8691,7474,7950
 ReceiverShortName="Ankeny Hill OR", "Bullards Bridge OR", "Nisqually Delta WA", "Oysterville WA", "Tokeland WA"
 ```
+
+
+
+The selector for the active receiver can be rendered as either a dropdown list (default) or as a grid of selector buttons. Styling is controlled via the ButtonStyleReceiverSelectors parameter.  Set to 0 for traditional dropdown list, set value to 1 for button grid :
+
+![ReceiverPickerStyles](./md_images/ReceiverPickerStyles.png)
+
+```
+ButtonStyleReceiverSelectors=1
+```
+
+
 
 ##### 2.3 - Titles and Navbar Settings
 
