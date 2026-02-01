@@ -110,6 +110,9 @@ ui_headerbar <- fluidRow(
 
 ui_titlebar<- fluidRow( class = "title-bar",
                         
+
+
+
    tags$img(
      #src = "images/logos/ankenyhill_logo_hires_cropped.jpg",
      src = config.MainLogoFile,
@@ -121,16 +124,31 @@ ui_titlebar<- fluidRow( class = "title-bar",
    ),
                         
    div( class = "picker-container",
-      textOutput("available_receivers", inline = TRUE),
-                             
-      pickerInput(
-      inputId = "receiver_pick",
-      label = NULL,  # No label inside the picker
-      choices = config.ReceiverShortNames,
-      options = pickerOptions(container = "body"),
-      width = "200px"
-       )
-    )
+        textOutput("available_receivers", inline = TRUE),
+        
+      # receiver picker can be styeld as either a dropdown list or a
+      # radio button group.
+      if (config.ButtonStyleReceiverSelectors) { #use radio button group
+          shinyWidgets::radioGroupButtons(
+            inputId   = "receiver_pick",
+            choices   = config.ReceiverShortNames,
+            selected  = config.ReceiverShortNames[1],
+            size      = "sm",
+            direction = "vertical",
+            status    = "default"    # <-- IMPORTANT
+          )
+      } else { #use dropdown list
+          shinyWidgets::pickerInput(
+            inputId  = "receiver_pick",
+            label    = NULL,
+            choices  = config.ReceiverShortNames,
+            width    = "200px"
+          )
+      }
+        
+     
+   ) #end div picker-container
+   
 )
 
 
