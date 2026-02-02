@@ -126,7 +126,7 @@ ui_titlebar<- fluidRow( class = "title-bar",
    div( class = "picker-container",
         textOutput("available_receivers", inline = TRUE),
         
-      # receiver picker can be styeld as either a dropdown list or a
+      # receiver picker can be styled as either a dropdown list or a
       # radio button group.
       if (config.ButtonStyleReceiverSelectors) { #use radio button group
           shinyWidgets::radioGroupButtons(
