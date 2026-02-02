@@ -1,4 +1,19 @@
 
+**6.2.9 (2026-02-01)**
+
+The active receiver selection widget can now be either the traditional dropdown list or a grid of radio buttons.  Controlled by the config file parameter ButtonStyleReceiverSelectors (see documentation folder Configuration_Guide.md)
+- global.R bump version
+- code/modules/configUtils.R added ButtonStyleReceiverSelectors parameter
+- ui.R added if block to use shinyWidgets::radioGroupButtons
+  if config.ButtonStyleReceiverSelectors is true
+- documentation/2_CONFIGURATION_GUIDE.md documented ButtonStyleReceiverSelectors parameter
+- documentation/md_images/ReceiverPickerStyles.png image added tp archive
+- kiosks/DEFAULT/www/css/motus_kiosk_default.css  added css styling required for ButtonStyleReceiverSelectors
+ 
+  ********************** IMPORTANT NOTE !! *******************
+  you will need to manually copy (replace) the file: kiosks/DEFAULT/www/css/motus_kiosk_default.css
+  into your own kiosk's www/css directory 
+
 
 **6.2.8 (2025-12-24)**
 
