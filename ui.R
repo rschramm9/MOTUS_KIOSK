@@ -84,7 +84,8 @@ df$img = c(
 ui_headerbar <- fluidRow(
   div(  
     id = "main_page_headerbar",
-    actionButton("gotoMap", "Page Loading...", style = "height: 95%"),
+#    actionButton("gotoMap", "Page Loading...", style = "height: 95%"),
+     actionButton("gotoMap", "Page Loading..."),
     div( class = "headerbar-container",
          textOutput("headerbar_text")
     ),
@@ -228,23 +229,59 @@ ui <- fluidPage(
   
   # link it to the CSS style sheet in the www/css directory
   # uses a css resource path set in global.R
-  
   #tags$link(rel = "stylesheet", type = "text/css", href = "css/motus_kiosk_default.css"),
   
   tags$head( 
     tags$link(rel = "stylesheet", type = "text/css", href = config.CssFile),
     tags$title("Motus Kiosk"),
     tags$script(src="scripts/var_change.js"),
+    
+    # --- NEW: OpenKiosk-safe receiver grid column logic (no :has()) ---
+    # for a grid style receiver picker, this will stack buttons in up to 3
+    # column grid
+    tags$script(HTML("
+  (function () {
+    function updateReceiverCols() {
+      var container = document.querySelector('#receiver_pick .btn-group-vertical.btn-group-container-sw');
+      if (!container) return;
+
+      var n = container.querySelectorAll(':scope > .btn-group').length;
+
+      // 1–3 => 1 col, 4–6 => 2, 7–9 => 3, 10+ => 4
+      var cols = Math.min(4, Math.max(1, Math.ceil(n / 3)));
+
+      container.classList.remove('cols-1','cols-2','cols-3','cols-4');
+      container.classList.add('cols-' + cols);
+    }
+
+    function init() {
+      updateReceiverCols();
+
+      // watch for re-render (e.g., receiver list changes)
+      var target = document.getElementById('receiver_pick');
+      if (!target) return;
+
+      var obs = new MutationObserver(function () { updateReceiverCols(); });
+      obs.observe(target, { childList: true, subtree: true });
+    }
+
+    window.addEventListener('load', init);
+  })();
+  ")),
+    
     tags$script(inactivity)
   ),
              
-   ###tags$script(inactivity),
              
-   ui_headerbar,
-   ui_titlebar,
-   ui_navbar,
-   ui_hrow,
-   ui_footer,
+  div(
+    id = "app-root",
+    ui_headerbar,
+    ui_titlebar,
+    ui_navbar,
+    #ui_hrow,
+    ui_footer
+  )
+  
   
 )   # end of ui definition
 
