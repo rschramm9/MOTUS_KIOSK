@@ -48,7 +48,7 @@ server <- function(input, output, session) {
   #suppress translator warning re. 'no translation yaml file' 
   warn = getOption("warn")
   options(warn=-1)
-  # print(paste0("In server.R config.TranslationsPath:", config.TranslationsPath))
+  #message(paste0("In server.R config.TranslationsPath:", config.TranslationsPath))
   i18n <- Translator$new(translation_csvs_path = config.TranslationsPath,
                        separator_csv="|")
   options(warn=warn)
@@ -327,6 +327,7 @@ server <- function(input, output, session) {
   shinyjs::runjs(sprintf("document.documentElement.style.setProperty('--base-page-text-color', '%s');", config.BodyPageTextColor ))
   shinyjs::runjs(sprintf("document.documentElement.style.setProperty('--jump-to-button-color', '%s');", config.JumpToButtonColor ))
   shinyjs::runjs(sprintf("document.documentElement.style.setProperty('--offline-text-color', '%s');", "darkorange" ))
+  shinyjs::runjs(sprintf("document.documentElement.style.setProperty('--frame-height', '%s');", config.FrameHeight ))
 
   # Pass language selection into the module for Server-side translations
   # If not done, some UI elements will not be updated upon language change
