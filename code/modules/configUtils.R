@@ -252,6 +252,19 @@ getKioskConfig <- function() {
     config.MainLogoHeight <<- as.numeric(list1[1]) #assume length=1
   }
   
+  #print("------------ FrameHeight --------------")
+  # New starting V6.2.9. adjustment for non-content elements
+  # of window to keep content from overflowing window at bottom
+  # Tune by trial-and-error, 300px seems to work well on a 1080P
+  # monitor (1920x1080 px)
+  list1 <- keyValueToList(configtbl,'FrameHeight')
+  if( (is.null(list1) || length(list1) == 0) ){
+    config.FrameHeight <<- 300
+  } else {
+    config.FrameHeight <<- as.numeric(list1[1]) #assume length=1
+  }
+  
+  
   #print("------------ CssFile (new in vsn 6.2.3) ----------------")
   list1 <- keyValueToList(configtbl,'CssFile')
   if( (is.null(list1) || length(list1) == 0) ){
@@ -811,8 +824,9 @@ printConfig <- function() {
   TSprint(paste0("ApiKey_2:", config.ApiKey_2))
   
   TSprint(paste0("ButtonStyleReceiverSelectors:", config.ButtonStyleReceiverSelectors))
-
-
+  
+  TSprint(paste0("FrameHeight:", config.FrameHeight))
+  
   return()
   
 } #end printConfig()
