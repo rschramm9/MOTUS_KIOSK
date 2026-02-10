@@ -14,6 +14,7 @@ ui_AboutMotus_title|Learn More About Motus
 ui_about_motus_loading|About Motus loading
 
 ui_RCVR_title|Detections
+ui_RCVR_detections_list_title|Select a detected animal from the list below to view details.
 
 ui_RCVR_detections_details_tab_label|Tag Detail
 ui_RCVR_detections_details_tab_helptext|The selected tagged bird's deployment information.
