@@ -15,6 +15,7 @@ ui_AboutMotus_title|Más información sobre Motus
 ui_about_motus_loading|Acerca de la carga de Motus
 
 ui_RCVR_title|Detecciones
+ui_RCVR_detections_list_title|Seleccione un animal detectado de la lista a continuación para ver los detalles.
 
 ui_RCVR_detections_details_tab_label|Detalles
 ui_RCVR_detections_details_tab_helptext|La información de despliegue del ave etiquetada seleccionada.
