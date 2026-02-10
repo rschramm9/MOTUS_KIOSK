@@ -1,3 +1,53 @@
+**6.3.0 (2026-02-10)**
+
+***********************************  IMPORTANT NOTE ! *************************
+
+```
+  If you are upgrading from prior versions (6.2.9 and earlier) this update contains code-breaking changes. You will need to manually copy (replace) the following files from the DEFAULT kiosk directories into your own existing production kiosk (likely in your Users/MOTUS_USER/Documents/kiosk/yourkioskname folder) : 
+  1 from: kiosks/DEFAULT/www/css/motus_kiosk_default.css   copy/replace file into your own kiosk's www/css directory 
+
+  2 from: kiosks/DEFAULT/data/translations  copy/replace all three languages translation .csv files into your own kiosk's data/translations folder
+  
+```
+
+
+
+###### Changes Summary
+
+Changed the label above the detections picklist.
+Cleanup the default css file to provide better control of the framing around the content.
+Framing can now be set by kiosk.cfg
+
+###### Changes Details
+
+ui.R: change the receiver picker grid stacking to eliminate use of has() because openKiosk
+doesnt support has, Use javascript functions updateReceiverCols() and updateReceiverCols()
+instead.
+
+server.R: added javascript hook to set css --frame-height dynamically
+
+code/modules/configUtils.R:  added config parameter FrameHeight
+Note: his parameter can be added to your kiosk.cfg file if you need to adjust frame
+height (see ConfigurationGuide)
+
+code/Modules/ReceiverDetections: 
+-- cleanup on velocity filter code
+-- only compute and display velocity, distance etc if the do filter checkbox is checked
+-- label above the the detections picklist was same as the tab label. Added
+
+ui_RCVR_detections_list_title to translations so it can be used to provide better
+guidance to the user.
+
+kiosks/DEFAULT/data/translations: added "ui_RCVR_detections_list_title" to data/translation
+csv files for all languages    *** these files must be manually copied to your own kiosk ***
+
+kiosks/DEFAULT/www/css/motus_kiosk_default.css:  changes to handle frame height parameter
+and general cleanup.  *** this file must be manually copied to your own named kiosk ***
+
+Added to code directory:  script SetOpenKioskAutostart.ps1 to get rid of status text
+that OpenKiosk adds at bottom of window.
+
+
 
 **6.2.9 (2026-02-01)**
 
@@ -9,7 +59,7 @@ The active receiver selection widget can now be either the traditional dropdown 
 - documentation/2_CONFIGURATION_GUIDE.md documented ButtonStyleReceiverSelectors parameter
 - documentation/md_images/ReceiverPickerStyles.png image added tp archive
 - kiosks/DEFAULT/www/css/motus_kiosk_default.css  added css styling required for ButtonStyleReceiverSelectors
- 
+
   ********************** IMPORTANT NOTE !! *******************
   you will need to manually copy (replace) the file: kiosks/DEFAULT/www/css/motus_kiosk_default.css
   into your own kiosk's www/css directory 
@@ -24,7 +74,7 @@ Scripts
 - They moved from each kiosk's 'extra' folders and into the main project's 'code' directory
   so they can be maintained in git now that they no longer require kiosk specific edits 
 - see Documentation: FINAL_DEPLOYMENT_FOR_WINDOWS.md
-    
+  
 - documentation/SETUP_FOR_WINDOWS_11.md updated the regedit command that removes "Gallery" from explorer window as Microsoft changed the location of the key. 
 
 
