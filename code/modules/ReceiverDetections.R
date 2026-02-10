@@ -54,29 +54,31 @@ UI_ReceiverDetections <- function(id, i18n) {
       useShinyjs(),
       
       
-#    tags$head(
-#      tags$style(HTML("hr {border-top: 1px solid #000000;}"))
-#    ),
+    tags$head(
+      tags$style(HTML("hr {border-top: 1px solid #000000;}"))
+    ),
     
-
     # this is the header above detected tag list 
     # it has to be styled here locally not in the .css theme 
-    titlePanel(
-       span(
-          div(
-           i18n$t("ui_RCVR_title"), 
-           style=paste0("display:inline-block;
-           vertical-align:top;
-           text-align:right !important;
-           color:", config.NavbarTextColor, ";
-           font-style: italic;
-           font-size: 20px;
-           background-color:white;"),
-         ), #end div
+    div(
+      i18n$t("ui_RCVR_detections_list_title"),
+      style = paste0(
+        "display:inline-block;",
+        "vertical-align:top;",
+        "text-align:right;",
+        "color:", config.NavbarTextColor, ";",
+        "font-style:italic;",
+        "font-size:18px;",
+        "padding:2px 0 2px 6px;",
+        "margin:0;",
+        "line-height:1.2;",
+        "background-color:white;"
+      ) #end paste
+    ),  #end div
     
-         div(
-           shinyjs::hidden(checkboxInput(ns("enablefilter"), label=i18n$t("ui_filter_velocity_checkbox_label"), value = FALSE, width = NULL)),
-           style=paste0( "display:inline-block;
+    div(
+      shinyjs::hidden(checkboxInput(ns("enablefilter"), label=i18n$t("ui_filter_velocity_checkbox_label"), value = FALSE, width = NULL)),
+      style=paste0( "display:inline-block;
            position:absolute;
            right:2em;
            vertical-align:top;
@@ -84,11 +86,15 @@ UI_ReceiverDetections <- function(id, i18n) {
            color:", config.NavbarTextColor, ";
            font-style: italic;
            font-size: 18px;"
-           ), #end paste0
-         ), #end div
-      ) # end span1
-    ), #end titlepanel
+      ), #end paste0
+    ), #end div
+
  
+ 
+div(
+  class = "rcvr-detections-layout",
+  
+  
     sidebarLayout(
       sidebarPanel(width = 4,
       DT::dataTableOutput( ns('mytable') )
@@ -145,7 +151,8 @@ UI_ReceiverDetections <- function(id, i18n) {
                 ) #end tabsetPanel            
       ) #end mainPanel
     ) # end sidebarLayout
-  ) #end fluidPage
+) # end div
+  ) #end tabPanel  
 }  # end function def for UI_ReceiverDetections
 
 #####################
@@ -577,7 +584,6 @@ SERVER_ReceiverDetections <- function(id, i18n_r, lang, rcvr) {
         # apply any flight data exclusions from .csv file read by global.R
         # this is the tag at at specific Date and ReceiverID exclusion
       
-
         if( length(gblIgnoreByTagReceiverDate_df > 0 )){
            for(i in 1:nrow(gblIgnoreByTagReceiverDate_df)) {
              row <- gblIgnoreByTagReceiverDate_df[i,]
@@ -641,64 +647,58 @@ SERVER_ReceiverDetections <- function(id, i18n_r, lang, rcvr) {
            idx <- nrow(tagflight_df)
            a_df <- tagflight_df[idx,] #the last row
            tagflight_df <- insertRow(tagflight_df, a_df, idx)
-           
-    if(input$enablefilter){ ### NEW CODE
-           # now walk tagflight_df and compute velocity of adjacent detections
-           DONE<-FALSE
-           idx <- 2 #always start on row 2
-           while(!DONE){
-             if(idx > nrow(tagflight_df)){
-               DONE <- TRUE
-             } else {
-               takeoff<-tagflight_df[idx-1,]
-               landing<-row<-tagflight_df[idx,]
+  
+           if(input$enablefilter){ # if the enable filter checkbox is checked
+              # walk tagflight_df and compute velocity of adjacent detections
+              DONE<-FALSE
+              idx <- 2 #always start on row 2
+              while(!DONE){
+                 if(idx > nrow(tagflight_df)){
+                     DONE <- TRUE
+                 } else {
+                     takeoff<-tagflight_df[idx-1,]
+                     landing<-row<-tagflight_df[idx,]
              
-               site_takeoff <- takeoff[["site"]]
-               lat_takeoff <- takeoff[["lat"]]
-               lon_takeoff <- takeoff[["lon"]]
-               usecs_takeoff <- takeoff[["runend"]]
-
-               site_landing <- landing[["site"]]
-               lat_landing <- landing[["lat"]]
-               lon_landing <- landing[["lon"]]
-               usecs_landing <- landing[["runstart"]]
-             
-               deltat <- usecs_landing - usecs_takeoff #seconds
+                     site_takeoff <- takeoff[["site"]]
+                     lat_takeoff <- takeoff[["lat"]]
+                     lon_takeoff <- takeoff[["lon"]]
+                     usecs_takeoff <- takeoff[["runend"]]
+                     site_landing <- landing[["site"]]
+                     lat_landing <- landing[["lat"]]
+                     lon_landing <- landing[["lon"]]
+                     usecs_landing <- landing[["runstart"]]
+                     deltat <- usecs_landing - usecs_takeoff #seconds
    
-               # st_distance wants a dataframe with a geometric structure
-               df <- data.frame(lon = c(lon_takeoff, lon_landing), lat = c(lat_takeoff, lat_landing))
-               mysf <- st_as_sf(df, coords = c("lon", "lat"), crs = "WGS84") %>% st_distance()
-               distance = mysf[1,2]  #meters
-               distance  <- drop_units(distance) #is a structure, want a numeric...
+                     # st_distance wants a dataframe with a geometric structure
+                     df <- data.frame(lon = c(lon_takeoff, lon_landing), lat = c(lat_takeoff, lat_landing))
+                     mysf <- st_as_sf(df, coords = c("lon", "lat"), crs = "WGS84") %>% st_distance()
+                     distance = mysf[1,2]  #meters
+                     distance  <- drop_units(distance) #is a structure, want a numeric...
              
-               if(deltat<=0){ deltat <- 1 } #dont divide by zero
+                     if(deltat<=0){ deltat <- 1 } #dont divide by zero
              
-               velocity<-(distance)/(deltat) #m/s
-
-               #print(paste0( "velocity(m/s): ", velocity,"  distance(km): ", distance/1000, " hours: ", deltat/3600)) 
+                     velocity<-(distance)/(deltat) #m/s
+                     #print(paste0( "velocity(m/s): ", velocity,"  distance(km): ", distance/1000, " hours: ", deltat/3600)) 
+                     tagflight_df[idx,]["distance"]<-distance/1000 #km
+                     tagflight_df[idx,]["duration"]<-deltat/3600 #hours
+                     tagflight_df[idx,]["velocity"]<-velocity
              
-               tagflight_df[idx,]["distance"]<-distance/1000 #km
-               tagflight_df[idx,]["duration"]<-deltat/3600 #hours
-               tagflight_df[idx,]["velocity"]<-velocity
-             
-               # an animal can be detected simultaneously by passing between two sites ~50km apart.
-               #if( (velocity >= config.VelocitySuspectMetersPerSecond) & (distance/1000 > 50) ) {
-               if( velocity >= config.VelocitySuspectMetersPerSecond  ) {
-                   tagflight_df[idx,]["use"]<-FALSE   # mark row as suspect
-               }
-             
-               idx <- idx +1
-             } #end else
+                     # an animal can be detected simultaneously by passing between two sites ~50km apart.
+                     # if( (velocity >= config.VelocitySuspectMetersPerSecond) & (distance/1000 > 50) ) {
+                     if( velocity >= config.VelocitySuspectMetersPerSecond  ) {
+                        tagflight_df[idx,]["use"]<-FALSE   # mark row as suspect
+                     }
+                     idx <- idx +1
+                  } #end else
+              } #end while(!DONE)
            
-           } #end while(!DONE)
-           
-    } ### wns if NEW CODE
+           } #end  if(input$enablefilter) - we have computed distance, velocity etc.
   
            #and drop the extra first and last rows we added above...
            tagflight_df <- tagflight_df[-1,, drop=F] #the first row
            tagflight_df <- tagflight_df[-nrow(tagflight_df),]  #the last row
        
-           # filter the data
+           # filter the data. This only works for first row....
            # TODO: If we remove a line we should recompute distance and velocity
            # across the new adjacent rows
            if(input$enablefilter){
@@ -714,8 +714,8 @@ SERVER_ReceiverDetections <- function(id, i18n_r, lang, rcvr) {
       
       DebugPrint(paste0("input$mytable_rows_selected observeEvent() - render tagflight_df as table"))
 
-      #table only shows a subset of columns
-      if(config.EnableSuspectDetectionFilter==1){
+      #table only shows a subset of columns only show velocity/distance/duratio if both are true 
+      if(config.EnableSuspectDetectionFilter==1 &&  input$enablefilter ) {
          df<-tagflight_df[c("seq","date", "site","lat" ,"lon","receiverDeploymentID","duration","distance","velocity","use")]
          #our convention in tagflight_df is "use" true but for display we want to call the column "suspect"
          #so here we convert true to false and false to true to make suspect rows appear = TRUE
@@ -752,9 +752,6 @@ SERVER_ReceiverDetections <- function(id, i18n_r, lang, rcvr) {
       
       remove_modal_spinner() # shown by tagDeploymentDetections
       
-  
-      
-
       if (is.na(tagDepID )) {   
         myLeafletMap = leaflet() %>% addTiles() #render the empty map
       } else {  #render the real map
