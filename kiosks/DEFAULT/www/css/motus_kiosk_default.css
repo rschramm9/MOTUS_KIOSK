@@ -2,368 +2,437 @@
 /* should live in your projects www/css folder */
 /* 15Sep2025 implemented titlebar-background-gradient-color */
 /* 01Feb2026 added styling for receiver picker styled as rows of buttons */
+/* 04Feb2026 Released for MOTUS_KIOSK V6.2.9 */
+/* 049Feb2026 Released for MOTUS_KIOSK V6.3.0 */
 
-        /* create variables for the users Titlebar, Navbar and Mainbody colors  */
-        :root {
-         --titlebar-logo-height: 100px; /* Default titlebar height */
-         --titlebar-text-color: white; /* Default titlebar text color */
-         --titlebar-background-color: darkslategray; /* Default titlebar background color at top */
-         --titlebar-background-gradient-color: lightslategray; /* Default titlebar background color fades to gradient*/
-         --navbar-text-color: white; /* Default navbar color */
-         --navbar-background-color: white; /* Default navbar background color */
-         --selected-tab-background-color: white /* backgroundcolor of the selected navbar tab*/
-         --base-page-background-color: white; /* Default backgroundcolor of the body */
-         --jump-to-button-color: yellow; /* Default jump to backgroundcolor */
-         --offline-text-color: orange; /*the color of the text displayed in headerbar when offline*/
-         
-          /* default color variables for receiver picker when styled as buttons */
-         --receiver-picker-radiobtn-unselected-background-color: ghostwhite;
-         --receiver-picker-radiobtn-unselected-text-color: slategray;        
-         --receiver-picker-radiobtn-selected-background-color: #347ab7;   /* slate blue */
-         --receiver-picker-radiobtn-selected-text-color: white;
-         --receiver-picker-radiobtn-hover-background-color: white;
-         --receiver-picker-radiobtn-hover-text-color: black;
-        }
-        
-        #readmediv {
-        border: 2px solid orange; /* Add orange border around readmediv */
-        padding: 10px; /* Optional: Add padding inside the border */
-        border-radius: 5px; /* Optional: Add rounded corners */
-      }
-      
-       /**************************************/
-       /** CSS section for the base page that all contents sits in **/
-      /**************************************/
-        /* fluid container holds all of the page content. We need */
-        /* content like titlebars and navbars to extend all the way */
-        /* to the edges of the screen */
-       .container-fluid {
-        padding: 0 !important;
-        margin: 0 !important;
-      }
-      
-      /* The background color of the main document window */
-      body {
-        background-color: var(--base-page-background-color) !important; /* Use the CSS variable */ 
-        color: var(--base-page-text-color) !important; /* Use the CSS variable */ 
-        margin: 0 !important;
-        padding: 0 !important;
-      }
-      
-      /**************************************/
-      /*** CSS for the top headerbar    ****/
-      /**************************************/
-      
-      /* the container that the headerbar item sit in */ 
-      #main_page_headerbar {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        height: 40px;
-        padding: 10px; /* Adjust this for consistent spacing */
-        background-color: var(--titlebar-background-color) !important; /* Use the CSS variable */
-      }
-      
-       /* this is css for the headerbar motus online status text */
-      .headerbar-container {
-        flex-grow: 1;
-        text-align: center;
-        align-self: center;
-        font-family: Verdana, sans-serif !important;
-          font-style: italic !important;
-          font-size: 14px !important;
-          color: var(--offline-text-color); /* Set text color */
-          /*text-shadow: 0px 0px 0px black;*/
-          background-color: var(--titlebar-background-color) !important; /* Use the CSS variable */ 
-          /*border: 2px solid black;*/
-      }
-      
-      .lang-picker {
-        margin-top: 15px !important; /* Increase margin to ensure visible space above */
-        margin-right: 20px !important; /* Keep space to the right */
-      }
-      
-      .lang-picker .btn {
-        padding: 0 !important;
-        height: 30px !important;
-        margin-top: 0 !important;
-      }
-      
-      /* Keyframes for blinking border animation on the gotMap button */
-        @keyframes blink-border {
-        0% { border-color: darkgray; }
-        25% { border-color: slategray; }
-        50% { border-color: darkslategray; }
-        75% { border-color: lightslategray; }
-        100% { border-color: darkgray; }
-        }
-        
-      #gotoMap {
-        height: 30px !important;
-        margin-left: 20px;
-        margin-top: 0;
-        color: black; /*text color*/
-        background-color: var(--jump-to-button-color);*/
-        border: 3px solid gray; /* Initial border color */
-        animation: blink-border 1s infinite; /* Apply animation */
-      }
-      
-      /**************************************/ 
-      /** CSS for the main titlebar. ***/   
-      /**************************************/
-    
-      /* The color and styling of the titlebar */
-      /* note 'color' sets the text color */
-      /* Sept 2025 - changed from solid to a linear gradient
-      /* was: background-color: var(--titlebar-background-color) !important;*/  /* Use the CSS variable */
+/* create variables for the users Titlebar, Navbar and Mainbody colors */
+:root {
+  --titlebar-logo-height: 100px; /* Default titlebar logo height */
+  --titlebar-text-color: white; /* Default titlebar text color */
+  --titlebar-background-color: darkslategray; /* Titlebar background color at top */
+  --titlebar-background-gradient-color: lightslategray; /* Titlebar gradient bottom */
+  --navbar-text-color: white; /* Navbar tab text color */
+  --navbar-background-color: white; /* Navbar background color */
+  --selected-tab-background-color: white; /* background color of the selected navbar tab */
+  --selected-tab-text-color: black; 
+  --base-page-background-color: white; /* Default background color of the body */
+  --base-page-text-color: black;
+  --jump-to-button-color: yellow; /* Default jump-to-map button background */
+  --offline-text-color: orange; /* color of the text displayed in headerbar when offline */
 
-      .title-bar {
-         background: linear-gradient(to bottom, var(--titlebar-background-color), var(--titlebar-background-gradient-color)) !important; */
-         color:orange;   /* the text color */
-         padding: 0 !important;
-         margin: 0 !important;
-         font-family: Verdana, sans-serif !important;
-         font-style: italic !important;
-         font-size: 24px !important;
-         font-weight: bold;
-         display: flex;
-         align-items: center;
-         justify-content: center; /* Center the title and picker vertically*/
-         position: relative;
-         width: 100vw !important;
-         left: 0;
-         /*border: 2px solid black !important;*/
-      }
-  
-      .title-bar img {
-        /*height: var(--titlebar-height) !important;*/
-        height: var(--titlebar-logo-height) !important;
-        width: auto;
-        margin-left: 20px; /* Add padding of 30px to the left */
-        margin-right: 0px; /* Add space between image and text */
-        /*border: 2px solid black !important;*/
-      }
-      
-      /* Styling for main titlebar caption */ 
-      .title-bar-content {
-        flex-grow: 1;
-        text-align: center;
-        font-size: 30px; 
-        color: var(--titlebar-text-color); /* Use the CSS variable to match the user specified TitlebarTextColor */
-      }
-      
-      /* Styling for the 'Available Receivers' picker */
-      .picker-container {
-        display: flex;
-        padding-right: 20px; /* Add padding from the right edge of window */
-        flex-direction: column;
-        align-items: flex-start; /* Align caption to the left */
-        margin-left: 20px; /* Add spacing from the title */
-        color:var(--titlebar-text-color); 
-      }
-          /*****   }   **** redundant? ****/
+  /* default color variables for receiver picker when styled as buttons */
+  --receiver-picker-radiobtn-unselected-background-color: ghostwhite;
+  --receiver-picker-radiobtn-unselected-text-color: slategray;
+  --receiver-picker-radiobtn-selected-background-color: #347ab7; /* slate blue */
+  --receiver-picker-radiobtn-selected-text-color: white;
+  --receiver-picker-radiobtn-hover-background-color: white;
+  --receiver-picker-radiobtn-hover-text-color: black;
+
+  /* All the non-content UI elements that frame the content (header+title+tabs+hr+footer+padding)
+     Tune by trial and error. 300px looks about right for 1920x1080 monitors. */
+  --app-chrome-height: 300px;
+}
+
+#readmediv {
+  border: 2px solid orange; /* Add orange border around readmediv */
+  padding: 10px;            /* Optional: Add padding inside the border */
+  border-radius: 5px;       /* Optional: Add rounded corners */
+}
+
+/**************************************/
+/** Base page + viewport setup **/
+/**************************************/
+/* fluid container holds all of the page content. We need content like titlebars and navbars
+   to extend all the way to the edges of the screen */
+.container-fluid {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* Establish a full-height viewport canvas */
+html, body {
+  width: 100%;
+  height: 100%;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Base document colors */
+body {
+  background-color: var(--base-page-background-color) !important;
+  color: var(--base-page-text-color) !important;
+}
+
+/* =========================================================
+   App wrapper + scrolling behavior (all tabs)
+   - #app-root is a flex column filling the viewport
+   - The navbar tab strip stays fixed
+   - The .tab-content region scrolls when the window is shorter
+   - max-height can be capped using --app-chrome-height
+   ========================================================= */
+#app-root {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* prevent page-level scrollbars (kiosk-friendly) */
+}
+
+/* header/title/footer are fixed-height blocks in the flex column */
+#main_page_headerbar,
+.title-bar,
+.footer-row {
+  flex: 0 0 auto;
+}
+
+/* navbar region gets the remaining space */
+#app-root .navbar1 {
+  flex: 1 1 auto;
+  min-height: 0;            /* critical: allows the inner scroll area to shrink */
+  display: flex;
+  flex-direction: column;
+}
+
+/* keep tab strip horizontal */
+#app-root .navbar1 .navbar {
+  flex: 0 0 auto;
+  display: block;
+}
+
+/* tab panels take remaining height and scroll if necessary */
+#app-root .navbar1 .tab-content {
+  flex: 1 1 auto;
+  min-height: 260px; /* windowed minimum */
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-height: calc(100vh - var(--app-chrome-height));
+}
+
+/**************************************/
+/*** CSS for the top headerbar     ****/
+/**************************************/
+#main_page_headerbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  height: auto !important;
+  min-height: 48px;       /* tuned to avoid clipping */
+  padding: 6px 10px;      /* reduce vertical padding */
+
+  box-sizing: border-box;
+  overflow: visible;      /* just in case */
+  background-color: var(--titlebar-background-color) !important;
+}
+
+/* headerbar motus online status text */
+.headerbar-container {
+  flex-grow: 1;
+  text-align: center;
+  align-self: center;
+  font-family: Verdana, sans-serif !important;
+  font-style: italic !important;
+  font-size: 14px !important;
+  color: var(--offline-text-color);
+  background-color: var(--titlebar-background-color) !important;
+}
+
+/* keep the language picker from being pushed down */
+.lang-picker {
+  margin-top: 0 !important;    /* was 15px */
+  margin-right: 20px !important;
+}
+
+.lang-picker .btn {
+  padding: 0 !important;
+  height: 30px !important;
+  margin-top: 0 !important;
+}
+
+/* Keyframes for blinking border animation on the gotoMap button */
+@keyframes blink-border {
+  0%   { border-color: darkgray; }
+  25%  { border-color: slategray; }
+  50%  { border-color: darkslategray; }
+  75%  { border-color: lightslategray; }
+  100% { border-color: darkgray; }
+}
+
+/* gotoMap action button */
+#gotoMap {
+  box-sizing: border-box;
+  display: inline-flex;    /* avoids line-height quirks */
+  align-items: center;
+
+  height: 36px !important;
+  padding: 0 12px !important;
+  line-height: 1 !important;
+
+  margin: 0 0 0 20px !important; /* remove vertical margin */
+  color: black;
+  background-color: var(--jump-to-button-color);
+  border: 3px solid gray;
+  animation: blink-border 1s infinite;
+}
+
+/**************************************/
+/*** CSS for the main titlebar     ****/
+/**************************************/
+/* The color and styling of the titlebar
+   note 'color' sets the text color
+   Sept 2025 - changed from solid to a linear gradient */
+.title-bar {
+  background: linear-gradient(
+    to bottom,
+    var(--titlebar-background-color),
+    var(--titlebar-background-gradient-color)
+  ) !important;
+  color: var(--titlebar-text-color); 
+  padding: 0 !important;
+  margin: 0 !important;
+
+  font-family: Verdana, sans-serif !important;
+  font-style: italic !important;
+  font-size: 24px !important;
+  font-weight: bold;
+
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Center the title and picker vertically */
+
+  position: relative;
+  width: 100vw !important;
+  left: 0;
+
+  /* if your title bar ever grows, keep it sane */
+  max-height: 140px; /* optional; adjust if needed */
+}
+
+.title-bar img {
+  height: var(--titlebar-logo-height) !important;
+  width: auto;
+  margin-left: 20px;
+  margin-right: 0px;
+}
+
+/* main titlebar caption */
+.title-bar-content {
+  flex-grow: 1;
+  text-align: center;
+  font-size: 30px;
+  color: var(--titlebar-text-color);
+}
+
+/* 'Available Receivers' picker container */
+.picker-container {
+  display: flex;
+  padding-right: 20px;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-left: 20px;
+  color: var(--titlebar-text-color);
+}
+
+/* ===================================================================
+   Receiver selector (radioGroupButtons) styling
+   =================================================================== */
+
+/* Base container width + scroll behavior (general fallback) */
+/* Fallback height limit for receiver selector.
+   This applies if the grid-enabled container is not active.
+   The grid container further below overrides this with a larger max-height. 
+   (see:#receiver_pick .btn-group-vertical.btn-group-container-sw) */
+#receiver_pick .btn-group-vertical {
+  width: 200px;
+  max-height: 120px; /* keeps title bar from growing */
+  overflow-y: auto;
+}
+
+/* Base (unselected) buttons */
+#receiver_pick button.btn.radiobtn {
+  background-color: var(--receiver-picker-radiobtn-unselected-background-color);
+  color: var(--receiver-picker-radiobtn-unselected-text-color);
+  border: 1px solid #cbd5e1;
+  text-align: left;
+  padding: 6px 12px;
+  box-shadow: none;
+  background-image: none;
+}
+
+/* Hover (unselected) — yellow highlight */
+#receiver_pick button.btn.radiobtn:hover {
+  background-color: var(--receiver-picker-radiobtn-hover-background-color);
+  color: var(--receiver-picker-radiobtn-hover-text-color);
+  border-color: #facc15; /* yellow */
+  box-shadow: 0 0 0 2px rgba(250, 204, 21, 0.35);
+}
+
+/* Selected (active) */
+#receiver_pick button.btn.radiobtn.active,
+#receiver_pick button.btn.radiobtn.btn-default.active,
+#receiver_pick button.btn.radiobtn:active {
+  background-color: var(--receiver-picker-radiobtn-selected-background-color);
+  color: var(--receiver-picker-radiobtn-selected-text-color);
+  border-color: #2563eb; /* blue */
+  box-shadow: none;
+  background-image: none;
+}
+
+/* Keep selected blue on hover (override hover highlight) */
+#receiver_pick button.btn.radiobtn.active:hover,
+#receiver_pick button.btn.radiobtn.btn-default.active:hover {
+  background-color: var(--receiver-picker-radiobtn-selected-background-color);
+  color: var(--receiver-picker-radiobtn-selected-text-color);
+  border-color: #2563eb; /* stay blue */
+  box-shadow: none;
+}
+
+/* Focus cleanup */
+#receiver_pick button.btn.radiobtn:focus,
+#receiver_pick button.btn.radiobtn:focus:active {
+  outline: none;
+  box-shadow: none;
+}
+
+/* Hide the native radio control inside the button */
+#receiver_pick button.btn.radiobtn > input[type='radio'] {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* =========================================================
+   Receiver selector: auto 1 / 2 / 3 / 4 columns
+   NOTE: Uses :has(), which works in Chrome/Edge/Safari (not Firefox).
+   ========================================================= */
+
+/* Base: 1 column (1–3 receivers) */
+/* Grid-enabled receiver selector:
+   Allows a taller scroll area once the button grid layout is active */
+   
+/* Base grid (always) */
+#receiver_pick .btn-group-vertical.btn-group-container-sw {
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 6px !important;
+  width: 200px !important;
+  padding-top: 4px;
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+/* Column counts driven by JS classes (OpenKiosk-safe) */
+#receiver_pick .btn-group-vertical.btn-group-container-sw.cols-1 {
+  grid-template-columns: 1fr !important;
+  width: 200px !important;
+}
+
+#receiver_pick .btn-group-vertical.btn-group-container-sw.cols-2 {
+  grid-template-columns: 1fr 1fr !important;
+  width: 320px !important;
+}
+
+#receiver_pick .btn-group-vertical.btn-group-container-sw.cols-3 {
+  grid-template-columns: 1fr 1fr 1fr !important;
+  width: 480px !important;
+}
+
+#receiver_pick .btn-group-vertical.btn-group-container-sw.cols-4 {
+  grid-template-columns: 1fr 1fr 1fr 1fr !important;
+  width: 640px !important;
+}
 
 
-      /* ===================================================================
-         Receiver selector (radioGroupButtons) styling
-         =================================================================== */
-
-      /* Container width + scroll behavior */
-      #receiver_pick .btn-group-vertical {
-        width: 200px;
-        max-height: 120px;        /* keeps title bar from growing */
-        overflow-y: auto;
-      }
-         
-          
-      /* Base (unselected) buttons */
-      #receiver_pick button.btn.radiobtn {
-        background-color: var(--receiver-picker-radiobtn-unselected-background-color);
-        color: var(--receiver-picker-radiobtn-unselected-text-color);
-        border: 1px solid #cbd5e1;
-        text-align: left;
-        padding: 6px 12px;
-        box-shadow: none;
-        background-image: none;
-      }
-
-      /* Hover (unselected) — yellow highlight */
-      #receiver_pick button.btn.radiobtn:hover {
-        background-color: var(--receiver-picker-radiobtn-hover-background-color);
-        color: var(--receiver-picker-radiobtn-hover-text-color);
-        border-color: #facc15; /* yellow */
-        box-shadow: 0 0 0 2px rgba(250, 204, 21, 0.35);
-      }
-
-      /* Selected (active) */
-      #receiver_pick button.btn.radiobtn.active,
-      #receiver_pick button.btn.radiobtn.btn-default.active,
-      #receiver_pick button.btn.radiobtn:active {
-        background-color: var(--receiver-picker-radiobtn-selected-background-color);
-        color: var(--receiver-picker-radiobtn-selected-text-color);
-        border-color: #2563eb; /* blue */
-        box-shadow: none;
-        background-image: none;
-      }
-
-      /* Keep selected blue on hover (override hover highlight) */
-      #receiver_pick button.btn.radiobtn.active:hover,
-      #receiver_pick button.btn.radiobtn.btn-default.active:hover {
-        background-color: var(--receiver-picker-radiobtn-selected-background-color);
-        color: var(--receiver-picker-radiobtn-selected-text-color);
-        border-color: #2563eb; /* stay blue */
-        box-shadow: none;
-      }
-
-      /* Focus cleanup */
-      #receiver_pick button.btn.radiobtn:focus,
-      #receiver_pick button.btn.radiobtn:focus:active {
-        outline: none;
-        box-shadow: none;
-      }
-
-      /* Hide the native radio control inside the button */
-      #receiver_pick button.btn.radiobtn > input[type='radio'] {
-        position: absolute;
-        opacity: 0;
-        pointer-events: none;
-      }
-
-      /* ========================================================= */
-      /*   Receiver selector: auto 1 / 2 / 3 / 4 columns           */
-      /* ========================================================= */
-
-      /* Base: 1 column (1–3 receivers) */
-      #receiver_pick .btn-group-vertical.btn-group-container-sw {
-        display: grid !important;
-        grid-template-columns: 1fr !important;
-        gap: 6px !important;
-        width: 200px !important;
-        padding-top: 4px;   /* ← prevents top-row clipping */
-        max-height: 220px;
-        overflow-y: auto;
-      }
-
-      /* Make each option fill its grid cell */
-      #receiver_pick .btn-group-vertical.btn-group-container-sw > .btn-group {
-        width: 100% !important;
-      }
-      #receiver_pick .btn-group-vertical.btn-group-container-sw
-        > .btn-group > button.btn.radiobtn {
-        width: 100% !important;
-      }
-
-      /* 2 columns when 4–6 receivers */
-      #receiver_pick .btn-group-vertical.btn-group-container-sw:has(> .btn-group:nth-child(4)) {
-        grid-template-columns: 1fr 1fr !important;
-        width: 320px !important;   /* 2 × ~160px */
-      }
-
-      /* 3 columns when 7–9 receivers */
-      #receiver_pick .btn-group-vertical.btn-group-container-sw:has(> .btn-group:nth-child(7)) {
-        grid-template-columns: 1fr 1fr 1fr !important;
-        width: 480px !important;   /* 3 × ~160px */
-      }
-
-      /* 4 columns when 10+ receivers */
-      #receiver_pick .btn-group-vertical.btn-group-container-sw:has(> .btn-group:nth-child(10)) {
-        grid-template-columns: 1fr 1fr 1fr 1fr !important;
-        width: 640px !important;   /* 4 × ~160px */
-      }
+/* Make each option fill its grid cell */
+#receiver_pick .btn-group-vertical.btn-group-container-sw > .btn-group {
+  width: 100% !important;
+}
+#receiver_pick .btn-group-vertical.btn-group-container-sw > .btn-group > button.btn.radiobtn {
+  width: 100% !important;
+}
 
 
-      /* when the receiver picker is a dropdown list */
-      /* Ensures dropdown list when active is displayed above */
-      /* other elements like the navbar */
-      .dropdown-menu {
-        z-index: 1050 !important; 
-      }
-      
-      /**************************************/
-      /****  CSS for the navbar  ****/ 
-      /**************************************/
 
-      /* the background color of the navbar behind the tabs */
-      .navbar1 .navbar { 
-          background-color: var(--navbar-background-color); /* Use the CSS variable */
-          border: 2px solid lightgray !important;
-          margin: 0 !important;
-          padding: 0 !important;
-      }
-        
-      /* set the color of the navbar 'brand' label text */
-      /* the brand label appears to the right of the navbar tabs if */
-      /* the navbar 'title' is not NULL in the navbarPage() call */
-      .navbar1 .navbar-default .navbar-brand{
-      color: var(--navbar-text-color) !important;
-      }
-        
-      /* The color and styling of the navbar tabs when not selected */
-      /* note 'color' sets the tab text color */
-      /* note 'border' sets the tab outline box and color must include 'solid' */
-      .navbar1 .navbar-nav li a {
-        background-color: var(--navbar-background-color); /* Use the CSS variable */
-        color: var(--navbar-text-color) !important;
-        font-family: Verdana, sans-serif !important;
-        font-style: italic !important;
-        font-size: 20px !important;
-        border: 2px solid var(--navbar-background-color) !important; /* Use the CSS variable */ 
-      }
-                          
-      /* The color and styling of the navbar tab text color when mouse hovered over*/
-      /* note 'color' sets the tab text color */
-      /* note 'border' sets the tab outline box and color must include 'solid' */
-      .navbar1 .navbar-nav li a:hover {
-         color: var(--navbar-text-color) !important;
-         border: 2px solid yellow !important;
-      }
-        
-      /* The color and styling of the navbar tab text color of the selected tab*/
-      /* note 'color' sets the tab text color */
-      /* note 'border' sets the tab outline box and color must include 'solid' */                
-      .navbar1 .navbar-nav > .active > a {
-         background-color: var(--selected-tab-background-color) !important;
-         color: var(--selected-tab-text-color) !important;
-         border: 2px solid lightgray !important;
-      }
-         
-      .tab-content {
-        padding-left: 15px; /* Add 33px padding from the left edge */
-        padding-right: 15px; /* Add 33px padding from the left edge */
-      }
-      
-      .tag-detections-titlepanel {
-      border: 2px solid black;
-      height: 40px;
-      width: 100%;
-      box-sizing: border-box; /* Ensures padding and border are included in the height and width */
-      display: flex;
-      align-items: center; /* Centers content vertically */
-      padding: 0 10px; /* Horizontal padding for inner content */
-      margin-bottom: 20px;
-      /*border: 2px solid red !important;*/
-      }
-    
-     /**************************************/  
-     /***.  CSS for the footer    ***/
-    /**************************************/
-    .footer-row {
-      display: flex;      /* Flexbox for horizontal alignment */
-      align-items: center; /* Vertically align items */
-      padding: 5px ;
-      background-color: #f8f9fa;     /* Light gray background */
-      border-top: 1px solid #dee2e6; /* Top border for separation */
-        /*height: 20px;*/
-    }
-    .version-info {
-      font-size: 12px;
-      padding-left:15px;
-    }
-    .motus-state {
-      font-size: 12px;           
-      margin-left: auto;
-      padding-right: 15px;
-      display: inline-block; 
-    }
-      
-      
+/* When the receiver picker is a dropdown list:
+   ensure dropdown list is displayed above other elements like the navbar */
+.dropdown-menu {
+  z-index: 1050 !important;
+}
+
+/**************************************/
+/****  CSS for the navbar         ****/
+/**************************************/
+/* background color of the navbar behind the tabs */
+.navbar1 .navbar {
+  background-color: var(--navbar-background-color);
+  border: 2px solid lightgray !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* brand label text color */
+.navbar1 .navbar-default .navbar-brand {
+  color: var(--navbar-text-color) !important;
+}
+
+/* navbar tabs when not selected */
+.navbar1 .navbar-nav li a {
+  background-color: var(--navbar-background-color);
+  color: var(--navbar-text-color) !important;
+  font-family: Verdana, sans-serif !important;
+  font-style: italic !important;
+  font-size: 20px !important;
+  border: 2px solid var(--navbar-background-color) !important;
+}
+
+/* navbar tabs on hover */
+.navbar1 .navbar-nav li a:hover {
+  color: var(--navbar-text-color) !important;
+  border: 2px solid yellow !important;
+}
+
+/* selected tab */
+.navbar1 .navbar-nav > .active > a {
+  background-color: var(--selected-tab-background-color) !important;
+  color: var(--selected-tab-text-color) !important;
+  border: 2px solid lightgray !important;
+}
+
+/* tab panel padding (applies to all tabs) */
+.tab-content {
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+.tag-detections-titlepanel {
+  border: 2px solid black;
+  height: 40px;
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  margin-bottom: 20px;
+}
+
+/**************************************/
+/***  CSS for the footer          ***/
+/**************************************/
+.footer-row {
+  display: flex;
+  align-items: center;
+  padding: 5px;
+  background-color: #f8f9fa;
+  border-top: 1px solid #dee2e6;
+}
+
+.version-info {
+  font-size: 12px;
+  padding-left: 15px;
+}
+
+.motus-state {
+  font-size: 12px;
+  margin-left: auto;
+  padding-right: 15px;
+  display: inline-block;
+}
