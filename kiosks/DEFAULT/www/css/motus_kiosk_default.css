@@ -414,6 +414,30 @@ body {
   margin-bottom: 20px;
 }
 
+/* =========================================================
+   Receiver detections sidebar – visible scrollbar
+   Make it wider and darker
+   ========================================================= */
+
+.rcvr-detections-layout .dataTables_scrollBody {
+  scrollbar-width: auto;
+  scrollbar-color: #555 #e0e0e0;
+}
+
+/* Chromium fallback */
+.rcvr-detections-layout .dataTables_scrollBody::-webkit-scrollbar {
+  width: 14px;
+}
+.rcvr-detections-layout .dataTables_scrollBody::-webkit-scrollbar-track {
+  background: #e0e0e0;
+}
+.rcvr-detections-layout .dataTables_scrollBody::-webkit-scrollbar-thumb {
+  background-color: #555;
+  border-radius: 8px;
+  border: 3px solid #e0e0e0;
+}
+
+
 /**************************************/
 /***  CSS for the footer          ***/
 /**************************************/
