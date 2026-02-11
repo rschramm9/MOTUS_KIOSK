@@ -86,11 +86,12 @@ I have quite successfully built and run the application in full kiosk mode on lo
 I have also built and run the application on Apple Mac OSX (but not as a locked down kiosk).
 
 These are the machines I have used:
-
+- GEEKOM Mini PC Mini IT11, 11th Intel i7-11390H (Up to 5.00 GHz), 16GB DDR4 RAM 512GB M.2 SSD, Windows 11 Pro Mini NUC PC, Purchased new in 2026 for $400 on Amazon.
 - NUC6CAY Celeron J3455 Processor 1.5Ghz 8GB Ram 120GB SSD w/wifi and Windows10 Pro (eBay $100) 
-- NUC7i5BNH MiniPC QUadCore i5-78260U 8Gb w/128Gb SSD w/wifi and  Windows 11 Pro. (eBay $185)
+- NUC7i5BNH MiniPC QuadCore i5-78260U 8Gb w/128Gb SSD w/wifi and  Windows 11 Pro. (eBay $185)
 - Apple Macbook Pro (circa 2018) 2.9 Ghz Intel core i9  32Gb w/macOS  12.6  (my development system)
-- As of Fall 2025 it looks several PC options are available new online in the $400-$500 dollar range however prices appear fluctuate wildly due to tarifs.
+- As of Winter 2026 it looks several PC options are available new online in the $400-$500 dollar range however prices appear to fluctuate due to tarifs.
+  
 The touchscreen I use is : Dell 24 Touchscreen Model P2424HT (Dell.com ~$450).
 Also the Viewsonic TD2760 which is a somewhat larger screen (27") at $530 new (found for much less on the used/ebay market)
 
