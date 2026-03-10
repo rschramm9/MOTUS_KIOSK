@@ -283,11 +283,18 @@ summaryFlight_df <-data.frame(date,site,lat,lon,receiverDeploymentID,seq,use,use
 # obtain the track data with so we can correctly order the daily summary data
 # tagTrack_df <- tagTrack(tagDeploymentID, config.EnableReadCache, config.ActiveCacheAgeLimitMinutes)
 
+
+
+if( nrow(summaryFlight_df) >= 1000){
+  WarningPrint( paste0("tagDeploymentDetections return exceeded maximum number of detection records (1000)."))
+  WarningPrint( paste0("Results are truncated."))
+  tagTrack_df <- summaryFlight_df 
+} else {
 #dont read or write cache.  this df is a by product used to create
 #the summary flight df so if that cached product would be the same age
 #if we wrote this to cache... ie its redundant to cache this
 tagTrack_df <- tagTrack(tagDeploymentID, 0, 0)
-
+}
 #DebugPrint("this is raw tagTrack_df at 327 as str()")
 #str(tagTrack_df)
 
