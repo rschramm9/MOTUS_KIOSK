@@ -61,7 +61,43 @@ tagTrack <- function(tagDeploymentID, useReadCache=0, cacheAgeLimitMinutes=60)
 
   # Make the request with user agent
   custom_agent <- user_agent(gblUserAgentText)
-  response <- GET(url, custom_agent)
+
+  start_time <- Sys.time()
+  ###########response <- GET(url, custom_agent)
+  
+  #version 6.3.1. Very large json returns can take several minutes.
+  # here I set a timeout,  if exceeded it returns the empty dataframe.. the doesnt seem to be
+  # an issue since it typically means we have so much data to plot that the fine grained detail
+  # doesnt matter, And the caller just uses the coarse hourly data.
+  result <- tryCatch(
+    GET(
+      url,
+      user_agent(gblUserAgentText),
+      timeout(config.HttpGetTimeoutSeconds)
+      #,config(connecttimeout = config.HttpGetTimeoutSeconds)
+    ),
+    error = function(e) e
+  )
+  
+  elapsed <- Sys.time() - start_time
+
+  if (inherits(result, "error")) {
+
+    err_msg <- conditionMessage(result)
+
+    if (grepl("timeout", err_msg, ignore.case = TRUE)) {
+      WarningPrint(paste0("tagTrack Motus request timed out after ", round(elapsed,2), " seconds."))
+    } else {
+      WarningPrint(paste0("tagTrack Motus request failed with error after ", round(elapsed,2), " seconds."))
+      WarningPrint(err_msg)
+    }
+    return(onError_df)
+  }
+  response <- result
+  
+  if (is.null(response) || status_code(response) != 200) {
+    return(onError_df)
+  }
   
   # Extract raw JSON content as text
   json_text <- content(response, as = "text", encoding = "UTF-8")
