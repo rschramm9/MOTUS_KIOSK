@@ -136,9 +136,9 @@ SERVER_MotusNews <- function(id, i18n_r, lang, rcvr) {
       } else if (current_lang == "fr") {
         url_to_show <- stringr::str_replace(url_to_show, "_en.html", "_fr.html")
       }
-      message(getwd())
-      message(config.SiteSpecificContentWWW)
-      message("MotusNews url_to_show: ", url_to_show)
+      #message(getwd())
+      #message(config.SiteSpecificContentWWW)
+      #message("MotusNews url_to_show: ", url_to_show)
       
       output$news <- renderUI({
         tags$iframe(
@@ -184,7 +184,7 @@ SERVER_MotusNews <- function(id, i18n_r, lang, rcvr) {
     #   user selects a story
     #-------------------------------------------------------------------------------------------------------------  
      observeEvent(input$file_choice, {
-      message("MotusNews User selected:", input$file_choice)
+       #message("MotusNews User selected:", input$file_choice)
        myRenderFunction()
       })
     
