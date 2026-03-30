@@ -80,7 +80,6 @@ df$img = c(
   en, es, fr
 ) 
 
-######### NEW ##########
 ui_headerbar <- fluidRow(
   div(  
     id = "main_page_headerbar",
@@ -109,16 +108,13 @@ ui_headerbar <- fluidRow(
   )
 )
 
-ui_titlebar<- fluidRow( class = "title-bar",
-                        
-
-
-
+ui_titlebar <- div(class = "title-bar",      
+                   
    tags$img(
-     #src = "images/logos/ankenyhill_logo_hires_cropped.jpg",
      src = config.MainLogoFile,
-     alt = "AHNC Logo"
-     ) ,
+     alt = "Logo",
+     class = "title-bar-logo"
+   ),
    
    div( class = "title-bar-content",
        textOutput("main_page_title", inline = TRUE)
@@ -150,7 +146,7 @@ ui_titlebar<- fluidRow( class = "title-bar",
      
    ) #end div picker-container
    
-)
+ ) #end titlebar div
 
 
 ###############################################################################
