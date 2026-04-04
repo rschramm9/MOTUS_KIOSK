@@ -91,7 +91,7 @@ ui_headerbar <- fluidRow(
     div(
       class = "lang-picker",
       tags$div(  tags$style(".jhr{
-         display: inline;
+         display: inline-block;
          vertical-align: middle;
          padding-left: 10px;
       }")),
