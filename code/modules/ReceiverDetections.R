@@ -137,8 +137,8 @@ div(
                                      #vsn4.x #leafletOutput(ns("leaflet_map"), width = "100%", height="100%")
                                      # Height as percentage does not work, because the dashboardBody
                                      # has undefined height. But relative to the whole document is okay. 
-                                     leafletOutput(ns('leaflet_map'), width = "100%", height="65vh")
-                                     #leafletOutput(ns('leaflet_map'), width = "100%", height="60vh")
+                                     #leafletOutput(ns('leaflet_map'), width = "100%", height="65vh")
+                                    leafletOutput(ns('leaflet_map'), width = "100%", height="675px")
                                      
                             ),
                             
