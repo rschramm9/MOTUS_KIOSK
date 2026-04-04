@@ -58,75 +58,90 @@ html, body {
 }
 
 /* Base document colors */
+
+/****
 body {
   background-color: var(--base-page-background-color) !important;
   color: var(--base-page-text-color) !important;
 }
+****/
 
-/* =========================================================
-   App wrapper + scrolling behavior (all tabs)
-   - #app-root is a flex column filling the viewport
-   - The navbar tab strip stays fixed
-   - The .tab-content region scrolls when the window is shorter
-   - max-height can be capped using --app-chrome-height
-   ========================================================= */
+/**************************************/
+/** Base page + normal scrolling    ***/
+/**************************************/
+html, body {
+  width: 100%;
+  min-height: 100%;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+body {
+  background-color: var(--base-page-background-color) !important;
+  color: var(--base-page-text-color) !important;
+  overflow-y: auto;   /* allow normal browser scrolling */
+  overflow-x: hidden;
+}
+
+.container-fluid {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* Main app wrapper now behaves like a normal page block */
 #app-root {
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden; /* prevent page-level scrollbars (kiosk-friendly) */
+  width: 100%;
+  min-height: 100%;
+  display: block;
+  overflow: visible;
 }
 
-/* header/title/footer are fixed-height blocks in the flex column */
-#main_page_headerbar,
-.title-bar,
-.footer-row {
-  flex: 0 0 auto;
-}
-
-/* navbar region gets the remaining space */
+/* Navbar and tabs also remain in normal flow */
 #app-root .navbar1 {
-  flex: 1 1 auto;
-  min-height: 0;            /* critical: allows the inner scroll area to shrink */
-  display: flex;
-  flex-direction: column;
+  display: block;
+  min-height: 0;
 }
 
-/* keep tab strip horizontal */
 #app-root .navbar1 .navbar {
-  flex: 0 0 auto;
   display: block;
 }
 
-/* tab panels take remaining height and scroll if necessary */
 #app-root .navbar1 .tab-content {
-  flex: 1 1 auto;
-  min-height: 260px; /* windowed minimum */
-  overflow-y: auto;
-  overflow-x: hidden;
-  max-height: calc(100vh - var(--app-chrome-height));
+  display: block;
+  overflow: visible;
+  max-height: none;
+  min-height: 0;
 }
+
+
 
 /**************************************/
 /*** CSS for the top headerbar     ****/
 /**************************************/
-#main_page_headerbar {
+/****  #main_page_headerbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
 
   height: auto !important;
-  min-height: 48px;       /* tuned to avoid clipping */
-  padding: 6px 10px;      /* reduce vertical padding */
+  min-height: 48px;  
+  padding: 6px 10px; 
 
   box-sizing: border-box;
-  overflow: visible;      /* just in case */
+  overflow: visible;   
+  background-color: var(--titlebar-background-color) !important;
+} ****/
+
+#main_page_headerbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   background-color: var(--titlebar-background-color) !important;
 }
 
 /* headerbar motus online status text */
 .headerbar-container {
-  flex-grow: 1;
+  flex: 1 1 auto;
   text-align: center;
   align-self: center;
   font-family: Verdana, sans-serif !important;
@@ -136,16 +151,37 @@ body {
   background-color: var(--titlebar-background-color) !important;
 }
 
-/* keep the language picker from being pushed down */
+/* keep the language picker pinned to the right and vertically centered */
 .lang-picker {
-  margin-top: 0 !important;    /* was 15px */
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  margin-top: 0 !important;
+  margin-left: auto !important;
   margin-right: 20px !important;
+}
+
+/* keep picker controls compact */
+.lang-picker .btn,
+.lang-picker .bootstrap-select,
+.lang-picker select,
+.lang-picker .jhr {
+  display: inline-block !important;
+  vertical-align: middle;
 }
 
 .lang-picker .btn {
   padding: 0 !important;
   height: 30px !important;
   margin-top: 0 !important;
+}
+
+/* optional helper class used inside lang-picker */
+.jhr {
+  display: inline-block !important;
+  vertical-align: middle;
+  padding-left: 10px;
 }
 
 /* Keyframes for blinking border animation on the gotoMap button */
@@ -197,14 +233,10 @@ body {
 
   display: flex;
   align-items: center;
-  justify-content: center; /* Center the title and picker vertically */
+  justify-content: center;
 
   position: relative;
-  width: 100vw !important;
-  left: 0;
-
-  /* if your title bar ever grows, keep it sane */
-  /* max-height: 180px;*/ /* optional; adjust if needed */
+  width: 100% !important;
 }
 
 .title-bar img {
@@ -449,6 +481,11 @@ body {
   padding: 5px;
   background-color: #f8f9fa;
   border-top: 1px solid #dee2e6;
+  margin-top: 10px;
+  width: 100%;
+  box-sizing: border-box;
+  position: static;
+  clear: both;
 }
 
 .version-info {
