@@ -49,6 +49,7 @@
 # Loading library 
 library(stringr)
 library(xml2)
+library(dplyr)
 
 ################################################################################
 ## create empty tagDeploymentDetails data frame
@@ -195,14 +196,17 @@ tagDeploymentDetails  <- function(tagDeploymentID, useReadCache=1, cacheAgeLimit
     lat <- latlon[2] 
     lon <- latlon[5]
   } #end if location is unknown
-  
   #create empty frame with one row of nulls
   df <- empty_tagDeploymentDetails_df()
   
   #append a row with our values
   df[2, ]<- list(tagid ,project, contact, started, species, lat, lon, ndays, nreceivers )
   #finally, delete any rows with nulls
-  df <- df %>% drop_na()
+  
+  ######################### allow missing contact lat lon etc 
+  #df <- df %>% drop_na()
+  df <- df %>%
+    drop_na(tagid, project,started, species)
 
   if(config.EnableWriteCache == 1){
     DebugPrint("tagDeploymentDetails writing new cache file.")
