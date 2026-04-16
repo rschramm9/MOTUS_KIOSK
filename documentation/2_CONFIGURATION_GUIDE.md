@@ -48,19 +48,28 @@ KioskCfgFile="kiosk.cfg"
 
 **TIP:** relative (~) paths are convenient when developing your site using the RStudio IDE.  However when your kiosk 'goes-live' it will likely be run in the background by another account such as Admin.  At some point you will want to modify the startup.cfg to use the full absolute paths (eg.  C:/Users/MOTUS_USER/Documents/kiosks)  (See the FINAL_DEPLOYMENT document Section 2.0)
 
-
-
 ##### 1.2 - Locate your site's motus receiver deployment ID.
 
-To locate all of your desired receiver's deployment IDs: Go to motus.org
-- Sign in to yur Motus.org account
-- Click "Explore Data"  on the Motus Dashboard.
-- Click on the "Stations" tab which will load a list of all stations
-- Type your Station Name into the "Search Stations" box to filter the list.
-- Look for the "**Last configured**" line, it should have a (Deployment #nnnnnn).  That is your deployment ID. 
+To locate all of your desired receiver's deployment IDs
+
+**Note  1) you need to know the Motus  ProjectID the receiver is deployed under** 
+
+**Note 2) you must be assigned as a "collaborator" on the project ( c\Contact your project PI) ****
+
+- Sign in to your Motus.org account.
+
+- Paste the URL shown into your browser and ***substituting your projectID*** number for my projectID 580:
+
+    https://motus.org/data/project/stations?projectID=580
+
+- If the map tab is displayed, select the 'Table' tab (just above the Map)
+
+- Locate your Station Name in the table of Receivers and click on it
+
+- In the orange pop-up - locate your "Deployment ID Number" 
   ( *NOTE: in Motus terminology, a Project may have multiple Receivers. A Reciever may have multiple RecieverDeployments - we are looking for the currently active **ReceiverDeploymentID**)* 
 
-**TIP:** If you want your kiosk to display detections from multiple receivers, simply make a list of the all of the active ReceiverDeploymentIDs and names to use in the next step.
+**TIP:** If you want your kiosk to display detections from multiple receivers, simply make a list of the all of the active ReceiverDeploymentIDs and names.  You may need to contact the project owner for any receivers you are not registered as collaborator on.  
 
 ##### 1.3 Find a suitable logo for your main page.
 
