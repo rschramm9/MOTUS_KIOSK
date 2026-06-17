@@ -1,7 +1,7 @@
 ######## I put github release version and other data here ############
 ######## so it can be displayed on the footer of the kiosk window ####
-gblFooterText <- "MOTUS_KIOSK vsn 6.3.3  16-Apr-2026"
-gblUserAgentText <- "MOTUS_KIOSK vsn 6.3.3"
+gblFooterText <- "MOTUS_KIOSK vsn 6.3.4  17-June-2026"
+gblUserAgentText <- "MOTUS_KIOSK vsn 6.3.4"
 mytoggle<<-FALSE #useful global variable for debugging
 
 ###############################################################################
@@ -66,6 +66,8 @@ library(httr)
 library(units)
 
 library(yaml)
+library(dplyr)
+
 
 #### for leaflet map
 library(leaflet)
@@ -107,6 +109,10 @@ library(data.table)
 ## source the necessary modules etc.  
 
 wd <- getwd()
+
+ts = format(Sys.time(), "%d.%m.%Y %H:%M:%OS")
+message(paste0("Starting MOTUS_KIOSK: ",ts))
+message(paste0( gblFooterText))
 message(paste0("getwd():", wd))
 
 if( grepl('/code$', wd)){
@@ -362,18 +368,20 @@ source(paste0(codedir,"/modules/MotusNews.R"))
      # here we make a dataframe from the shortnames and the deployment ids, later we
      # use the reactive picklist choice to filter the dataframe to get the desired deployment id
      gblReceivers_df <<- data.frame(unlist(config.ReceiverShortNames),unlist(config.ReceiverDeployments))
+
      #to name the columns we use names() function
      names(gblReceivers_df) = c("shortName","receiverDeploymentID")
-     config.ReceiverShortName<- toString(config.ReceiverShortNames[1])   #start with the first receiver on the list
-     selectedreceiver <<- filter(gblReceivers_df, shortName == config.ReceiverShortName)
+     ###config.ReceiverShortName<- toString(config.ReceiverShortNames[1])   #start with the first receiver on the list
+     gbl_ReceiverShortName <<- toString(config.ReceiverShortNames[1])   #start with the first receiver on the list, global used in ReceiverDetections
+     selectedreceiver <<- filter(gblReceivers_df, shortName == gbl_ReceiverShortName)
+     
      
      # NOTE the use of global assignments
      gblReceiverDeploymentID <<- selectedreceiver["receiverDeploymentID"]
-     InfoPrint(paste0("Start with receiver:", config.ReceiverShortName, "  ID:", gblReceiverDeploymentID))
+     InfoPrint(paste0("Start with receiver:", gbl_ReceiverShortName, "  ID:", gblReceiverDeploymentID))
+
  
-     # for testing connection status to motus.org, I will always use this ID
-     defaultReceiverID<<-gblReceiverDeploymentID 
-       
+     
      # Initially populate the dataframes here
      # dont allow a modal spinner as UI may not be 'up' yet
      
