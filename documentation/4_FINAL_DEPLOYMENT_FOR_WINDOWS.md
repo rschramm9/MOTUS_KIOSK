@@ -101,7 +101,7 @@ Verifiy Settings are:
 - In section "Keyboard Shortcuts"
 - 	"Enable Back/Forward navigation keys" TRUE  <<<< CRITICALLY IMPORTANT!
 - 	"Enable Settings keys" TRUE  <<<< CRITICALLY IMPORTANT!
-  
+
 - In the "Password" section - you may wish to change the OpenKiosk admin password - but r*emember it - there is no password recovery mechanism!!*
 
 **CRITICALLY IMPORTANT **
@@ -194,7 +194,8 @@ KioskCfgFile="kiosk.cfg"
 **2.9** - On the "Actions" tab
 
 - Click "New" button ; in the pop-up,  set  it’s 'Begin the task' dropdown to be “Start a  Program”
-- In the "Program/script" section, use the browse button and navigate to the .bat file you prepared above. Likely: <br>C:\Users\MOTUS_USER\Documents\kiosks\yourkioskname\extras\MOTUS_MSWINDOWS_STARTSERVER.bat and select it
+- In the "Program/script" section, use the browse button and navigate to the .bat file at: <br>C:\Users\MOTUS_USER\Projects\MOTUS_KIOSK\code\MOTUS_MSWINDOWS_STARTSERVER.bat and select it
+- ~~OBSOLETE C:\Users\MOTUS_USER\Documents\kiosks\yourkioskname\extras\MOTUS_MSWINDOWS_STARTSERVER.bat and select it~~
 - Set the "Start In:" field to C:\Users\MOTUS_USER\Projects\MOTUS_KIOSK
 - Press "OK"  for the action button.
 
