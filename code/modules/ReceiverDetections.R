@@ -323,11 +323,12 @@ SERVER_ReceiverDetections <- function(id, i18n_r, lang, rcvr) {
       detections_df <<- data.frame()
       
       for (id in z) {
-        ###print(paste0("----"))
-        ###print(paste0("id:",id))
-        message(paste0("calling receiverDeploymentDetections with id: ", id))
+        #print(paste0("mytagstotable() --for id in z--"))
+        #print(paste0("id:",id))
+        InfoPrint(paste0("calling receiverDeploymentDetections with id: ", id))
         tmp_df <<- receiverDeploymentDetections(id, config.EnableReadCache, config.ActiveCacheAgeLimitMinutes, withSpinner=FALSE,spinnerText=usespinnertext)
         if(nrow(tmp_df)<=0) {  # failed to get results... try the inactive cache
+          message("receiverDeploymentDetections request failed - try Inactive cache")
                 DebugPrint("receiverDeploymentDetections request failed - try Inactive cache")
                 df <<- receiverDeploymentDetections(id, config.EnableReadCache, config.InactiveCacheAgeLimitMinutes, withSpinner=FALSE,spinnerText=usespinnertext)
         }
@@ -343,8 +344,16 @@ SERVER_ReceiverDetections <- function(id, i18n_r, lang, rcvr) {
       DebugPrint("back from receiverDeploymentDetection.. results follow ")
       
       if( !is.data.frame(detections_df)){
-        DebugPrint("receiverDeploymentDetections failed to return a dataframe... exit function")
+        WarningPrint("receiverDeploymentDetections failed to return a dataframe... create an empty dataframe and continue")
+        detections_df <- data.frame( matrix( ncol = 8, nrow = 1 ) )
+        colnames(detections_df) <- c('tagDetectionDate','tagID','tagDeploymentID','tagDeploymentName','species','tagDeploymentDate','lat','lon')
         return()
+      }
+      
+      if (nrow(detections_df) < 1) {
+        WarningPrint("receiverDeploymentDetections return a dataframe with no rows... create an empty dataframe and continue")
+        detections_df <- data.frame( matrix( ncol = 8, nrow = 1 ) )
+        colnames(detections_df) <- c('tagDetectionDate','tagID','tagDeploymentID','tagDeploymentName','species','tagDeploymentDate','lat','lon')
       }
       
       DebugPrint("sort the detections")
