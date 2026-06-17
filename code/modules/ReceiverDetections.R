@@ -308,13 +308,35 @@ SERVER_ReceiverDetections <- function(id, i18n_r, lang, rcvr) {
     # A non-reactive function that will be available to each user session
     # populate global detections_df and detections_subset_df as needed and render to sidebar table
     myTagsToTable <- function(x) {
+    
+      selectedreceiver <- filter(gblReceivers_df, shortName == gbl_ReceiverShortName)      
+      gblReceiverDeploymentID <<- selectedreceiver["receiverDeploymentID"]
+      ####print(gblReceiverDeploymentID)
+      # a dataframe of length 1, convert to a vector...
       
-      #note <<- is assignment to global variable, also note receiverDeploymentID is global
-      detections_df <<- receiverDeploymentDetections(gblReceiverDeploymentID, config.EnableReadCache, config.ActiveCacheAgeLimitMinutes, withSpinner=FALSE,spinnerText=usespinnertext)
-      if(nrow(detections_df)<=0) {  # failed to get results... try the inactive cache
-        DebugPrint("receiverDeploymentDetections request failed - try Inactive cache")
-        detections_df <<- receiverDeploymentDetections(gblReceiverDeploymentID, config.EnableReadCache, config.InactiveCacheAgeLimitMinutes, withSpinner=FALSE,spinnerText=usespinnertext)
-      }
+      ###print(class(gblReceiverDeploymentID))
+      ###print(length(gblReceiverDeploymentID))
+      
+      z <- selectedreceiver$receiverDeploymentID
+      
+      # clear global dataframe before loop
+      detections_df <<- data.frame()
+      
+      for (id in z) {
+        ###print(paste0("----"))
+        ###print(paste0("id:",id))
+        message(paste0("calling receiverDeploymentDetections with id: ", id))
+        tmp_df <<- receiverDeploymentDetections(id, config.EnableReadCache, config.ActiveCacheAgeLimitMinutes, withSpinner=FALSE,spinnerText=usespinnertext)
+        if(nrow(tmp_df)<=0) {  # failed to get results... try the inactive cache
+                DebugPrint("receiverDeploymentDetections request failed - try Inactive cache")
+                df <<- receiverDeploymentDetections(id, config.EnableReadCache, config.InactiveCacheAgeLimitMinutes, withSpinner=FALSE,spinnerText=usespinnertext)
+        }
+        
+        # only append if rows exist
+        if (nrow(tmp_df) > 0) {
+          detections_df <<- rbind( detections_df, tmp_df )
+        }
+      }  #end for id in z
       
       remove_modal_spinner() #shown by receiverDeploymentDetections
       
@@ -622,12 +644,18 @@ SERVER_ReceiverDetections <- function(id, i18n_r, lang, rcvr) {
             theRemoteID=row[["remoteReceiverDeploymentID"]]
             theNote=row[["briefNote"]]
            
-            #note this is the currently selected receiver stored in a global variable
-            if(theLocalID == gblReceiverDeploymentID ){ 
+            #note this is the currently selected receivers stored in a global variable
+            z <- selectedreceiver$receiverDeploymentID
+            for (id in z) {
+            
+            if(theLocalID == id){ 
                 # the localId matches the currently selected receiver so do it
                 tagflight_df <- tagflight_df[ !(tagflight_df$receiverDeploymentID == theRemoteID),] 
-            } 
-          } #end for
+            }
+              
+            } #end inner for
+                
+          } #end outer for
         }   #endif
 
         if(config.EnableSuspectDetectionFilter==1){
@@ -848,28 +876,34 @@ SERVER_ReceiverDetections <- function(id, i18n_r, lang, rcvr) {
     observeEvent(rcvr(), {
       DebugPrint("recvr picker observerEvent")
       # NOTE the use of global assignments
-      strReceiverShortName <<- rcvr()  #global assignment
-      
-      DebugPrint(paste0("recvr picker observerEvent strReceiverShortName", strReceiverShortName))
+      gbl_ReceiverShortName <<- rcvr()  #global assignment, used by tags to table function
+      #tmpstr <- rcvr()  #global assignment
+      #.  eg. Malheur Headquarters
+      DebugPrint(paste0("recvr picker observerEvent strReceiverShortName:", gbl_ReceiverShortName))
+      message(paste0("recvr picker observerEvent strReceiverShortName:", gbl_ReceiverShortName))
       
       # on new receiver selection via the picker
-      # update the global string strReceiverShortName
+      # update the global string gbl_ReceiverShortName
       # and use it to filter the global dataframe of shortnames and ID's to update
-      # the global variable receiverDeploymentID. Then call myTagsToTable()
-      #to populate the sidebar with a new list of detections
+      # the global variable receiverDeploymentID. 
+      # Then call myTagsToTable(). to populate the sidebar with a new list of detections
       
-      selectedreceiver <- filter(gblReceivers_df, shortName == strReceiverShortName)      
+      selectedreceiver <- filter(gblReceivers_df, shortName == gbl_ReceiverShortName)      
       gblReceiverDeploymentID <<- selectedreceiver["receiverDeploymentID"]
+   
       
-      DebugPrint(paste0("recvr picker observerEvent receiverDeploymentID", gblReceiverDeploymentID))
+      DebugPrint(paste0("ReceiverDetections.R recvr picker observerEvent receiverDeploymentID", gblReceiverDeploymentID))
+      #InfoPrint(paste0("recvr picker observerEvent receiverDeploymentID:", gblReceiverDeploymentID))
+      # prints like:  receiverDeploymentID:c("12845", "8316") 
+      
       myTagsToTable()
       DebugPrint("recvr picker observerEvent back from tags to table")
       
       
-      InfoPrint(paste("set rcvr title to:",strReceiverShortName," receiverDeploymentID is now:",gblReceiverDeploymentID ))
+      #### OBSOLETE. InfoPrint(paste("set rcvr title to:",tmpstr," receiverDeploymentID is now:",gblReceiverDeploymentID ))
       #output$table_title<-renderText({strReceiverShortName})
       
-      tmp <- paste0("Tags detected at ", strReceiverShortName)
+     ##### OBSOLETE tmp <- paste0("Tags detected at ", tmpstr)
       
       # Dynamic tag detections label
       #output$detected_tag_list_label <- renderUI({
