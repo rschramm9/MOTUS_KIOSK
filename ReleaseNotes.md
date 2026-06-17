@@ -1,3 +1,52 @@
+
+
+
+
+**6.3.4 (2026-06-17) **Allow a named receiver to have multiple receiverDeployments.  Prior versions, each receiver could only have a single deployment ID.  When receivers are upgraded or modified, Motus requires a new deployment be created and the prior detection data was no longer visible.   
+
+global.R  
+- Add library(dplyr) to global.R
+- remove unused local variable config.ReceiverShortName
+- remove unused global variable defaultReceiverID (was obsolete when motus.org requested different ping)
+
+ui.R  available receivers choice list now filtered to remove duplicate receiverShortNames so
+That the receiver name only appears once in the selection picklist.
+
+ReceiverDetections.R
+- change function myTagsToTable to process receiverShortnames that may have multiple receiverDeploymentIDs
+
+- change observeEvent(rcvr()) 
+Change global variable name from strReceiverShortname to gbl_ReceiverShortName to better clarify its a gloabal
+
+- added script DisableCtrlAltDelOptions.ps1 script to plug security hole whereby
+if the keyboard was left exposed to the public someone could type Ctrl+Alt+Del
+and gain access to parts of the system.
+
+- modified Final Deployment for Windows to include running of DisableCtrlAltDelOptions.ps1 script.
+
+- 
+
+**6.3.3 (2026-04-16) **
+Allow null lat/lon on tag deployment locations
+
+**6.3.2 (2026-) **
+A tall main header logo may get cut off at the bottom. Modified ui.R to make the ui_titlebar
+a div of css class title-bar instead of a fluidrow and the logo a css class of
+title-bar-logo.  Also modified the default css to style those classes.
+Change the default css file name in www/css to include a version number to better track modification. Also requires matching the configuration parameter CssFile in the kiosk.cfg file.
+ui.R  change the lang-picker  display from inline to inline-block due to rework of title-bar
+
+**6.3.1 (2026-) **
+Some tagged birds spend many days (or months) in the same location, especially in the mid-west it seems.
+his can cause many thousands of hits in both the daily summary and particularly in the
+higher resolution data.  It can take several minutes to download and even sometimes hang
+the response indefinitely.  Its rather pointless to process all those high resolution points
+since they dont lend much to the map that the daily data provides (just possibly the order of the points)
+So I implement a the timeout in tagTrack.R.  If it times out then tagDeploymentDetections just uses
+the daily summary and skips the sorting.
+
+
+
 **6.3.0 (2026-02-10)**
 
 ***********************************  IMPORTANT NOTE ! *************************
