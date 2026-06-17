@@ -128,8 +128,7 @@ ui_titlebar <- div(class = "title-bar",
       if (config.ButtonStyleReceiverSelectors) { #use radio button group
           shinyWidgets::radioGroupButtons(
             inputId   = "receiver_pick",
-            choices   = config.ReceiverShortNames,
-            selected  = config.ReceiverShortNames[1],
+            choices   =  unname(unique(unlist(config.ReceiverShortNames))),
             size      = "sm",
             direction = "vertical",
             status    = "default"    # <-- IMPORTANT
@@ -138,7 +137,7 @@ ui_titlebar <- div(class = "title-bar",
           shinyWidgets::pickerInput(
             inputId  = "receiver_pick",
             label    = NULL,
-            choices  = config.ReceiverShortNames,
+            choices  = unname(unique(unlist(config.ReceiverShortNames))),
             width    = "200px"
           )
       }
