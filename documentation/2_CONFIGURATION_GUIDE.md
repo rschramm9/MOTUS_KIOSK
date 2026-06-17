@@ -46,6 +46,7 @@ KioskCfgFile="kiosk.cfg"
 
 *Note: these values are case sensitive and must match exactly the project directory structure containing your kiosk.*
 
+
 **TIP:** relative (~) paths are convenient when developing your site using the RStudio IDE.  However when your kiosk 'goes-live' it will likely be run in the background by another account such as Admin.  At some point you will want to modify the startup.cfg to use the full absolute paths (eg.  C:/Users/MOTUS_USER/Documents/kiosks)  (See the FINAL_DEPLOYMENT document Section 2.0)
 
 ##### 1.2 - Locate your site's motus receiver deployment ID.
@@ -182,8 +183,7 @@ or for multiple receivers:
 ReceiverDeploymentID=9195,7948,8691,7474,7950
 ReceiverShortName="Ankeny Hill OR", "Bullards Bridge OR", "Nisqually Delta WA", "Oysterville WA", "Tokeland WA"
 ```
-
-
+**TIP:** Beginning with version 6.3.4 If you you want to include prior (inactive) deployments at a named receiver, just make additional receiverDeploymentID entries with the **exact** same ReceiverShortname - the kiosk application will simply join the tag detections from the multiple deployments together for display.
 
 The selector for the active receiver can be rendered as either a dropdown list (default) or as a grid of selector buttons. Styling is controlled via the ButtonStyleReceiverSelectors parameter.  Set to 0 for traditional dropdown list, set value to 1 for button grid :
 
