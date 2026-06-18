@@ -14,6 +14,7 @@ Refuge staff are often not available on site to supervise so security against mi
 One of the core requirements of the app is that as an unattended "kiosk" it needs to be 'completely locked down'.
 A great deal of attention was paid to securing the kiosk as we did not want anyone to access user
 accounts or go browsing off to where they shouldnt. 
+
 - no one can access the user accounts or windows desktop.
 
 - no one can access the cmd console to run commands or programs
@@ -26,8 +27,12 @@ accounts or go browsing off to where they shouldnt.
   an OpenKiosk password protected escape sequence that requires a connected
   keyboard.
 
-- For additional security it is recommended to lock the computer itself in a cabinet along with
-  the keyboard so there is no access to the power button. 
+- For the highest level of security it is **STRONGLY RECOMMENDED** to lock the computer itself in a cabinet along with the keyboard so there is no access to the power button. 
+  
+  -  Giving access to the computer's power button and USB ports is a security risk.
+  -  It is also possible for a knowledgable and malicious hacker to mess with login acct, power down/sleep, wifi etc by ctrl+alt+del if  given access to the keyboard. 
+  
+  
 
 The data queries are made within the application as simple http requests straight to motus.org public access data server.  All of that is hidden within the application completely out of sight and reach of the Motus user.
 
