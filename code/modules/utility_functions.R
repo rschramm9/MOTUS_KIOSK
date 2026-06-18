@@ -599,7 +599,14 @@ motus_news_yaml_to_df <- function(yaml_list) {
 # on error return NULL
 ################################################################################
 load_motus_news_catalog <- function(path) {
+  
+  
   yaml_list <- read_motus_news_yaml(path)
+  if( is.null(yaml_list)) {
+    ErrorPrint(paste0( "read_motus_news_yaml() failed. load_motus_news_catalog returning NULL"))
+    return(NULL)
+  }
+  
   df <- motus_news_yaml_to_df(yaml_list)
   
   ###if (is.null(df)) return(NULL)
