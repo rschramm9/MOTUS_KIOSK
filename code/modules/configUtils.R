@@ -100,14 +100,14 @@ getStartConfig <- function() {
   } else {
     #I ultimately want a string
     xxx <- toString(list1[1]) 
-    message(paste0("path given:", xxx))
+    WarningPrint(paste0("path given:", xxx))
     # if path begins '~/' replace the ~ with users home directory
     if( grepl('^~/', xxx)){
-      message(paste0("modifying config directory"))
+      WarningPrint(paste0("modifying config directory"))
       home<-path_home()  #in library fs
-      message(paste0("Home is:",home))
+      WarningPrint(paste0("Home is:",home))
       xxx=str_replace(xxx,"~",home)
-      message(paste0("config path with tilde expanded:", xxx))
+      WarningPrint(paste0("config path with tilde expanded:", xxx))
     }
     config.KiosksPath<<-xxx
   }
@@ -135,13 +135,13 @@ getStartConfig <- function() {
 ########################################################################################
 getKioskConfig <- function() {
   
-  message(paste0("using global KiosksPath:", config.KiosksPath)) #/users/rich/Projects/kiosks
-  message(paste0("using global StartKiosk:", config.StartKiosk))
+  WarningPrint(paste0("using global KiosksPath:", config.KiosksPath)) #/users/rich/Projects/kiosks
+  WarningPrint(paste0("using global StartKiosk:", config.StartKiosk))
   
   #first test the directory exists
   thedirectory<-paste0(config.KiosksPath,"/",config.StartKiosk)
   
-  message(paste0("testing for the named kiosk's directory:",thedirectory))
+  WarningPrint(paste0("testing for the named kiosk's directory:",thedirectory))
   if (!file.exists(thedirectory)) {
     message(paste0("ERROR: getKioskConfig: no kiosk directory found at: ",thedirectory))
     ErrorPrint("Please check the name of your StartKiosk in the startup.cfg file.")
@@ -151,7 +151,7 @@ getKioskConfig <- function() {
   
   thefile<-paste0(config.KiosksPath,"/",config.StartKiosk,"/",config.KioskCfgFile)
   if (!file.exists(thefile)) {
-    message(paste0("ERROR: getKioskConfig: kiosk configuration file not found in kiosk's directory at:",thefile))
+    ErrorPrint(paste0("ERROR: getKioskConfig: kiosk configuration file not found in kiosk's directory at:",thefile))
     ErrorPrint("Please check that the name of your KioskCfgFile in the startup.cfg file matches a config file in your kiosk's folder.")
     stop("There is an error reading your kiosk's configuration file.")
   }
@@ -159,7 +159,7 @@ getKioskConfig <- function() {
   tryCatch( 
     {
       #attempt to read file from current directory
-      InfoPrint(paste0("Loading kiosk configuration data from ", thefile))
+      WarningPrint(paste0("Loading kiosk configuration data from ", thefile))
       lines <- readLines(thefile, warn = FALSE)
       configtbl <-linesToList(lines)
     },
@@ -336,14 +336,14 @@ getKioskConfig <- function() {
   if( !is.null(config.MotusNewsStoryCatalog)) {
     gblDoVersion3News<<-TRUE
     gblDoVersion2News<<-FALSE
-    message("Will use kiosk Version 3 News")
+    InfoPrint("Using kiosk Version 3 MotusNews")
   } else if ( !is.null(config.NewsPageEnglish)) {
     gblDoVersion3News<<-FALSE
     gblDoVersion2News<<-TRUE
-    message("Will use kiosk Version 2 (Legacy) News")
+    WarningPrint("Will use kiosk Version 2 (Legacy) MotusNews")
   } else {
     badCfg<-TRUE
-    WarningPrint("Config file is missing entries for either MotusNewsStoryCatalog or legacy item NewsPageEnglish")
+    ErrorPrint("Config file is missing entries for either MotusNewsStoryCatalog or legacy item NewsPageEnglish")
   }
   
   
