@@ -889,7 +889,6 @@ SERVER_ReceiverDetections <- function(id, i18n_r, lang, rcvr) {
       #tmpstr <- rcvr()  #global assignment
       #.  eg. Malheur Headquarters
       DebugPrint(paste0("recvr picker observerEvent strReceiverShortName:", gbl_ReceiverShortName))
-      message(paste0("recvr picker observerEvent strReceiverShortName:", gbl_ReceiverShortName))
       
       # on new receiver selection via the picker
       # update the global string gbl_ReceiverShortName
