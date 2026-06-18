@@ -4,6 +4,27 @@
 
 **6.3.4 (2026-06-17) **Allow a named receiver to have multiple receiverDeployments.  Prior versions, each receiver could only have a single deployment ID.  When receivers are upgraded or modified, Motus requires a new deployment be created and the prior detection data was no longer visible.   
 
+
+
+***********************************  IMPORTANT SECURITY NOTE ! *************************
+
+```
+If you allow public access to your kiosk's keyboard then it is possible for a unauthorized person to access the underlying operating system.   
+
+It is strongly recommended you lock way both your keyboard and the computer from public access and leave only the touchscreen (or a mouse) available to the public.
+
+
+
+Also please look at the "Final Deployment for Windows" and run the DisableCtrlAltDelOptions.ps1 script documented there which provides some additional protections. 
+```
+
+For the highest level of security it is **STRONGLY RECOMMENDED** to lock the computer itself in a cabinet along with the keyboard so there is no access to the power button. 
+
+-  Giving access to the computer's power button and USB ports is a security risk.
+-  It is also possible for a knowledgable and malicious hacker to mess with login acct, power down/sleep, wifi etc by ctrl+alt+del if  given access to the keyboard. 
+
+
+
 global.R  
 - Add library(dplyr) to global.R
 - remove unused local variable config.ReceiverShortName
@@ -24,7 +45,9 @@ and gain access to parts of the system.
 
 - modified Final Deployment for Windows to include running of DisableCtrlAltDelOptions.ps1 script.
 
-- 
+- myTagsToTable() if a receiver returns no detections then create an empty data frame so app doesnt crash.
+
+  
 
 **6.3.3 (2026-04-16) **
 Allow null lat/lon on tag deployment locations
