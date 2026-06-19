@@ -1,5 +1,20 @@
 
 
+**6.3.5 (2026-06-19) **
+
+Minor cleanup of log messages.  Error check if load_motus_news_yaml file fails.  
+
+configUtils.R
+- some message() outputs dealing with path tilde expansions were changed to WarningPrint()
+- some message() outputs dealing with path tilde expansions were changed to WarningPrint() or InfoPrint()
+
+utilityFunctions.R
+- if load_motus_news_yaml file fails to load, returns NULL. Results in
+an HTTP 404 page not found message displayed on motus news tab instead of crashing.
+
+pingMotus.R
+- change some message() and InfoPrint() calls to DebugPrint() to shorten logfiles
+
 
 
 **6.3.4 (2026-06-17) **Allow a named receiver to have multiple receiverDeployments.  Prior versions, each receiver could only have a single deployment ID.  When receivers are upgraded or modified, Motus requires a new deployment be created and the prior detection data was no longer visible.   
