@@ -103,9 +103,9 @@ pingMotus <- function()
   #page_title <- page %>% html_node("title") %>% html_text()
   
   if (ans==TRUE){
-    InfoPrint("Motus responded with expected page title ")
+    DebugPrint("Motus responded with expected page title ")
   } else {
-    message("failed page title")
+    DebugPrint("failed page title")
   }
   
   # we dont process anything else from the html results.... we just wanted to ping
