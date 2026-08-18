@@ -343,6 +343,36 @@ SERVER_ReceiverDetections <- function(id, i18n_r, lang, rcvr) {
       
       DebugPrint("back from receiverDeploymentDetection.. results follow ")
       
+      
+      #########new ignore block.....
+      # for the currently selected receiver, left panel tags detected at this receiver
+      # apply any detection data exclusions from .csv file read by global.R
+      # this is the tag at at specific Date and ReceiverID exclusion 
+      # for the left panel.  Nore the exclusion list is used again further down to
+      # exclude for detections in the flightpath for other receivers
+      
+      if( length(gblIgnoreByTagReceiverDate_df > 0 )){
+  
+        for(i in 1:nrow(gblIgnoreByTagReceiverDate_df)) {
+          row <- gblIgnoreByTagReceiverDate_df[i,]
+          theDate=row[["date"]]
+          theTagID=row[["tagDeploymentID"]]
+          theRcvrID=row[["receiverDeploymentID"]]
+          theNote=row[["briefNote"]]
+          
+          # print(paste0("exclude"," class(date):", class(theDate),
+          #             " date:", theDate, "  tagDeploymentID:", theTagID,"  receiverDeploymentID:", theRcvrID,"  Note:", theNote))
+          
+          if (theRcvrID == selectedreceiver$receiverDeploymentID){ 
+            print("DO THE FILTER")
+            detections_df <- filter(detections_df, !(   tagDetectionDate == theDate &
+                            tagDeploymentID == theTagID))
+            }
+        }
+      }
+
+      ######### end new ignore block.....      
+
       if( !is.data.frame(detections_df)){
         WarningPrint("receiverDeploymentDetections failed to return a dataframe... create an empty dataframe and continue")
         detections_df <- data.frame( matrix( ncol = 8, nrow = 1 ) )
@@ -365,6 +395,9 @@ SERVER_ReceiverDetections <- function(id, i18n_r, lang, rcvr) {
       #subset the data frame to form a frame with only the columns we want to show
       # note also it's a global assignment 
       detections_subset_df<<-detections_df[c("tagDetectionDate", "tagDeploymentID","species" )]
+
+      # sort this df also just to be certain
+      detections_subset_df <<- detections_subset_df[ order(detections_subset_df$tagDetectionDate,decreasing = TRUE), ]
       
       DebugPrint("back from subset.. results follow ")
       #str(detections_subset_df)
@@ -614,7 +647,6 @@ SERVER_ReceiverDetections <- function(id, i18n_r, lang, rcvr) {
         
         # apply any flight data exclusions from .csv file read by global.R
         # this is the tag at at specific Date and ReceiverID exclusion
-      
         if( length(gblIgnoreByTagReceiverDate_df > 0 )){
            for(i in 1:nrow(gblIgnoreByTagReceiverDate_df)) {
              row <- gblIgnoreByTagReceiverDate_df[i,]
@@ -631,7 +663,7 @@ SERVER_ReceiverDetections <- function(id, i18n_r, lang, rcvr) {
                               tagDeploymentID == theTagID))
             }
         }
-        
+
         if( length(gblIgnoreByTagReceiver_df > 0 )){
           for(i in 1:nrow(gblIgnoreByTagReceiver_df)) {
             row <- gblIgnoreByTagReceiver_df[i,]
