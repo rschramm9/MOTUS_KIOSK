@@ -343,8 +343,6 @@ SERVER_ReceiverDetections <- function(id, i18n_r, lang, rcvr) {
       
       DebugPrint("back from receiverDeploymentDetection.. results follow ")
       
-      
-      #########new ignore block.....
       # for the currently selected receiver, left panel tags detected at this receiver
       # apply any detection data exclusions from .csv file read by global.R
       # this is the tag at at specific Date and ReceiverID exclusion 
@@ -364,14 +362,12 @@ SERVER_ReceiverDetections <- function(id, i18n_r, lang, rcvr) {
           #             " date:", theDate, "  tagDeploymentID:", theTagID,"  receiverDeploymentID:", theRcvrID,"  Note:", theNote))
           
           if (theRcvrID == selectedreceiver$receiverDeploymentID){ 
-            print("DO THE FILTER")
+            #print("DO THE FILTER")
             detections_df <- filter(detections_df, !(   tagDetectionDate == theDate &
                             tagDeploymentID == theTagID))
             }
         }
       }
-
-      ######### end new ignore block.....      
 
       if( !is.data.frame(detections_df)){
         WarningPrint("receiverDeploymentDetections failed to return a dataframe... create an empty dataframe and continue")
