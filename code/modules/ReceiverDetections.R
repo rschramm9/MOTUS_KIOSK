@@ -361,13 +361,14 @@ SERVER_ReceiverDetections <- function(id, i18n_r, lang, rcvr) {
           # print(paste0("exclude"," class(date):", class(theDate),
           #             " date:", theDate, "  tagDeploymentID:", theTagID,"  receiverDeploymentID:", theRcvrID,"  Note:", theNote))
           
-          if (theRcvrID == selectedreceiver$receiverDeploymentID){ 
-            #print("DO THE FILTER")
-            detections_df <- filter(detections_df, !(   tagDetectionDate == theDate &
-                            tagDeploymentID == theTagID))
-            }
-        }
-      }
+          z <- selectedreceiver$receiverDeploymentID  #can be multiple
+            for (id in z) {
+               if (theRcvrID == id){ 
+                detections_df <- filter(detections_df, !(tagDetectionDate == theDate & tagDeploymentID == theTagID))
+                } #end if
+            } #end for id in z
+        } #end for i in 1:nrow
+      } #end if length > 0
 
       if( !is.data.frame(detections_df)){
         WarningPrint("receiverDeploymentDetections failed to return a dataframe... create an empty dataframe and continue")
