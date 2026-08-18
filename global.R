@@ -1,7 +1,7 @@
 ######## I put github release version and other data here ############
 ######## so it can be displayed on the footer of the kiosk window ####
-gblFooterText <- "MOTUS_KIOSK vsn 6.3.5  19-June-2026"
-gblUserAgentText <- "MOTUS_KIOSK vsn 6.3.5"
+gblFooterText <- "MOTUS_KIOSK vsn 6.3.6  18-Aug-2026"
+gblUserAgentText <- "MOTUS_KIOSK vsn 6.3.6"
 mytoggle<<-FALSE #useful global variable for debugging
 
 ###############################################################################
@@ -22,7 +22,7 @@ mytoggle<<-FALSE #useful global variable for debugging
 # 
 # 2) Any use or publication of the data presented through this application or its functions
 # must conform to the terms of the Motus Collaboration Policy at https://motus.org/policy/
-# and ensure proper recognition of Motus, Birds Canada, Motus researchers and projects.
+# and ensure proper recognition of Motus, Birds Canada, Motus researchers and projects. 
 # ***************************************************************************************
 #
 # This program is distributed in the hope that it will be useful,
