@@ -469,14 +469,44 @@ The descriptive content that appears in the in the in the "Species" tab when eve
 There should be several files for each species you want to describe - one in each language you wish to support.  
 Notice that the filenames must all begin with "species_"  and end with the same pattern for the supported languages (eg.  _en.html, _fr.html, _es.html )
 
-The file name choice here is critical. The software builds a compacted lowercase filename using the motus plain english species name field.
+**The file name choice here is critical.** The software builds a compacted lowercase filename using the motus plain english species name field.
  All special characters (~!@#$%^&*(){}+:"<>?,./;'[]-=) and any white space are removed.  The program builds the filename string by adding the leading "species"  and the trailing "_en.html" and then tries to match that to a file in the speciespages directory.  
 
-So motus detections of an  "American Robin" will match to a file  named "species_americanrobin_en.html" for English and "species_americanrobin_en.html" in Spanish etc.
+So motus detections of an  "American Robin" will match to a directory named americanrobin containing  files  named "species_americanrobin_en.html" for English and "species_americanrobin_en.html" in Spanish etc.
 
 Similarly a motus species name of "Swainson's Trush" compacted and formatted become filename of "species_swainsonsthrush_en.html"   (or _es.html and _fr.html for other languages)
 
 A motus species name of "Eastern Whip-poor-will" compacted and formatted become filename of "species_easternwhippoorwiil_en.html" (or _es.html and _fr.html for other languages)
+
+##### Special note for species with multiple common names 
+
+Discovered some tag owners use different common names for species  (eg. Hoary Bat,
+American Bat, Northern Hoary Bat). Also sometimes they append the latin species
+name (eg. Purple Martin (subis/arboricola) ). 
+
+Beginning version 6.3.8 (October 2026)  You can now place an optional file in the **www/speciespages** directory named **species_name_aliases.json** that can hold those aliases as demonstrated below.
+```
+{
+  "brownpelican": [
+    "Brown Pelican (California)"
+  ],
+  
+  "hoarybat": [
+    "Hoary Bat",
+    "Northern Hoary Bat",
+    "American Hoary Bat",
+    "North American Hoary Bat"
+  ],
+  
+  "purplemartin": [
+    "Purple Martin (subis/arboricola)"
+  ]
+}
+
+```
+
+
+
 
 **Species HTML files are found in your kiosk's  www/speciespages.**
 
