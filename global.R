@@ -1,7 +1,7 @@
 ######## I put github release version and other data here ############
 ######## so it can be displayed on the footer of the kiosk window ####
-gblFooterText <- "MOTUS_KIOSK vsn 6.3.7  18-Aug-2026"
-gblUserAgentText <- "MOTUS_KIOSK vsn 6.3.7"
+gblFooterText <- "MOTUS_KIOSK vsn 6.3.8  17-Oct-2026"
+gblUserAgentText <- "MOTUS_KIOSK vsn 6.3.8"
 mytoggle<<-FALSE #useful global variable for debugging
 
 ###############################################################################
@@ -141,6 +141,10 @@ source(paste0(codedir,"/modules/tagTrack.R"))
 source(paste0(codedir,"/modules/AboutMotus.R"))
 source(paste0(codedir,"/modules/MotusNews.R"))  
 
+# New 16Oct2026 
+source(paste0(codedir,"/modules/speciesNameAlias.R"))  
+
+
      #read the startup configuration file (see configUtils.R)
      # to find which kiosk
      badCfg = getStartConfig()
@@ -278,7 +282,24 @@ source(paste0(codedir,"/modules/MotusNews.R"))
      
      s = paste0(config.SiteSpecificContentWWW,"/speciespages")
      addResourcePath("speciespages", s )
- 
+     
+     # New 16Oct2026 
+     # Load the species aliases from the same directory
+     # aliases are only loaded once at startup
+     # species_lookup is global
+     #message(file.path(s, "species_name_aliases.json"))
+     species_lookup <- load_species_lookup(
+       file.path(s, "species_name_aliases.json")
+     )
+     
+     if (is.null(species_lookup)) {
+       WarningPrint("Species alias lookup FAILED to load.")
+     } else {
+       InfoPrint(paste0(
+         "Species alias lookup loaded successfully: ",
+         length(species_lookup), " aliases."
+       ))
+     }
 
      # MotusNews for version 6.2.4 with its directory structure and catalog
      # or MotusNews for 6.2.3 and earlier with its structure which
