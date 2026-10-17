@@ -1,4 +1,34 @@
+**6.3.8  (17-Oct-2026)**
+Discovered some tag owners use different common names for species  (eg. Hoary Bat,
+American Bat, Northern Hoary Bat). Also sometimes they append the latin species
+name (eg. Purple Martin (subis/arboricola) ).  This is causing problems when looking
+up species pages.  Added a module speciesNameAlias.R for functions to read a json
+file containing aliases. Use of this feature is optional and should not break existing kiosks
+if it does not exist - it will simply revert to previous behaviour when species not found.
+(See documentation: START_HERE.md Section 12.0 - Configure your own species tab content)
 
+- speciesNameAlias.R - add to modules directory
+- global.R sources modules/speciesNameAlias.R and calls load_species_lookup()
+- ReceiverDetections.R - calls get_species_key()  also moved species_name normalization into
+  get_species_key()
+- documentation/1_START_HERE.md added directions for configuring species aliases
+- kiosks/DEFAULT - added species_name_aliases.json file, purplemartin and hoarybat
+  species pages.
+  
+  
+
+**6.3.7** 
+
+fix bug introduced in 6.3.6 where filter did not correctly handle multiple
+receivers at a locations correctly - e.g Malheur, CapeMeares etc 
+
+- ReceiverDetections.R near line 364
+
+**6.3.6 (18-Aug-2026)**
+Fix bug where ignore tag detection at the current receiver was not getting filtered from the left detections panel
+Fix bug where sometimes the detections were not sorted descending in left panel 
+
+- ReceiverDetections.R several places
 
 **6.3.5 (2026-06-19) **
 
