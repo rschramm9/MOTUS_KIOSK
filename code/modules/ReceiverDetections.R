@@ -506,18 +506,25 @@ SERVER_ReceiverDetections <- function(id, i18n_r, lang, rcvr) {
       # NOTE: global assignment operator as species_key is needed outside of this
       # functions scope 
       
+      
       #get the selected species and strip unwanted chars and then lowercase() it
-      #e.g."Swainson's Thrush" becomes key = "swainsonsthrush"
+      #e.g."Swainson's Thrush" becomes key = "swainsonsthrush"#
       selected_species <- detections_subset_df[selectedrowindex,3]
-      #no special chars
-      species_key <<- gsub('[^[:alnum:] ]','',selected_species)
-      #no tabs or newline
-      species_key <<- gsub('[\t\n]','',species_key)
-      #no spaces
-      species_key <<- gsub(' ','', species_key)
-      #lowercase
-      species_key <<- tolower(species_key)
-    
+      
+      
+#      #no special chars
+#      species_key <<- gsub('[^[:alnum:] ]','',selected_species)
+#      #no tabs or newline
+#      species_key <<- gsub('[\t\n]','',species_key)
+#      #no spaces
+#      species_key <<- gsub(' ','', species_key)
+#      #lowercase
+#      species_key <<- tolower(species_key)
+    #New 16Oct2026
+      DebugPrint(paste0("calling get_species_key using:", selected_species))
+      species_key <<- get_species_key(selected_species, species_lookup)
+      
+      
       DebugPrint("calling updateSpeciesInfo")
       updateSpeciesInfo()
       DebugPrint("back from updateSpeciesInfo")
