@@ -56,7 +56,8 @@ startup.cfg
 
 # kiosks/web holds only kiosk content for
 # shinyapps.io web hosted apps. We dont want to manage them
-# in the repository
+# in the repository.
+
 /kiosks/web/*
 !/kiosks/web/README.md
 
