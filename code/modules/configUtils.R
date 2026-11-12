@@ -44,23 +44,31 @@ linesToList <- function(lines){
 ########################################################################################
 # Read the startup.cfg to get the name of the target kiosk etc
 # sets GLOBAL config parameters
-# return TRUE if made it all the way thru or FALSE if there were issues.
+# return FALSE if made it all the way thru or TRUE if there were serious issues.
 #
 ########################################################################################
 getStartConfig <- function() {
   
+  # attempt to open and read the startup.cfg file which should reside in the
+  # top level project directory.  Results are held in variable configtbl
+  # for processing into global config variables
+  
   tryCatch( 
     {  
-      thefile<-paste0(projectdir,"/","startup.cfg")  # note projectdir is global set in global.R
-      message(paste0("testing startup.cfg file:",thefile))
+      # note projectdir is a global set in global.R
+      thefile<-paste0(projectdir,"/","startup.cfg") 
+      message(paste0("testing for startup.cfg file:",thefile))
       if (!file.exists(thefile)) {
-        message(paste0("ERROR: getStartConfig: startup.cfg file not found at:", thefile))
-        stop("There is an error reading your cfg file")
+        FatalPrint(paste0("ERROR: getStartConfig(): startup.cfg file not found at:", thefile))
+        message(paste0("FATAL ERROR: getStartConfig(): startup.cfg file not found at:", thefile))
+        stop("There is a FATAL error reading your startup cfg file")
       } #else file exists
       #attempt to read file from current directory
       lines <- readLines(thefile, warn = FALSE) 
+      #print(lines)
       configtbl <-linesToList(lines)
-      InfoPrint("Loaded start configuration data from local file startup.cfg")
+      #print(configtbl)
+      WarningPrint("Loaded start configuration data from local file startup.cfg")
     },
     
     warning = function( w )
@@ -70,18 +78,20 @@ getStartConfig <- function() {
     
     error = function( err ) 
     {
-      WarningPrint("Could not read startup.cfg data from current working directory")
-      ErrorPrint("Config file read error: Could not load start configuration data. Exiting Program")
-      ErrorPrint("here is the err returned by the read:")
-      ErrorPrint(err)
-      ErrorPrint("Please check the location of your startup.cfg file.")
-      stop("There is an error reading your startup.cfg file")
+      FatalPrint("Could not read startup.cfg data from current working directory")
+      FatalPrint("Config file read error: Could not load start configuration data. Exiting Program")
+      FatalPrint("here is the err returned by the read:")
+      FatalPrint(err)
+      FatalPrint("Please check the location of your startup.cfg file.")
+      stop("There is an error reading your startup.cfg file.  Stopping")
     }
-  )
+  ) #end try-catch
   
-  badCfg<-FALSE  #assume a good config
+  badCfg<-FALSE  #initial this flag and assume a good config
   
   #print("------------ StartKiosk ----------------")
+  # fetch the name of the kiosk we are to start
+  # and assign to config.StartKiosk  (e.g. AHNC )
   list1 <- keyValueToList(configtbl,'StartKiosk')
   if( (is.null(list1) || length(list1) == 0) ){
     badCfg<-TRUE
@@ -90,10 +100,27 @@ getStartConfig <- function() {
     #I ultimately want a string
     config.StartKiosk<<- toString(list1[1])  
   }
-  #message(paste0("Starting cfg for:",config.StartKiosk))
+  
+  if( is.null(config.StartKiosk) ) {
+    ErrorPrint(paste0("config.StartKiosk is NULL.  Set badCfg = TRUE"))
+  } else {
+    WarningPrint(paste0("Set global variable config.StartKiosk to:",config.StartKiosk))
+  } 
+  
   
   #print("------------ KiosksPath ----------------")
+  # fetch the file path to the kiosk we are to start
+  # and assign to config.KioskPath.
+  # Note for locally hosted kiosks, the kiosk content
+  # is NOT in a subfolder of the R project but is typically
+  # in the MOTUS_USERS Documents folder to keep seperate from
+  # the code to simplify maintainin the project in Git and for
+  # making code updates.
+  # Also if the KiosksPath is given a relative path using ~
+  # it needs to be expanded to the users actual
+  # home directory
   list1 <- keyValueToList(configtbl,'KiosksPath')
+  
   if( (is.null(list1) || length(list1) == 0) ){
     badCfg<-TRUE
     config.KiosksPath<<-NULL
@@ -111,9 +138,16 @@ getStartConfig <- function() {
     }
     config.KiosksPath<<-xxx
   }
-  #message(paste0("Using KioskPath:", config.KiosksPath))
   
-  #print("------------ KioskCfgFile ----------------")
+  if( is.null(config.KiosksPath) ) {
+    ErrorPrint(paste0("config.KiosksPath is NULL.  Set badCfg = TRUE"))
+  } else {
+    WarningPrint(paste0("Set global variable config.KiosksPath to:", config.KiosksPath))
+  } 
+  
+  # print("------------ KioskCfgFile ----------------")
+  # fetch the actual name of the kiosk configuration file for
+  # the named kiosk and assign to config,KioskCfgFile.
   list1 <- keyValueToList(configtbl,'KioskCfgFile')
   if( (is.null(list1) || length(list1) == 0) ){
     badCfg<-TRUE
@@ -122,8 +156,13 @@ getStartConfig <- function() {
     #I ultimately want a string
     config.KioskCfgFile<<- toString(list1[1])  
   }
+
+  if( is.null(config.KioskCfgFile) ) {
+    ErrorPrint(paste0("config.KioskCfgFile is NULL.  Set badCfg = TRUE"))
+  } else {
+    WarningPrint(paste0("Set global variable config.KioskCfgFile to:", config.KioskCfgFile))
+  } 
   
-  #message(paste0("Starting cfg for:",config.StartKiosk))
   return(badCfg)
   
 } #end getStartConfig()
@@ -135,31 +174,34 @@ getStartConfig <- function() {
 ########################################################################################
 getKioskConfig <- function() {
   
-  WarningPrint(paste0("using global KiosksPath:", config.KiosksPath)) #/users/rich/Projects/kiosks
-  WarningPrint(paste0("using global StartKiosk:", config.StartKiosk))
-  
-  #first test the directory exists
+  InfoPrint(paste0("using global KiosksPath:", config.KiosksPath))
+  InfoPrint(paste0("using global StartKiosk:", config.StartKiosk))
+  print("1")
+  #first test that the directory path exists
   thedirectory<-paste0(config.KiosksPath,"/",config.StartKiosk)
   
-  WarningPrint(paste0("testing for the named kiosk's directory:",thedirectory))
+  InfoPrint(paste0("testing for the named kiosk's directory:",thedirectory))
   if (!file.exists(thedirectory)) {
-    message(paste0("ERROR: getKioskConfig: no kiosk directory found at: ",thedirectory))
-    ErrorPrint("Please check the name of your StartKiosk in the startup.cfg file.")
-    ErrorPrint("and also check that a matching kiosk exists at that location.")
+    FatalPrint(paste0("ERROR: getKioskConfig: no kiosk directory found at: ",thedirectory))
+    FatalPrint("Please check the name of your StartKiosk in the startup.cfg file.")
+    FatalPrint("and also check that a matching kiosk exists at that location.")
     stop("There is an error reading your startup.cfg file")
-  } 
+    } 
   
+  # here if the file paths exist, now check for the actual named config file
   thefile<-paste0(config.KiosksPath,"/",config.StartKiosk,"/",config.KioskCfgFile)
   if (!file.exists(thefile)) {
-    ErrorPrint(paste0("ERROR: getKioskConfig: kiosk configuration file not found in kiosk's directory at:",thefile))
-    ErrorPrint("Please check that the name of your KioskCfgFile in the startup.cfg file matches a config file in your kiosk's folder.")
+    FatalPrint(paste0("ERROR: getKioskConfig: kiosk configuration file not found in kiosk's directory at:",thefile))
+    FatalPrint("Please check that the name of your KioskCfgFile in the startup.cfg file matches the config file in your kiosk's folder.")
     stop("There is an error reading your kiosk's configuration file.")
+  } else {
+    InfoPrint(paste0("Found the kiosk configuration file:", thefile))
   }
-  
+
   tryCatch( 
     {
       #attempt to read file from current directory
-      WarningPrint(paste0("Loading kiosk configuration data from ", thefile))
+      InfoPrint(paste0("Loading kiosk configuration data from ", thefile))
       lines <- readLines(thefile, warn = FALSE)
       configtbl <-linesToList(lines)
     },
@@ -169,18 +211,19 @@ getKioskConfig <- function() {
     },
     error = function( err ) 
     {
-      WarningPrint("Could not read your kiosk's configuration data from current directory")
-      ErrorPrint("Config file read error: Could not load kiosk configuration data. Exiting Program")
-      ErrorPrint("here is the err returned by the read:")
-      ErrorPrint(err)
-      ErrorPrint("Check location and contents of the kiosk configuration file named in startup.cfg.")
-      
+      FatalPrint("Could not read your kiosk's configuration data from the specified directory")
+      FatalPrint("Config file read error: Could not load kiosk configuration data. Exiting Program")
+      FatalPrint("Here is the err returned by the read:")
+      FatalPrint(err)
+      FatalPrint("Check location and contents of the kiosk configuration file named in startup.cfg.")
       stop("There is an error reading your kiosk's configuration file")
     }
   )
 
-  badCfg<-FALSE  #assume good config
+  # now process the the configuration data from the configtbl list
   
+  badCfg<-FALSE  #assume good config, flag will be set TRUE if any parsing fails
+
   #config.SiteSpecificContent<<-paste0(projectdir,"/",config.KiosksPath,"/",config.StartKiosk)
   config.SiteSpecificContent<<-paste0(config.KiosksPath,"/",config.StartKiosk)
   #message(paste0("in configUtils, config.siteSpecificContent is:", config.SiteSpecificContent))

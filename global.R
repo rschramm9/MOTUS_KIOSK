@@ -1,8 +1,9 @@
 ######## I put github release version and other data here ############
 ######## so it can be displayed on the footer of the kiosk window ####
-gblFooterText <- "MOTUS_KIOSK vsn 6.3.8  17-Oct-2026"
-gblUserAgentText <- "MOTUS_KIOSK vsn 6.3.8"
+gblFooterText <- "MOTUS_KIOSK vsn 6.3.9 11-Nov-2026"
+gblUserAgentText <- "MOTUS_KIOSK vsn 6.3.9"
 mytoggle<<-FALSE #useful global variable for debugging
+
 
 ###############################################################################
 # Copyright 2022-2023 Richard Schramm
@@ -155,7 +156,7 @@ source(paste0(codedir,"/modules/speciesNameAlias.R"))
      }
     
      #message(paste0("Starting Kiosk named:", config.StartKiosk))
-     InfoPrint(paste0("[global.R] Starting Kiosk named:", config.StartKiosk))
+     InfoPrint(paste0("[global.R] Attempt to starting kiosk named:", config.StartKiosk))
      badCfg<-getKioskConfig()
      if( badCfg == TRUE){
          FatalPrint("There is a fatal error in your kiosk.cfg file")

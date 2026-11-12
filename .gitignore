@@ -54,7 +54,9 @@ changes.txt
 # create/modify a startup.cfg which will be ignored in the repo
 startup.cfg 
 
-kiosks/AHNC
-kiosks/WLNC
-kiosks/FINLEY
-kiosks/HNC
+# kiosks/web holds only kiosk content for
+# shinyapps.io web hosted apps. We dont want to manage them
+# in the repository
+/kiosks/web/*
+!/kiosks/web/README.md
+

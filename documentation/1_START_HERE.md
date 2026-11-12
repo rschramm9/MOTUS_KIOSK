@@ -478,7 +478,7 @@ Similarly a motus species name of "Swainson's Trush" compacted and formatted bec
 
 A motus species name of "Eastern Whip-poor-will" compacted and formatted become filename of "species_easternwhippoorwiil_en.html" (or _es.html and _fr.html for other languages)
 
-##### Special note for species with multiple common names 
+##### Special note for species with multiple common names
 
 Discovered some tag owners use different common names for species  (eg. Hoary Bat,
 American Bat, Northern Hoary Bat). Also sometimes they append the latin species
@@ -518,6 +518,8 @@ Beginning version 6.3.8 (October 2026)  You can now place an optional file in th
 
 Beginning with version 6.2.7 each species now has its own subfolder of the species name within the  www/speciespages folder with a structure like this:
 
+***Beginning with version 6.3.9 subfolder 'species_images' has been replaced by  simply 'images' to keep path lengths below 100 character limit imposed by shinyapps.io for feb deployed applications.***
+
 ### The folder 'unknown' as shown below is REQUIRED
 
 ```
@@ -530,7 +532,7 @@ www/
     │     ├── americanrobin_fr.html
     │     ├── species_css/
     │     │     └── species_style.css
-    │     └── species_images/
+    │     └── images/
     │           ├── americanrobin1.png
     │           └── americanrobinrangemap.png
     │
@@ -540,7 +542,7 @@ www/
     │     ├── redknot_fr.html
     │     ├── species_css/
     │     │     └── species_style.css
-    │     └── species_images/
+    │     └── images/
     │           ├── image_1.png
     │           └── image_2.jpg
     │
@@ -550,7 +552,7 @@ www/
           ├── species_unknown_en_fr.html
           ├── species_css/
           │     └── species_style.css
-          └── species_images/
+          └── images/
                 └── placeholder.png
 ```
 
@@ -558,7 +560,7 @@ www/
 
 To add your own species files:
 
-- Copy ***one*** of the existing species directories to be used as a template for the new species. For example to make a new page for a "hoarybaf"
+- Copy ***one*** of the existing species directories to be used as a template for the new species. For example to make a new page for a "hoarybat"
   -  copy entire americanrobin folder and rename it to 'hoarybat'
   - enter the new folder and rename the *species_americanrobin_en.html* file to *species_hoarybat_en.html* (if you prefer to work in French or Spanish, use the _fr or _es file)
 
