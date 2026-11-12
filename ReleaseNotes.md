@@ -1,3 +1,32 @@
+**6.3.9  (11-Nov-2026)**
+For deploying kiosks to web hosting at shinyapps.io, pathnames+ filenames www/speciespages
+were exceeding a 100 character path/filename limit imposed by shinyapps.io.
+Changed all changed all html species pages to references to directory "species_images"
+to simply "images"
+
+Modified configUtils.R functions getStartConfig() and getKioskConfig() to
+provide additional info to console log at startup to provide better debug info
+when loading configuration
+
+Added a subdirectory to the project directory 'kiosks' named 'web' to hold kiosks
+that are meant for web deployment to shinyapps.io.  Shinyapps.io requires all
+files to live within the main project directory. Normally we dont want users
+placing their content within the main project because it complicates github
+pushes and pulls as we dont manage users content.
+Users should temporarally copy kiosks the are deploying to a web hosting
+service from their Documents/kiosk folder to this kiosk/web directory, point
+the startup.cfg file to kiosk/web. Then push after testing.
+**** These temporary kiosk files will be ignored (see .gitignore)****
+
+Documentation START_HERE.md.  Added note about change from species_images to images
+as described above
+
+.gitignore added:
+  /kiosks/web/*
+  !/kiosks/web/README.md
+
+
+
 **6.3.8  (17-Oct-2026)**
 Discovered some tag owners use different common names for species  (eg. Hoary Bat,
 American Bat, Northern Hoary Bat). Also sometimes they append the latin species
