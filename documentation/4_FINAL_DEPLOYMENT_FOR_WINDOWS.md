@@ -259,7 +259,7 @@ It must open in its "own shell" - not the normal explorer.exe shell to prevent t
 
 **3.3** When the Powershell console app is displayed, right-click on it and select 'Run as administrator'
 
-**3.4** Enter command:   **Set-ExecutionPolicy unrestricted**
+**3.4** Enter command:   
 
 **3.5** Enter these three commands:  **( each cmd entered all on one line).  ( *Substitute your correct user name if you arent using MOTUS_USER !!)*
 
@@ -268,7 +268,8 @@ powershell -File "C:\Users\MOTUS_USER\Projects\MOTUS_KIOSK\code\SetOpenKioskAuto
 
 powershell -File "C:\Users\MOTUS_USER\Projects\MOTUS_KIOSK\code\PatchOpenKioskStatusPanel.ps1" MOTUS_USER
 
-powershell -File "C:\Users\MOTUS_USER\Projects\MOTUS_KIOSK\code\DisableCtrlAltDelOptions.ps1" MOTUS_USER
+
+
 
 ```
 
